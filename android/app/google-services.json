@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "885622529419",
+    "project_id": "versouls",
+    "storage_bucket": "versouls.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885622529419:android:5eb5a5469439dd9873e38e",
+        "android_client_info": {
+          "package_name": "com.poemisa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885622529419-84ri8uebf2lomeejg9tuhb1rv84vf57t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5DcerRvWYLG0H_5SfP-_MSCawh5xlZD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885622529419-84ri8uebf2lomeejg9tuhb1rv84vf57t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
