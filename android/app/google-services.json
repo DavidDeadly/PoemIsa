@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "885622529419-84ri8uebf2lomeejg9tuhb1rv84vf57t.apps.googleusercontent.com",
+          "client_id": "885622529419-uhd2qcfept40urigj4tnohegmmt2a3r5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.poemisa",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "885622529419-0j1grs556pgm92iqdld62dtp4u4rejut.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "885622529419-84ri8uebf2lomeejg9tuhb1rv84vf57t.apps.googleusercontent.com",
+              "client_id": "885622529419-0j1grs556pgm92iqdld62dtp4u4rejut.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

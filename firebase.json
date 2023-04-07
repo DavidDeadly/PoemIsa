@@ -19,6 +19,14 @@
     "functions": {
       "port": 5001,
       "host": "192.168.1.10"
-    }
+    },
+    "auth": {
+      "host": "192.168.1.10",
+      "port": 9099
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
   }
 }

@@ -1,8 +1,10 @@
 import * as functions from "firebase-functions";
 import vision from "@google-cloud/vision";
 import * as dotenv from "dotenv";
+import {initializeApp} from "firebase-admin/app";
 
 dotenv.config();
+initializeApp();
 
 const bucketURI = process.env.IMAGES_BUCKET;
 
@@ -20,7 +22,6 @@ export const handWrittenTextRecognition = functions.https.onCall(
   async (bucketFilePath: string, _context) => {
     try {
       const fullImagePath = `${bucketURI}/${bucketFilePath}`;
-
       const text = await recognizeHandWrittenText(fullImagePath);
 
       return {
