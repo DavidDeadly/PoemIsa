@@ -5,7 +5,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { Button } from '../components/Button';
 
 export const Home = () => {
-  const handleLogOut = () =>
+  const handleSignOut = () =>
     auth()
       .signOut()
       .then(() => GoogleSignin.signOut())
@@ -15,7 +15,7 @@ export const Home = () => {
   return (
     <View>
       <Text style={{ color: '#222' }}>Home</Text>
-      <Button text="Log out" onPress={handleLogOut} />
+      <Button text="Sign out" onPress={handleSignOut} />
     </View>
   );
 };
