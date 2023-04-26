@@ -1,6 +1,10 @@
 {
   "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
-    "typeRoots": ["./src/types"]
-  }
+    "typeRoots": ["./src/types"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "exclude": ["node_modules"]
 }
