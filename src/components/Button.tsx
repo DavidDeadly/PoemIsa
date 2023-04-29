@@ -1,29 +1,39 @@
+import { COLORS } from '@/constants';
+import { IconProps } from 'iconsax-react-native';
+import { FunctionComponent } from 'react';
 import {
-  GestureResponderEvent,
   StyleSheet,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View
 } from 'react-native';
 
 type ButtonProps = {
+  Icon?: FunctionComponent<IconProps>;
   text: string;
-  onPress: (ev: GestureResponderEvent) => void;
-};
+} & TouchableOpacityProps;
 
-export const Button = ({ text, onPress }: ButtonProps) => (
-  <TouchableOpacity style={styles.button} onPress={onPress}>
-    <Text style={styles.buttonText}>{text}</Text>
-  </TouchableOpacity>
+export const Button = ({ style, Icon, text, ...props }: ButtonProps) => (
+  <View style={style}>
+    <TouchableOpacity style={styles.button} {...props}>
+      {Icon && <Icon size="25" color={COLORS.secondary} />}
+      <Text style={styles.buttonText}>{text}</Text>
+    </TouchableOpacity>
+  </View>
 );
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#823BC4',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 8,
+    backgroundColor: COLORS.primary,
     color: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 15,
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     borderRadius: 50,
     marginTop: 20
   },
