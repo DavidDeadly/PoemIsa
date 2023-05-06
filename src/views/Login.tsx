@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { Google } from 'iconsax-react-native';
 
 import { useUser } from '@/hooks/useUser';
@@ -24,6 +24,11 @@ export const Login = () => {
         <Google size="25" color={COLORS.secondary} />
         <Text style={styles.buttonText}>Iniciar sesión</Text>
       </Button>
+
+      <Image
+        source={require('@/assets/images/login-picture.png')}
+        style={styles.image}
+      />
 
       {!randomQoute ? (
         <Loading styles={styles.quoteContainer} />
@@ -64,9 +69,21 @@ const styles = StyleSheet.create({
     marginBottom: 50
   },
   button: {
-    flex: 4
+    flex: 1
   },
   buttonText: {
     color: '#fff'
+  },
+  image: {
+    flex: 2,
+    margin: 0,
+    width: '80%',
+    resizeMode: 'cover',
+    borderRadius: 50,
+    borderColor: COLORS.primary,
+    borderWidth: 2,
+    padding: 10,
+    backgroundColor: COLORS.secondary,
+    opacity: 0.5
   }
 });
