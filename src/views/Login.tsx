@@ -1,5 +1,6 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { Text, StyleSheet, Image } from 'react-native';
 import { Google } from 'iconsax-react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import { useUser } from '@/hooks/useUser';
 import { Button } from '@/components/Button';
@@ -9,12 +10,21 @@ import { Quote } from '@/components/Quote';
 import { FadeInView } from '@/components/FadeInView';
 import { Loading } from '@/components/Loading';
 
+const AppGradient = {
+  start: { x: 1, y: 1 },
+  end: { x: 0, y: 0 }
+};
+
 export const Login = () => {
   const { user, loginWithGoogle } = useUser();
   const { randomQoute } = useRandomQuote();
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={Object.values(COLORS)}
+      style={styles.container}
+      start={AppGradient.start}
+      end={AppGradient.end}>
       <Text style={styles.title}>PoemIsa</Text>
 
       <Button
@@ -37,7 +47,7 @@ export const Login = () => {
           <Quote quote={randomQoute} fontSize={20} />
         </FadeInView>
       )}
-    </View>
+    </LinearGradient>
   );
 };
 
