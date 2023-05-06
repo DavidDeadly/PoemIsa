@@ -1,7 +1,6 @@
-import { OPENAI_API_KEY } from '@env';
+import Config from 'react-native-config';
 
 export const CONSTS = {
-  WEB_CLIENT_ID:
-    '885622529419-84ri8uebf2lomeejg9tuhb1rv84vf57t.apps.googleusercontent.com',
-  OPEN_AI_API_KEY: OPENAI_API_KEY
+  WEB_CLIENT_ID: Config.WEB_CLIENT_ID,
+  OPEN_AI_API_KEY: Config.OPENAI_API_KEY
 };

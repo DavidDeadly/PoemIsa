@@ -4,12 +4,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
-  View
+  View,
+  ViewStyle
 } from 'react-native';
 
-type ButtonProps = {
-  children: React.ReactNode;
-} & TouchableOpacityProps;
+type ButtonProps = { style: ViewStyle } & TouchableOpacityProps;
 
 export const Button: FC<ButtonProps> = ({ style, children, ...props }) => (
   <View style={style}>

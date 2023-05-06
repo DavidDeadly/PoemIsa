@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import functions from '@react-native-firebase/functions';
 import { NavigationContainer } from '@react-navigation/native';
 
