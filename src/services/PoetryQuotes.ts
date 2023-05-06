@@ -1,7 +1,6 @@
 import { PoetryQuotesRepository } from '@/repositories/PoetryQuotesRepository';
 
-const poetryQuotesRepository = new PoetryQuotesRepository();
-
 export const getPoetryQuotes = () => {
+  const poetryQuotesRepository = PoetryQuotesRepository.init();
   return poetryQuotesRepository.getAll();
 };
