@@ -6,6 +6,8 @@ import { Button } from '@/components/Button';
 import { COLORS } from '@/constants';
 import { useRandomQuote } from '@/hooks/useRandomQuote';
 import { Quote } from '@/components/Quote';
+import { FadeInView } from '@/components/FadeInView';
+import { Loading } from '@/components/Loading';
 
 export const Login = () => {
   const { user, loginWithGoogle } = useUser();
@@ -23,7 +25,13 @@ export const Login = () => {
         <Text style={styles.buttonText}>Iniciar sesión</Text>
       </Button>
 
-      <Quote styles={styles.quoteContainer} quote={randomQoute} fontSize={20} />
+      {!randomQoute ? (
+        <Loading styles={styles.quoteContainer} />
+      ) : (
+        <FadeInView styles={styles.quoteContainer} duration={1000}>
+          <Quote quote={randomQoute} fontSize={20} />
+        </FadeInView>
+      )}
     </View>
   );
 };
@@ -50,6 +58,8 @@ const styles = StyleSheet.create({
     flex: 2,
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: 10,
     marginBottom: 50
   },
