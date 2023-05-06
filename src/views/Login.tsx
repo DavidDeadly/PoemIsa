@@ -5,10 +5,11 @@ import { useUser } from '@/hooks/useUser';
 import { Button } from '@/components/Button';
 import { COLORS } from '@/constants';
 import { useRandomQuote } from '@/hooks/useRandomQuote';
+import { Quote } from '@/components/Quote';
 
 export const Login = () => {
   const { user, loginWithGoogle } = useUser();
-  const [randomQoute] = useRandomQuote();
+  const { randomQoute } = useRandomQuote();
 
   return (
     <View style={styles.container}>
@@ -16,18 +17,13 @@ export const Login = () => {
 
       <Button
         style={styles.button}
-        Icon={Google}
-        text="Iniciar sesión"
         onPress={loginWithGoogle}
-        disabled={Boolean(user)}
-      />
+        disabled={Boolean(user)}>
+        <Google size="25" color={COLORS.secondary} />
+        <Text style={styles.buttonText}>Iniciar sesión</Text>
+      </Button>
 
-      {randomQoute && (
-        <View style={styles.quoteContainer}>
-          <Text style={styles.quote}>{randomQoute.content}</Text>
-          <Text style={styles.author}>~{randomQoute.author}~</Text>
-        </View>
-      )}
+      <Quote styles={styles.quoteContainer} quote={randomQoute} fontSize={20} />
     </View>
   );
 };
@@ -54,17 +50,13 @@ const styles = StyleSheet.create({
     flex: 2,
     display: 'flex',
     flexDirection: 'column',
-    gap: 10
-  },
-  quote: {
-    fontSize: 20,
-    fontFamily: 'MontserratAlternates-BoldItalic'
-  },
-  author: {
-    fontSize: 20,
-    fontFamily: 'MontserratAlternates-LightItalic'
+    gap: 10,
+    marginBottom: 50
   },
   button: {
     flex: 4
+  },
+  buttonText: {
+    color: '#fff'
   }
 });

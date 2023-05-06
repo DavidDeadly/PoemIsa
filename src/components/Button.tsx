@@ -1,24 +1,20 @@
 import { COLORS } from '@/constants';
-import { IconProps } from 'iconsax-react-native';
-import { FunctionComponent } from 'react';
+import { FC } from 'react';
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   TouchableOpacityProps,
   View
 } from 'react-native';
 
 type ButtonProps = {
-  Icon?: FunctionComponent<IconProps>;
-  text: string;
+  children: React.ReactNode;
 } & TouchableOpacityProps;
 
-export const Button = ({ style, Icon, text, ...props }: ButtonProps) => (
+export const Button: FC<ButtonProps> = ({ style, children, ...props }) => (
   <View style={style}>
     <TouchableOpacity style={styles.button} {...props}>
-      {Icon && <Icon size="25" color={COLORS.secondary} />}
-      <Text style={styles.buttonText}>{text}</Text>
+      {children}
     </TouchableOpacity>
   </View>
 );
@@ -36,8 +32,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 50,
     marginTop: 20
-  },
-  buttonText: {
-    color: '#fff'
   }
 });

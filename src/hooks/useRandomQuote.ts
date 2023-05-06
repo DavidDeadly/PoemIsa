@@ -7,9 +7,10 @@ export const useRandomQuote = () => {
   const [quotes, setQuotes] = useState<PoetryQuotes[]>([]);
   const [randomQoute, setRandomQoute] = useState<PoetryQuotes | null>(null);
 
-  const getQuote = useCallback(() => {
+  const getAnotherQuote = useCallback(() => {
     const randomIndex = getRandomIndex(0, quotes.length - 1);
-    return quotes[randomIndex];
+    const quote = quotes[randomIndex];
+    setRandomQoute(quote);
   }, [quotes]);
 
   useEffect(() => {
@@ -20,10 +21,9 @@ export const useRandomQuote = () => {
 
   useEffect(() => {
     if (quotes.length > 0) {
-      const quote = getQuote();
-      setRandomQoute(quote);
+      getAnotherQuote();
     }
-  }, [quotes, getQuote]);
+  }, [quotes, getAnotherQuote]);
 
-  return [randomQoute] as const;
+  return { randomQoute, getAnotherQuote };
 };
