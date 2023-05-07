@@ -36,6 +36,7 @@ export const Login = () => {
       </Button>
 
       <Image
+        testID="login-image"
         source={require('@/assets/images/login-picture.png')}
         style={styles.image}
       />
