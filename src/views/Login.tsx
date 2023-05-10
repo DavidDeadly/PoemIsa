@@ -1,9 +1,4 @@
-import {
-  Text,
-  StyleSheet,
-  Image,
-  TouchableWithoutFeedback
-} from 'react-native';
+import { Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Google } from 'iconsax-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -13,7 +8,8 @@ import { COLORS } from '@/constants';
 import { Quote } from '@/components/Quote';
 import { FadeInView } from '@/components/FadeInView';
 import { Loading } from '@/components/Loading';
-import { useLoginPoetryFlip } from '@/hooks/useLoginPoetryFlip';
+import { useLoginFlipQuote } from '@/hooks/useLoginFlipQuote';
+import Animated, { FlipInXDown } from 'react-native-reanimated';
 
 const AppGradient = {
   start: { x: 1, y: 1 },
@@ -22,13 +18,9 @@ const AppGradient = {
 
 export const Login = () => {
   const { user, loginWithGoogle } = useUser();
-  const { randomQuote, pageFlipSubject$ } = useLoginPoetryFlip();
-
-  const handlePageFlip = () => {
-    if (randomQuote) {
-      pageFlipSubject$.next(randomQuote);
-    }
-  };
+  const { randomQuote, flipPoetry, animatedStyle } = useLoginFlipQuote({
+    delayTime: 500
+  });
 
   return (
     <LinearGradient
@@ -46,11 +38,12 @@ export const Login = () => {
         <Text style={styles.buttonText}>Iniciar sesión</Text>
       </Button>
 
-      <TouchableWithoutFeedback onPress={() => handlePageFlip()}>
-        <Image
+      <TouchableWithoutFeedback onPress={() => flipPoetry()}>
+        <Animated.Image
+          entering={FlipInXDown.duration(1000)}
           testID="login-image"
           source={require('@/assets/images/login-picture.png')}
-          style={styles.image}
+          style={[styles.image, animatedStyle]}
         />
       </TouchableWithoutFeedback>
 
