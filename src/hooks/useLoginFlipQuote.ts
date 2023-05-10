@@ -1,6 +1,4 @@
-import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
 import { Subject, delay, map, throttleTime } from 'rxjs';
-import { useRandomQuote } from './useRandomQuote';
 import { useEffect } from 'react';
 import { Player } from '@react-native-community/audio-toolkit';
 import {
@@ -10,6 +8,9 @@ import {
   withSequence,
   withTiming
 } from 'react-native-reanimated';
+
+import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
+import { useRandomQuote } from '@/hooks/useRandomQuote';
 
 const pageFlipSubject$ = new Subject<PoetryQuotesFS>();
 const pageFlipThrottleObservable = pageFlipSubject$.pipe(

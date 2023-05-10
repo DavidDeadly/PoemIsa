@@ -1,6 +1,7 @@
 import { Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Google } from 'iconsax-react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import Animated, { FlipInXDown } from 'react-native-reanimated';
 
 import { useUser } from '@/hooks/useUser';
 import { Button } from '@/components/Button';
@@ -9,7 +10,6 @@ import { Quote } from '@/components/Quote';
 import { FadeInView } from '@/components/FadeInView';
 import { Loading } from '@/components/Loading';
 import { useLoginFlipQuote } from '@/hooks/useLoginFlipQuote';
-import Animated, { FlipInXDown } from 'react-native-reanimated';
 
 const AppGradient = {
   start: { x: 1, y: 1 },
