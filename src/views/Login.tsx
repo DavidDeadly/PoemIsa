@@ -9,7 +9,7 @@ import { COLORS } from '@/constants';
 import { Quote } from '@/components/Quote';
 import { FadeInView } from '@/components/FadeInView';
 import { Loading } from '@/components/Loading';
-import { useLoginFlipQuote } from '@/hooks/useLoginFlipQuote';
+import { useFlipQuoteEffects } from '@/hooks/useFlipQuoteEffects';
 
 const AppGradient = {
   start: { x: 1, y: 1 },
@@ -18,8 +18,8 @@ const AppGradient = {
 
 export const Login = () => {
   const { user, loginWithGoogle } = useUser();
-  const { randomQuote, flipPoetry, animatedStyle } = useLoginFlipQuote({
-    delayTime: 500
+  const { randomQuote, flipPoetry, animatedStyle } = useFlipQuoteEffects({
+    delayEffect: 500
   });
 
   return (
