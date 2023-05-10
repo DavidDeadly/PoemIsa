@@ -13,7 +13,10 @@ export const FadeInView: FC<FadeInViewProps> = ({
   duration
 }) => {
   return (
-    <Animated.View entering={FadeIn.duration(duration)} style={styles}>
+    <Animated.View
+      layout={FadeIn.duration(duration / 4)}
+      entering={FadeIn.duration(duration)}
+      style={styles}>
       {children}
     </Animated.View>
   );
