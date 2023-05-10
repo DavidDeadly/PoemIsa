@@ -1,14 +1,19 @@
-import { Text, StyleSheet, Image } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  Image,
+  TouchableWithoutFeedback
+} from 'react-native';
 import { Google } from 'iconsax-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { useUser } from '@/hooks/useUser';
 import { Button } from '@/components/Button';
 import { COLORS } from '@/constants';
-import { useRandomQuote } from '@/hooks/useRandomQuote';
 import { Quote } from '@/components/Quote';
 import { FadeInView } from '@/components/FadeInView';
 import { Loading } from '@/components/Loading';
+import { useLoginPoetryFlip } from '@/hooks/useLoginPoetryFlip';
 
 const AppGradient = {
   start: { x: 1, y: 1 },
@@ -17,7 +22,13 @@ const AppGradient = {
 
 export const Login = () => {
   const { user, loginWithGoogle } = useUser();
-  const { randomQoute } = useRandomQuote();
+  const { randomQuote, pageFlipSubject$ } = useLoginPoetryFlip();
+
+  const handlePageFlip = () => {
+    if (randomQuote) {
+      pageFlipSubject$.next(randomQuote);
+    }
+  };
 
   return (
     <LinearGradient
@@ -35,17 +46,19 @@ export const Login = () => {
         <Text style={styles.buttonText}>Iniciar sesión</Text>
       </Button>
 
-      <Image
-        testID="login-image"
-        source={require('@/assets/images/login-picture.png')}
-        style={styles.image}
-      />
+      <TouchableWithoutFeedback onPress={() => handlePageFlip()}>
+        <Image
+          testID="login-image"
+          source={require('@/assets/images/login-picture.png')}
+          style={styles.image}
+        />
+      </TouchableWithoutFeedback>
 
-      {!randomQoute ? (
+      {!randomQuote ? (
         <Loading styles={styles.quoteContainer} />
       ) : (
         <FadeInView styles={styles.quoteContainer} duration={1000}>
-          <Quote quote={randomQoute} fontSize={20} />
+          <Quote quote={randomQuote} fontSize={20} />
         </FadeInView>
       )}
     </LinearGradient>

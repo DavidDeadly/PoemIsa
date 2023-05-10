@@ -1,17 +1,27 @@
 import { useCallback, useEffect, useState } from 'react';
-import { PoetryQuotes } from '@/types/models/poetryQuotes';
+import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
 import { getPoetryQuotes } from '@/services/PoetryQuotes';
 import { getRandomIndex } from '@/helpers/randomIndex';
 
 export const useRandomQuote = () => {
-  const [quotes, setQuotes] = useState<PoetryQuotes[]>([]);
-  const [randomQoute, setRandomQoute] = useState<PoetryQuotes | null>(null);
+  const [quotes, setQuotes] = useState<PoetryQuotesFS[]>([]);
+  const [randomQuote, setRandomQoute] = useState<PoetryQuotesFS>();
 
-  const getAnotherQuote = useCallback(() => {
-    const randomIndex = getRandomIndex(0, quotes.length - 1);
-    const quote = quotes[randomIndex];
-    setRandomQoute(quote);
-  }, [quotes]);
+  const getAnotherQuote = useCallback(
+    (currentQuote?: PoetryQuotesFS) => {
+      const quoteWithOutCurrentQuote = currentQuote
+        ? quotes.filter(quote => quote.id !== currentQuote.id)
+        : quotes;
+      const randomIndex = getRandomIndex(
+        0,
+        quoteWithOutCurrentQuote.length - 1
+      );
+
+      const quote = quoteWithOutCurrentQuote[randomIndex];
+      setRandomQoute(quote);
+    },
+    [quotes]
+  );
 
   useEffect(() => {
     getPoetryQuotes().then(response => {
@@ -25,5 +35,5 @@ export const useRandomQuote = () => {
     }
   }, [quotes, getAnotherQuote]);
 
-  return { randomQoute, getAnotherQuote };
+  return { randomQuote, getAnotherQuote };
 };

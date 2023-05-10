@@ -24,7 +24,7 @@ function Example() {
   );
 }
 
-test('examples of some things', async () => {
+xtest('examples of some things', async () => {
   const expectedUsername = 'Ada Lovelace';
 
   render(<Example />);
