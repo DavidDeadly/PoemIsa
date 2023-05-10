@@ -6,7 +6,7 @@ import { COLORS } from '@/constants';
 export const Loading: FC<{ styles: ViewStyle }> = ({ styles }) => {
   return (
     <View style={styles}>
-      <ActivityIndicator size="large" color={COLORS.primary} />
+      <ActivityIndicator size="large" color={COLORS.main.primary} />
     </View>
   );
 };

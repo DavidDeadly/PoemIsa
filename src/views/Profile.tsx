@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 export const Profile = () => {
   return (
     <View>
-      <Text style={{ color: '#222' }}>Profile</Text>
+      <Text style={{ color: '#222' }}>Perfil</Text>
     </View>
   );
 };

@@ -8,7 +8,7 @@ export const useUser = () => {
 
   const signOut = () => Auth.signOut();
 
-  const loginWithGoogle = async () => Auth.loginWithGoogle();
+  const loginWithGoogle = () => Auth.loginWithGoogle();
 
   return { user, signOut, loginWithGoogle };
 };

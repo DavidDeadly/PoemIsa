@@ -8,7 +8,7 @@ import {
   ViewStyle
 } from 'react-native';
 
-type ButtonProps = { style: ViewStyle } & TouchableOpacityProps;
+type ButtonProps = { style?: ViewStyle } & TouchableOpacityProps;
 
 export const Button: FC<ButtonProps> = ({ style, children, ...props }) => (
   <View style={style}>
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     gap: 8,
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.main.primary,
     color: '#fff',
     justifyContent: 'center',
     alignItems: 'center',

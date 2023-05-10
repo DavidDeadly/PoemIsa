@@ -14,8 +14,10 @@ export const Home = () => {
 
   return (
     <View>
-      <Text style={{ color: '#222' }}>Home</Text>
-      <Button text="Sign out" onPress={handleSignOut} />
+      <Text style={{ color: '#222' }}>Inicio</Text>
+      <Button onPress={handleSignOut}>
+        <Text>Cerrar sesión</Text>
+      </Button>
     </View>
   );
 };
