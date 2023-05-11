@@ -1,13 +1,13 @@
-import { useMemo } from 'react';
+import { useObservable, useObservableState } from 'observable-hooks';
+import { BehaviorSubject, combineLatestWith, from, map } from 'rxjs';
+
 import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
 import { getPoetryQuotes } from '@/services/PoetryQuotes';
 import { getRandomIndex } from '@/helpers/randomIndex';
-import { useObservableState } from 'observable-hooks';
-import { BehaviorSubject, combineLatestWith, from, map } from 'rxjs';
 
 export const useRandomQuote = () => {
-  const getPoetryQuotes$ = useMemo(() => from(getPoetryQuotes()), []);
-  const randomPoetryQuote$ = useMemo(
+  const getPoetryQuotes$ = useObservable(() => from(getPoetryQuotes()), []);
+  const randomPoetryQuote$ = useObservable(
     () => new BehaviorSubject<PoetryQuotesFS | undefined>(undefined),
     []
   );

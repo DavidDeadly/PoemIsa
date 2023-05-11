@@ -1,6 +1,5 @@
 import { Subject, delay, map, throttleTime } from 'rxjs';
-import { useMemo } from 'react';
-import { Player } from '@react-native-community/audio-toolkit';
+import { useObservable, useSubscription } from 'observable-hooks';
 import {
   Easing,
   useAnimatedStyle,
@@ -11,11 +10,18 @@ import {
 
 import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
 import { useRandomQuote } from '@/hooks/useRandomQuote';
-import { useSubscription } from 'observable-hooks';
+import { getSoundPrepared } from '@/helpers/getSoundPrepared';
 
 export const useFlipQuoteEffects = ({ delayEffect = 0, delayClick = 500 }) => {
   const { randomQuote, getAnotherQuote } = useRandomQuote();
-  const pageFlipSubject$ = useMemo(() => new Subject<PoetryQuotesFS>(), []);
+  const pageFlipSubject$ = useObservable(
+    () => new Subject<PoetryQuotesFS>(),
+    []
+  );
+  const pageFlipSound$ = useObservable(
+    () => getSoundPrepared('pageflip.mp3'),
+    []
+  );
   const rotation = useSharedValue(0);
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -24,20 +30,24 @@ export const useFlipQuoteEffects = ({ delayEffect = 0, delayClick = 500 }) => {
   });
 
   const startFlipEffect = () => {
-    const sound = new Player('pageflip.mp3');
-    sound.play();
+    pageFlipSound$.subscribe({
+      next: sound => {
+        sound.play();
 
-    const rotationDuration = delayEffect / 2;
-    rotation.value = withSequence(
-      withTiming(360, {
-        duration: rotationDuration,
-        easing: Easing.cubic
-      }),
-      withTiming(0, {
-        duration: rotationDuration,
-        easing: Easing.ease
-      })
-    );
+        const rotationDuration = delayEffect / 2;
+        rotation.value = withSequence(
+          withTiming(360, {
+            duration: rotationDuration,
+            easing: Easing.cubic
+          }),
+          withTiming(0, {
+            duration: rotationDuration,
+            easing: Easing.ease
+          })
+        );
+      },
+      error: error => console.log('Error playing the pageflip sound: ', error)
+    });
   };
 
   useSubscription(
