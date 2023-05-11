@@ -1,4 +1,9 @@
-import { Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  StatusBar
+} from 'react-native';
 import { Google } from 'iconsax-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, { FlipInXDown } from 'react-native-reanimated';
@@ -85,7 +90,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    paddingTop: StatusBar.currentHeight
   },
   title: {
     fontSize: 60,
