@@ -12,7 +12,7 @@ export const ToastNotifications: FC<PropsWithChildren> = ({ children }) => {
     <ToastProvider
       placement="top"
       duration={5000}
-      animationType="slide-in"
+      animationType="zoom-in"
       animationDuration={250}
       successColor="green"
       dangerColor="red"
