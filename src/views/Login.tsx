@@ -65,7 +65,7 @@ export const Login = () => {
       <TouchableWithoutFeedback onPress={() => flipPoetry()}>
         <Animated.Image
           entering={FlipInXDown.duration(1000)}
-          testID="login-image"
+          accessibilityRole="image"
           source={require('@/assets/images/login-picture.png')}
           style={[styles.image, animatedStyle]}
         />

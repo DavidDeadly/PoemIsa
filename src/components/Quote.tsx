@@ -24,7 +24,7 @@ export const Quote: FC<QuoteProps> = ({ styles, quote, fontSize }) => {
   }, [fontSize]);
 
   return (
-    <View style={styles}>
+    <View style={styles} accessibilityLabel="quote">
       <Text style={textStyles.quote}>{quote.content}</Text>
       <Text style={textStyles.author}>~{quote.author}~</Text>
     </View>

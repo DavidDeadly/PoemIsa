@@ -5,7 +5,7 @@ import { COLORS } from '@/constants';
 
 export const Loading: FC<{ styles: ViewStyle }> = ({ styles }) => {
   return (
-    <View style={styles}>
+    <View style={styles} accessibilityLabel="loading-spinner">
       <ActivityIndicator size="large" color={COLORS.main.primary} />
     </View>
   );
