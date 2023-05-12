@@ -102,13 +102,16 @@ describe('Login', () => {
     mockToastShow.mockClear();
     mockRandomQuote = null;
     mockUser = null;
-    expect(screen.toJSON()).toMatchSnapshot();
   });
 
   describe('Render', () => {
     test('should render', () => {
       const login = screen.getAllByLabelText('login');
       expect(login).toBeDefined();
+    });
+
+    test("shoudl math the snapshot 'Login'", () => {
+      expect(screen.toJSON()).toMatchSnapshot();
     });
 
     test('should render the aplicastion title "PoemIsa"', () => {
