@@ -5,15 +5,18 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 type FadeInViewProps = PropsWithChildren<{
   styles?: ViewStyle;
   duration: number;
+  accessibilityLabel?: string;
 }>;
 
 export const FadeInView: FC<FadeInViewProps> = ({
   children,
   styles = {},
-  duration
+  duration,
+  accessibilityLabel
 }) => {
   return (
     <Animated.View
+      accessibilityLabel={accessibilityLabel}
       layout={FadeIn.duration(duration / 4)}
       entering={FadeIn.duration(duration)}
       style={styles}>

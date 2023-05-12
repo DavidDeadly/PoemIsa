@@ -48,6 +48,7 @@ export const Login = () => {
 
   return (
     <LinearGradient
+      accessibilityLabel="login"
       colors={Object.values(COLORS.main)}
       style={styles.container}
       start={AppGradient.start}
@@ -62,10 +63,10 @@ export const Login = () => {
         <Text style={styles.buttonText}>Iniciar sesión</Text>
       </Button>
 
-      <TouchableWithoutFeedback onPress={() => flipPoetry()}>
+      <TouchableWithoutFeedback onPress={() => randomQuote && flipPoetry()}>
         <Animated.Image
           entering={FlipInXDown.duration(1000)}
-          accessibilityRole="image"
+          accessibilityRole="imagebutton"
           source={require('@/assets/images/login-picture.png')}
           style={[styles.image, animatedStyle]}
         />
@@ -74,7 +75,10 @@ export const Login = () => {
       {!randomQuote ? (
         <Loading styles={styles.quoteContainer} />
       ) : (
-        <FadeInView styles={styles.quoteContainer} duration={1000}>
+        <FadeInView
+          accessibilityLabel="quote"
+          styles={styles.quoteContainer}
+          duration={1000}>
           <Quote quote={randomQuote} fontSize={20} />
         </FadeInView>
       )}

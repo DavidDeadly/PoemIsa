@@ -11,7 +11,7 @@ import {
 type ButtonProps = { style?: ViewStyle } & TouchableOpacityProps;
 
 export const Button: FC<ButtonProps> = ({ style, children, ...props }) => (
-  <View style={style}>
+  <View style={style} accessibilityLabel="button">
     <TouchableOpacity style={styles.button} {...props}>
       {children}
     </TouchableOpacity>
