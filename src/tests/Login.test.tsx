@@ -102,6 +102,7 @@ describe('Login', () => {
     mockToastShow.mockClear();
     mockRandomQuote = null;
     mockUser = null;
+    expect(screen.toJSON()).toMatchSnapshot();
   });
 
   describe('Render', () => {
