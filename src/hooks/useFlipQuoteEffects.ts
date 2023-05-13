@@ -11,11 +11,12 @@ import {
 import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
 import { useRandomQuote } from '@/hooks/useRandomQuote';
 import { getSoundPrepared } from '@/helpers/getSoundPrepared';
+import { PoetryQuoteFSError } from '@/models/PoetryQuotes';
 
 export const useFlipQuoteEffects = ({ delayEffect = 0, delayClick = 500 }) => {
   const { randomQuote, getAnotherQuote } = useRandomQuote();
   const pageFlipSubject$ = useObservable(
-    () => new Subject<PoetryQuotesFS>(),
+    () => new Subject<PoetryQuotesFS | undefined>(),
     []
   );
   const pageFlipSound$ = useObservable(
@@ -62,7 +63,9 @@ export const useFlipQuoteEffects = ({ delayEffect = 0, delayClick = 500 }) => {
     getAnotherQuote
   );
 
-  const flipPoetry = () => randomQuote && pageFlipSubject$.next(randomQuote);
+  const flipPoetry = () =>
+    randomQuote?.id !== PoetryQuoteFSError.data.at(0).id &&
+    pageFlipSubject$.next(randomQuote);
 
   return { randomQuote, flipPoetry, animatedStyle };
 };

@@ -1,9 +1,17 @@
 import { useObservable, useObservableState } from 'observable-hooks';
-import { BehaviorSubject, combineLatestWith, from, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatestWith,
+  from,
+  map,
+  of
+} from 'rxjs';
 
 import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
 import { getPoetryQuotes } from '@/services/PoetryQuotes';
 import { getRandomIndex } from '@/helpers/randomIndex';
+import { PoetryQuoteFSError } from '@/models/PoetryQuotes';
 
 export const useRandomQuote = () => {
   const getPoetryQuotes$ = useObservable(() => from(getPoetryQuotes()), []);
@@ -14,6 +22,7 @@ export const useRandomQuote = () => {
 
   const [randomQuote] = useObservableState(() =>
     getPoetryQuotes$.pipe(
+      catchError(() => of(PoetryQuoteFSError)),
       combineLatestWith(randomPoetryQuote$),
       map(([quotesData, currentQuote]) =>
         getRandomQuote(quotesData.data, currentQuote)

@@ -16,3 +16,14 @@ export const mapSnapshotToPoetryQuote = (
     };
   });
 };
+
+export const PoetryQuoteFSError: PoetryQuotesData = {
+  count: 0,
+  data: [
+    {
+      id: '0',
+      content: 'No quotes found',
+      author: 'Error'
+    }
+  ]
+};
