@@ -24,9 +24,11 @@ export const useRandomQuote = () => {
     getPoetryQuotes$.pipe(
       catchError(() => of(PoetryQuoteFSError)),
       combineLatestWith(randomPoetryQuote$),
-      map(([quotesData, currentQuote]) =>
-        getRandomQuote(quotesData.data, currentQuote)
-      )
+      map(([quotesData, currentQuote]) => {
+        return quotesData.data.length
+          ? getRandomQuote(quotesData.data, currentQuote)
+          : PoetryQuoteFSError.data.at(0);
+      })
     )
   );
 
