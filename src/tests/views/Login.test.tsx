@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { StatusBar, StyleSheet } from 'react-native';
+import { StatusBar, StyleSheet, processColor } from 'react-native';
 
 import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
 import { Login } from '@/views/Login';
@@ -208,6 +208,19 @@ describe('Login', () => {
     test("should have the style 'container'", () => {
       const container = screen.queryByLabelText('login');
       expect(container).toHaveStyle(loginStyles.container);
+    });
+
+    test('the container should have the correct background color and start, end properties', () => {
+      const AppGradient = {
+        start: { x: 1, y: 1 },
+        end: { x: 0, y: 0 }
+      };
+      const expectedColors = Object.values(COLORS.main).map(processColor);
+
+      const container = screen.queryByLabelText('login');
+      expect(container).toHaveProp('colors', expectedColors);
+      expect(container).toHaveProp('startPoint', AppGradient.start);
+      expect(container).toHaveProp('endPoint', AppGradient.end);
     });
 
     test("should have the style 'title'", () => {
