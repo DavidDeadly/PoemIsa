@@ -19,7 +19,7 @@ function App(): JSX.Element {
           <StatusBar
             animated
             translucent
-            backgroundColor="rgba(103, 89, 96, 0.2)"
+            backgroundColor="transparent"
             barStyle="dark-content"
           />
           <AppWrapper />
