@@ -55,7 +55,7 @@ const loginStyles = StyleSheet.create({
   }
 });
 
-let mockLoginWithGoogle = jest.fn().mockResolvedValue(undefined);
+const mockLoginWithGoogle = jest.fn().mockResolvedValue(undefined);
 let mockUser: Object | null = null;
 jest.mock('@/hooks/useUser', () => {
   return {
@@ -288,7 +288,7 @@ describe('Login', () => {
       });
 
       test('should trigger the toast notification when the login fails with an singIn exception', async () => {
-        mockLoginWithGoogle = mockLoginWithGoogle.mockRejectedValue(
+        mockLoginWithGoogle.mockRejectedValue(
           new SigInException(ERRORS.SING_IN.NETWORK_ERROR)
         );
         render(<Login />);
@@ -311,7 +311,7 @@ describe('Login', () => {
       });
 
       test("should triger the toast notification when the login fails with an error that it's not a signIn exception", async () => {
-        mockLoginWithGoogle = mockLoginWithGoogle.mockRejectedValue(
+        mockLoginWithGoogle.mockRejectedValue(
           new Error('Error para loggearse en los tests, no GUI!!!')
         );
         render(<Login />);
