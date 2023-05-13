@@ -6,6 +6,7 @@ import { Login } from '@/views/Login';
 import { COLORS } from '@/constants';
 import { SigInException } from '@/errors/SignInException';
 import { ERRORS, ERRORS_MAP_TO_USER } from '@/constants/errors';
+import { UnexpectedException } from '@/errors/UnexpectedExeption';
 
 const loginStyles = StyleSheet.create({
   container: {
@@ -312,7 +313,9 @@ describe('Login', () => {
 
       test("should triger the toast notification when the login fails with an error that it's not a signIn exception", async () => {
         mockLoginWithGoogle.mockRejectedValue(
-          new Error('Error para loggearse en los tests, no GUI!!!')
+          new UnexpectedException(
+            'Error para loggearse en los tests, no GUI!!!'
+          )
         );
         render(<Login />);
         const button = screen.getByText('Iniciar sesión');
@@ -321,7 +324,9 @@ describe('Login', () => {
         expect(mockLoginWithGoogle).toBeCalled();
         expect(mockLoginWithGoogle).toBeCalledTimes(1);
         await expect(mockLoginWithGoogle()).rejects.toStrictEqual(
-          new Error('Error para loggearse en los tests, no GUI!!!')
+          new UnexpectedException(
+            'Error para loggearse en los tests, no GUI!!!'
+          )
         );
         expect(mockToastShow).toBeCalled();
         expect(mockToastShow).toBeCalledTimes(1);
