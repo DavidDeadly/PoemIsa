@@ -69,3 +69,4 @@ yarn-error.log
 !.env.project
 !.env.vault
 coverage
+index.android.bundle
