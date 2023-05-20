@@ -36,21 +36,21 @@ export const BottomTabs = () => {
         options={{
           tabBarIcon: props => <TabBarIcon {...props} TabIcon={HomeIcon} />
         }}
-        name="Home"
+        name="Inicio"
         component={Home}
       />
       <Tab.Screen
         options={{
           tabBarIcon: props => <TabBarIcon {...props} TabIcon={AddIcon} />
         }}
-        name="Capture"
+        name="Crear"
         component={Capture}
       />
       <Tab.Screen
         options={{
           tabBarIcon: props => <TabBarIcon {...props} TabIcon={ProfileIcon} />
         }}
-        name="Profile"
+        name="Perfil"
         component={Profile}
       />
     </Tab.Navigator>
