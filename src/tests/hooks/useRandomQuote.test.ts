@@ -67,12 +67,27 @@ describe('useRandomQuote', () => {
     expect(result.current.randomQuote).not.toEqual(currentQuote);
   });
 
-  test("should return the erro quote when the repository's getAll method fails", async () => {
+  test("should return the error quote when the repository's getAll method fails", async () => {
     mockGetAllPoetryQuotes.mockRejectedValue(
       new Error('Error getting all poetry quotes')
     );
     const { result } = renderHook(() => useRandomQuote());
     expect(result.current.randomQuote).toBeUndefined();
+
+    await waitFor(() => result.current.randomQuote);
+
+    expect(result.current.randomQuote).toBeDefined();
+    expect(result.current.randomQuote).toEqual(PoetryQuoteFSError.data.at(0));
+  });
+
+  test("should return the error quote when the repository's getAll method returns an empty array", async () => {
+    mockGetAllPoetryQuotes.mockResolvedValue({
+      count: 0,
+      data: []
+    });
+    const { result } = renderHook(() => useRandomQuote());
+    expect(result.current.randomQuote).toBeUndefined();
+
     await waitFor(() => result.current.randomQuote);
 
     expect(result.current.randomQuote).toBeDefined();

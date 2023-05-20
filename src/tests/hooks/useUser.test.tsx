@@ -83,7 +83,7 @@ describe('useUser', () => {
       wrapper: ContextProviderMock
     });
 
-    await result.current.signOut();
+    result.current.signOut();
 
     expect(sypSignOut).toHaveBeenCalled();
     expect(sypSignOut).toHaveBeenCalledTimes(1);
