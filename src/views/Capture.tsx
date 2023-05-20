@@ -83,10 +83,14 @@ Al parecer solo reconoce las palabras, entonces las entrega en un orden que care
 
   return (
     <ScrollView contentContainerStyle={styles.screen}>
-      <Text style={styles.title}>Text Recognition</Text>
+      <Text style={styles.title}>Reconocer texto</Text>
       <View>
-        <Button text="Take a picture" onPress={onTakePhoto} />
-        <Button text="Pick a picture" onPress={onSelectImagePress} />
+        <Button onPress={onTakePhoto}>
+          <Text>Toma una foto</Text>
+        </Button>
+        <Button onPress={onSelectImagePress}>
+          <Text>Selecciona una imagen</Text>
+        </Button>
       </View>
       {image && (
         <Image
@@ -96,13 +100,15 @@ Al parecer solo reconoce las palabras, entonces las entrega en un orden que care
         />
       )}
       {image && !imageText && (
-        <Text style={styles.loading}>loading image text...</Text>
+        <Text style={styles.loading}>Cargando texto de la imagen...</Text>
       )}
       {imageText && (
         <>
-          <Text style={styles.text_title}>Text result</Text>
+          <Text style={styles.text_title}>Resultado</Text>
           <Text style={styles.text}>{imageText}</Text>
-          <Button text="Ask chatGPT to fix your text" onPress={askChatGPT} />
+          <Button onPress={askChatGPT}>
+            <Text>Pedir a ChatGPT que corrija texto</Text>
+          </Button>
         </>
       )}
     </ScrollView>

@@ -1,33 +1,35 @@
+import { COLORS } from '@/constants';
+import { FC } from 'react';
 import {
-  GestureResponderEvent,
   StyleSheet,
-  Text,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle
 } from 'react-native';
 
-type ButtonProps = {
-  text: string;
-  onPress: (ev: GestureResponderEvent) => void;
-};
+type ButtonProps = { style?: ViewStyle } & TouchableOpacityProps;
 
-export const Button = ({ text, onPress }: ButtonProps) => (
-  <TouchableOpacity style={styles.button} onPress={onPress}>
-    <Text style={styles.buttonText}>{text}</Text>
-  </TouchableOpacity>
+export const Button: FC<ButtonProps> = ({ style, children, ...props }) => (
+  <View style={style} accessibilityLabel="button">
+    <TouchableOpacity style={styles.button} {...props}>
+      {children}
+    </TouchableOpacity>
+  </View>
 );
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#823BC4',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 8,
+    backgroundColor: COLORS.main.primary,
     color: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 15,
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     borderRadius: 50,
     marginTop: 20
-  },
-  buttonText: {
-    color: '#fff'
   }
 });

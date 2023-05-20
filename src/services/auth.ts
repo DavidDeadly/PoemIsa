@@ -2,11 +2,14 @@ import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import { IAuth } from '@/types/interfaces/IAuth';
-import { CONSTS } from '@/constants';
+import { APIS } from '@/constants';
+import { ERRORS } from '@/constants/errors';
+import { SigInException as SignInException } from '@/errors/SignInException';
+import { UnexpectedException } from '@/errors/UnexpectedExeption';
 
 class Auth implements IAuth {
   constructor() {
-    GoogleSignin.configure({ webClientId: CONSTS.WEB_CLIENT_ID });
+    GoogleSignin.configure({ webClientId: APIS.WEB_CLIENT_ID });
   }
 
   signOut() {
@@ -33,9 +36,15 @@ class Auth implements IAuth {
         console.log(googleCredential);
         return auth().signInWithCredential(googleCredential);
       })
-      .catch(error =>
-        console.log('error signing in with google', error.message)
-      );
+      .catch((error: Error) => {
+        const posibleErrors = Object.values(ERRORS.SING_IN);
+
+        if (!posibleErrors.includes(error.message)) {
+          throw new UnexpectedException(error.message);
+        }
+
+        throw new SignInException(error.message);
+      });
 
     return result;
   }

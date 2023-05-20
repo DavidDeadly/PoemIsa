@@ -1,8 +1,8 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import { StatusBar, Text, View } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { Button } from '../components/Button';
+
+import { Button } from '@/components/Button';
 
 export const Home = () => {
   const handleSignOut = () =>
@@ -13,9 +13,11 @@ export const Home = () => {
       .catch(error => console.log('error signing out:', error));
 
   return (
-    <View>
-      <Text style={{ color: '#222' }}>Home</Text>
-      <Button text="Sign out" onPress={handleSignOut} />
+    <View style={{ paddingTop: StatusBar.currentHeight }}>
+      <Text style={{ color: '#222' }}>Inicio</Text>
+      <Button onPress={handleSignOut}>
+        <Text>Cerrar sesión</Text>
+      </Button>
     </View>
   );
 };
