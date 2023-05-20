@@ -8,37 +8,26 @@ import { useRandomQuote } from '@/hooks/useRandomQuote';
 import { PoetryQuotesRepository } from '@/repositories/PoetryQuotesRepository';
 import { PoetryQuoteFSError } from '@/models/PoetryQuotes';
 
-const mockGetAllPoetryQuotes = jest
-  .fn<Promise<PoetryQuotesData>, void[], PoetryQuotesRepository>()
-  .mockResolvedValue({
-    count: 2,
-    data: [
-      {
-        id: '1',
-        author: 'author 1',
-        content: 'content 1'
-      },
-      {
-        id: '2',
-        author: 'author 2',
-        content: 'content 2'
-      }
-    ]
-  });
-
-jest.mock('@/repositories/PoetryQuotesRepository', () => {
-  return {
-    PoetryQuotesRepository: {
-      init: () => {
-        return {
-          getAll: mockGetAllPoetryQuotes
-        };
-      }
-    }
-  };
-});
-
 describe('useRandomQuote', () => {
+  const poetryQuotesRepository = PoetryQuotesRepository.init();
+  const getAllSpy: jest.SpyInstance = jest
+    .spyOn(poetryQuotesRepository, 'getAll')
+    .mockResolvedValue({
+      count: 2,
+      data: [
+        {
+          id: '1',
+          author: 'author 1',
+          content: 'content 1'
+        },
+        {
+          id: '2',
+          author: 'author 2',
+          content: 'content 2'
+        }
+      ]
+    });
+
   test('should be a function', () => {
     expect(useRandomQuote).toBeInstanceOf(Function);
   });
@@ -68,9 +57,10 @@ describe('useRandomQuote', () => {
   });
 
   test("should return the error quote when the repository's getAll method fails", async () => {
-    mockGetAllPoetryQuotes.mockRejectedValue(
+    getAllSpy.mockRejectedValueOnce(
       new Error('Error getting all poetry quotes')
     );
+
     const { result } = renderHook(() => useRandomQuote());
     expect(result.current.randomQuote).toBeUndefined();
 
@@ -81,10 +71,11 @@ describe('useRandomQuote', () => {
   });
 
   test("should return the error quote when the repository's getAll method returns an empty array", async () => {
-    mockGetAllPoetryQuotes.mockResolvedValue({
+    getAllSpy.mockResolvedValueOnce({
       count: 0,
       data: []
     });
+
     const { result } = renderHook(() => useRandomQuote());
     expect(result.current.randomQuote).toBeUndefined();
 
