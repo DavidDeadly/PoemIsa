@@ -1,12 +1,17 @@
 import { renderHook } from '@testing-library/react-native';
 import { FC, PropsWithChildren } from 'react';
 
-import { UserContext } from '@/context/UserContext';
+import { UserContext, UserContextType } from '@/context/UserContext';
 import { useUser } from '@/hooks/useUser';
-import { User } from '@/types/models/user';
 import auth from '@/services/auth';
 
-let mockUser: string | null = null;
+let mockUserContext: {
+  user: string | null;
+  loadingUser: boolean;
+} = {
+  user: 'UserDavid',
+  loadingUser: true
+};
 jest.mock('@/services/auth', () => {
   return {
     loginWithGoogle: jest.fn().mockResolvedValue('UserDavid'),
@@ -16,7 +21,7 @@ jest.mock('@/services/auth', () => {
 
 const ContextProviderMock: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <UserContext.Provider value={mockUser as User}>
+    <UserContext.Provider value={mockUserContext as UserContextType}>
       {children}
     </UserContext.Provider>
   );
@@ -24,7 +29,10 @@ const ContextProviderMock: FC<PropsWithChildren> = ({ children }) => {
 
 describe('useUser', () => {
   afterEach(() => {
-    mockUser = null;
+    mockUserContext = {
+      user: null,
+      loadingUser: true
+    };
   });
 
   test('should be a function', () => {
@@ -40,7 +48,7 @@ describe('useUser', () => {
   });
 
   test("should return a user value 'UserDavid'", () => {
-    mockUser = 'UserDavid';
+    mockUserContext.user = 'UserDavid';
     const { result } = renderHook(() => useUser(), {
       wrapper: ContextProviderMock
     });
