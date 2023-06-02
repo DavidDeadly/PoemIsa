@@ -1,9 +1,10 @@
 import { renderHook } from '@testing-library/react-native';
 import { FC, PropsWithChildren } from 'react';
 
-import { UserContext, UserContextType } from '@/context/UserContext';
-import { useUser } from '@/hooks/useUser';
-import auth from '@/services/auth';
+import { UserContext } from '@/components/context';
+import { useUser } from '@/hooks';
+import { Auth } from '@/services';
+import { UserContextType } from '@/types/components';
 
 let mockUserContext: {
   user: string | null;
@@ -73,7 +74,7 @@ describe('useUser', () => {
   });
 
   test('should call loginWithGoogle function', async () => {
-    const sypLogin = jest.spyOn(auth, 'loginWithGoogle');
+    const sypLogin = jest.spyOn(Auth, 'loginWithGoogle');
     const { result } = renderHook(() => useUser(), {
       wrapper: ContextProviderMock
     });
@@ -86,7 +87,7 @@ describe('useUser', () => {
   });
 
   test('should call signOut function', async () => {
-    const sypSignOut = jest.spyOn(auth, 'signOut');
+    const sypSignOut = jest.spyOn(Auth, 'signOut');
     const { result } = renderHook(() => useUser(), {
       wrapper: ContextProviderMock
     });

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
-import Auth from '@/services/auth';
-import { UserContext } from '@/context/UserContext';
+import { Auth } from '@/services';
+import { UserContext } from '@/components/context';
 
 export const useUser = () => {
   const { user, loadingUser } = useContext(UserContext);

@@ -8,10 +8,9 @@ import {
   of
 } from 'rxjs';
 
-import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
-import { getPoetryQuotes } from '@/services/PoetryQuotes';
-import { getRandomIndex } from '@/helpers/randomIndex';
-import { PoetryQuoteFSError } from '@/models/PoetryQuotes';
+import { getPoetryQuotes } from '@/services';
+import { getRandomIndex } from '@/helpers';
+import { PoetryQuoteFSError } from '@/models';
 
 export const useRandomQuote = () => {
   const getPoetryQuotes$ = useObservable(() => from(getPoetryQuotes()), []);

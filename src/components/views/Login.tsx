@@ -9,15 +9,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import Animated, { FlipInXDown } from 'react-native-reanimated';
 import { useToast } from 'react-native-toast-notifications';
 
-import { useUser } from '@/hooks/useUser';
-import { Button } from '@/components/Button';
+import { Button } from '@/components';
 import { COLORS } from '@/constants';
-import { Quote } from '@/components/Quote';
-import { FadeInView } from '@/components/FadeInView';
-import { Loading } from '@/components/Loading';
-import { useFlipQuoteEffects } from '@/hooks/useFlipQuoteEffects';
-import { SigInException } from '@/errors/SignInException';
-import { ERRORS, ERRORS_MAP_TO_USER } from '@/constants/errors';
+import { Quote } from '@/components';
+import { FadeInView } from '@/components';
+import { Loading } from '@/components';
+import { useUser } from '@/hooks';
+import { useFlipQuoteEffects } from '@/hooks';
+import { SignInException } from '@/errors';
+import { ERRORS, ERRORS_MAP_TO_USER } from '@/constants';
 
 const AppGradient = {
   start: { x: 1, y: 1 },
@@ -38,7 +38,7 @@ export const Login = () => {
       })
       .catch(error => {
         const userFriendlyMessage: string =
-          error instanceof SigInException
+          error instanceof SignInException
             ? ERRORS_MAP_TO_USER.get(error.message)!
             : ERRORS_MAP_TO_USER.get(ERRORS.UNEXPECTED)!;
 
@@ -49,7 +49,7 @@ export const Login = () => {
   return (
     <LinearGradient
       accessibilityLabel="login"
-      colors={Object.values(COLORS.main)}
+      colors={Object.values(COLORS.MAIN)}
       style={styles.container}
       start={AppGradient.start}
       end={AppGradient.end}>
@@ -59,7 +59,7 @@ export const Login = () => {
         style={styles.button}
         onPress={() => handleLogin()}
         disabled={Boolean(user)}>
-        <Google size="25" color={COLORS.main.secondary} />
+        <Google size="25" color={COLORS.MAIN.SECONDARY} />
         <Text style={styles.buttonText}>Iniciar sesión</Text>
       </Button>
 
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     fontFamily: 'MontserratAlternates-ExtraBoldItalic',
     flex: 1,
     fontWeight: '600',
-    color: COLORS.main.primary
+    color: COLORS.MAIN.PRIMARY
   },
   quoteContainer: {
     flex: 2,
@@ -126,10 +126,10 @@ const styles = StyleSheet.create({
     width: '80%',
     resizeMode: 'cover',
     borderRadius: 50,
-    borderColor: COLORS.main.primary,
+    borderColor: COLORS.MAIN.PRIMARY,
     borderWidth: 2,
     padding: 10,
-    backgroundColor: COLORS.main.secondary,
+    backgroundColor: COLORS.MAIN.SECONDARY,
     opacity: 0.5
   }
 });

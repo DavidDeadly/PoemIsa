@@ -12,12 +12,6 @@ const client = new vision.ImageAnnotatorClient({
   keyFilename: process.env.SERVICE_ACCOUNT_KEY_FILENAME,
 });
 
-export type HandWrittenTextResponse = {
-  data: {
-    text: string;
-  };
-};
-
 export const handWrittenTextRecognition = functions.https.onCall(
   async (bucketFilePath: string, _context) => {
     try {

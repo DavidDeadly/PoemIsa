@@ -1,11 +1,13 @@
-import { TabBarIconProps } from '../types/components/Icons';
+import { FC } from 'react';
 
-export const TabBarIcon = ({
+import { TabBarIconProps } from '@/types/components/Icons';
+
+export const TabBarIcon: FC<TabBarIconProps> = ({
   color,
   size,
   focused,
   TabIcon
-}: TabBarIconProps) => {
+}) => {
   return (
     <TabIcon
       style={{

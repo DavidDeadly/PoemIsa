@@ -1,7 +1,4 @@
-import {
-  PoetryQoutesCollection,
-  mapSnapshotToPoetryQuote
-} from '@/models/PoetryQuotes';
+import { PoetryQoutesCollection, mapSnapshotToPoetryQuote } from '@/models';
 
 export class PoetryQuotesRepository implements IPoetryQuotesRepository {
   static repository: PoetryQuotesRepository;

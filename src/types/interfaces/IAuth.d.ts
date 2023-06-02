@@ -1,4 +1,4 @@
-export interface IAuth {
+interface IAuth {
   signOut: () => void;
   loginWithGoogle: () => Promise<void | FirebaseAuthTypes.UserCredential>;
 }

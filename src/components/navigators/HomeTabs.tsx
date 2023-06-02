@@ -1,22 +1,24 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home } from '../views/Home';
-import { Capture } from '../views/Capture';
-import { Profile } from '../views/Profile';
 import {
   Home3 as HomeIcon,
   Add as AddIcon,
   Profile as ProfileIcon
 } from 'iconsax-react-native';
 import { TouchableOpacity } from 'react-native';
-import { TabBarIcon } from './TabBarIcon';
+
+import { CreatePoem } from '@/components/views';
+import { Home } from '@/components/views';
+import { Profile } from '@/components/views';
+import { TabBarIcon } from '@/components';
+import { SCREENS } from '@/constants';
 
 const Tab = createBottomTabNavigator();
 
-export const BottomTabs = () => {
+export const HomeTabs = () => {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName={SCREENS.MAIN.HOME}
       screenOptions={{
         tabBarInactiveTintColor: '#c8a9e5',
         tabBarActiveTintColor: '#823bc4',
@@ -36,21 +38,21 @@ export const BottomTabs = () => {
         options={{
           tabBarIcon: props => <TabBarIcon {...props} TabIcon={HomeIcon} />
         }}
-        name="Inicio"
+        name={SCREENS.MAIN.HOME}
         component={Home}
       />
       <Tab.Screen
         options={{
           tabBarIcon: props => <TabBarIcon {...props} TabIcon={AddIcon} />
         }}
-        name="Crear"
-        component={Capture}
+        name={SCREENS.MAIN.CREATE}
+        component={CreatePoem}
       />
       <Tab.Screen
         options={{
           tabBarIcon: props => <TabBarIcon {...props} TabIcon={ProfileIcon} />
         }}
-        name="Perfil"
+        name={SCREENS.MAIN.PROFILE}
         component={Profile}
       />
     </Tab.Navigator>

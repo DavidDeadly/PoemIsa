@@ -6,7 +6,9 @@ const config = {
   transform: {
     'test\\.[jt]sx?$': 'babel-jest'
   },
-  transformIgnorePatterns: ['node_modules/(?!@react-native|react-native)'],
+  transformIgnorePatterns: [
+    'node_modules/(?!@react-native|react-native|@react|react)'
+  ],
   setupFilesAfterEnv: ['<rootDir>/src/tests/setupFilesAfterEnv.ts'],
   testEnvironment: 'node',
   testMatch: ['**/tests/**/*.test.ts?(x)'],

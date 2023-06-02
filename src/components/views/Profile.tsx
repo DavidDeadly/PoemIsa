@@ -8,7 +8,7 @@ import {
   View
 } from 'react-native';
 
-import { useUser } from '@/hooks/useUser';
+import { useUser } from '@/hooks';
 import { COLORS } from '@/constants';
 import { posts } from '@/mocks/Posts';
 import LinearGradient from 'react-native-linear-gradient';
@@ -22,13 +22,13 @@ export const Profile = () => {
   const { user } = useUser();
 
   if (!user) {
-    return <h1 style={styles.text}>No has iniciado sesión!!</h1>;
+    return <h1>No has iniciado sesión!!</h1>;
   }
 
   return (
     <LinearGradient
       accessibilityLabel="login"
-      colors={Object.values(COLORS.main)}
+      colors={Object.values(COLORS.MAIN)}
       style={styles.container}
       start={AppGradient.start}
       end={AppGradient.end}>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     marginTop: 20,
-    borderColor: COLORS.main.secondary
+    borderColor: COLORS.MAIN.SECONDARY
   },
   identity: {},
   list: {

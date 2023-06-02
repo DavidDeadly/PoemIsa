@@ -1,11 +1,10 @@
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-import { IAuth } from '@/types/interfaces/IAuth';
 import { APIS } from '@/constants';
-import { ERRORS } from '@/constants/errors';
-import { SigInException as SignInException } from '@/errors/SignInException';
-import { UnexpectedException } from '@/errors/UnexpectedExeption';
+import { ERRORS } from '@/constants';
+import { SignInException } from '@/errors';
+import { UnexpectedException } from '@/errors';
 
 class Auth implements IAuth {
   constructor() {

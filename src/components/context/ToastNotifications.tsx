@@ -5,7 +5,7 @@ import { ToastProvider } from 'react-native-toast-notifications';
 import { StyleSheet } from 'react-native';
 
 export const ToastNotifications: FC<PropsWithChildren> = ({ children }) => {
-  const iconsColor = COLORS.toasts.colorIcons;
+  const iconsColor = COLORS.TOASTS.COLOR_ICONS;
   const iconsSize = 20;
 
   return (

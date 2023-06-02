@@ -7,12 +7,9 @@ import {
 } from 'react';
 
 import { User } from '@/types/models/user';
-import Auth from '@/services/auth';
+import { Auth } from '@/services';
+import { UserContextType } from '@/types/components';
 
-export type UserContextType = {
-  user: User;
-  loadingUser: boolean;
-};
 export const UserContext = createContext<UserContextType>({
   user: null,
   loadingUser: true

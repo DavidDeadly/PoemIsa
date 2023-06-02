@@ -3,9 +3,9 @@ import functions from '@react-native-firebase/functions';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
 
-import { UserProvider } from '@/context/UserContext';
-import { AppWrapper } from '@/components/AppWrapper';
-import { ToastNotifications } from '@/context/ToastNotifications';
+import { UserProvider } from '@/components/context';
+import { ToastNotifications } from '@/components/context';
+import { AppWrapper } from '@/components';
 
 if (__DEV__) {
   functions().useEmulator('192.168.1.10', 5001);

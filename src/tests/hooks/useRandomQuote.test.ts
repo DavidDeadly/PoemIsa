@@ -4,9 +4,9 @@ import {
   waitFor
 } from '@testing-library/react-native';
 
-import { useRandomQuote } from '@/hooks/useRandomQuote';
-import { PoetryQuotesRepository } from '@/repositories/PoetryQuotesRepository';
-import { PoetryQuoteFSError } from '@/models/PoetryQuotes';
+import { useRandomQuote } from '@/hooks';
+import { PoetryQuotesRepository } from '@/repositories';
+import { PoetryQuoteFSError } from '@/models';
 
 describe('useRandomQuote', () => {
   const poetryQuotesRepository = PoetryQuotesRepository.init();

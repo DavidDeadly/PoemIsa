@@ -2,7 +2,7 @@ import { StatusBar, Text, View } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-import { Button } from '@/components/Button';
+import { Button } from '@/components';
 
 export const Home = () => {
   const handleSignOut = () =>
