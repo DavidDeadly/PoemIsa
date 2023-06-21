@@ -11,12 +11,16 @@ export const CreatePoem = () => {
     useNavigation<StackNavigationProp<PoemIsaStackParamList>>();
 
   const goToWrite = () => navigation.navigate(SCREENS.APP.WRITE);
+  const goToCapture = () => navigation.navigate(SCREENS.APP.CAPTURE);
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Create</Text>
       <Button onPress={goToWrite}>
         <Text style={styles.text}>Go to Write</Text>
+      </Button>
+      <Button onPress={goToCapture}>
+        <Text style={styles.text}>Go to Capture</Text>
       </Button>
     </View>
   );
