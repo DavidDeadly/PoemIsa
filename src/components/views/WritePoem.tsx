@@ -1,112 +1,162 @@
+import { useCallback, useRef, useState } from 'react';
+import {
+  GestureResponderEvent,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  View
+} from 'react-native';
+import {
+  RichEditor,
+  RichToolbar,
+  actions
+} from 'react-native-pell-rich-editor';
+import LinearGradient from 'react-native-linear-gradient';
+
 import { COLORS } from '@/constants';
-import { useRef } from 'react';
-import { StatusBar, StyleSheet, View } from 'react-native';
-import QuillEditor, { QuillToolbar } from 'react-native-cn-quill';
 
-const contextToolbarOptions = [
-  [{ indent: '-1' }, { indent: '+1' }],
-  ['bold', 'italic', 'underline', 'strike'],
-  [{ script: 'sub' }, { script: 'super' }],
-  ['clean']
-];
-
-const bottomToolbarOptions = [
-  [{ align: [false, 'center', 'right'] }],
-
-  [{ color: [] }, { background: [] }],
-
-  [{ font: [] }],
-  [{ size: ['small', false, 'large'] }]
-];
-
-const customStyles = {
-  toolbar: {
-    provider: (provided: object) => ({
-      ...provided,
-      borderColor: COLORS.MAIN.PRIMARY,
-      backgroundColor: COLORS.MAIN.SECONDARY
-    }),
-    root: (provided: object) => ({
-      ...provided,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }),
-    toolset: {
-      root: (provided: object) => ({
-        ...provided,
-        justifyContent: 'center',
-        alignItems: 'center'
-      })
-    }
-  },
-  separator: (provided: object) => {
-    console.log('separator: ', provided);
-    return {
-      ...provided,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'red',
-      color: 'green'
-    };
-  },
-  selection: {
-    close: {
-      view: (provided: object) => ({
-        ...provided,
-        backgroundColor: COLORS.MAIN.PRIMARY
-      })
-    }
-  }
+const AppGradient = {
+  start: { x: 0, y: 2 },
+  end: { x: 2, y: 0 }
 };
 
 export const WritePoem = () => {
-  const editorRef = useRef<QuillEditor | null>(null);
+  const editorRef = useRef<RichEditor | null>(null);
+  const scrollRef = useRef<ScrollView>(null);
+  const [touchCordenates, setTouchCordenates] = useState<{
+    x: number;
+    y: number;
+  }>();
+
+  const handleCursorPosition = useCallback((scrollY: number) => {
+    scrollRef.current!.scrollTo({ y: scrollY - 30, animated: true });
+  }, []);
+
+  const selectRed = () => {
+    const editor = editorRef?.current;
+
+    if (editor) {
+      editor.setForeColor('red');
+    }
+  };
+
+  const focusEditor = () => editorRef.current!.focusContentEditor();
+
+  const shouldFocusEditor = (event: GestureResponderEvent) => {
+    if (!touchCordenates) return;
+
+    const { x, y } = touchCordenates;
+    const {
+      nativeEvent: { pageX, pageY }
+    } = event;
+
+    const isNotDragTouch = x === pageX && y === pageY;
+
+    if (isNotDragTouch) {
+      focusEditor();
+    }
+  };
 
   return (
-    <>
-      <View style={styles.container}>
-        <QuillEditor
-          ref={editorRef}
-          style={styles.editor}
-          quill={{
-            placeholder: 'Write something beautiful...',
-            theme: 'snow',
-            modules: {
-              toolbar: contextToolbarOptions
-            }
-          }}
-        />
-        <QuillToolbar
+    <LinearGradient
+      accessibilityLabel="login"
+      colors={Object.values(COLORS.MAIN)}
+      style={styles.parentView}
+      start={AppGradient.start}
+      end={AppGradient.end}>
+      <View>
+        <RichToolbar
           editor={editorRef}
-          options={bottomToolbarOptions}
-          theme="light"
-          styles={customStyles}
+          style={styles.toolbarTop}
+          actions={[
+            actions.indent,
+            actions.outdent,
+            actions.alignLeft,
+            actions.alignCenter,
+            actions.alignRight
+          ]}
         />
       </View>
-    </>
+      <ScrollView
+        ref={scrollRef}
+        style={styles.scrollView}
+        nestedScrollEnabled
+        scrollEventThrottle={20}
+        onTouchStart={ev => {
+          setTouchCordenates({
+            x: ev.nativeEvent.pageX,
+            y: ev.nativeEvent.pageY
+          });
+        }}
+        onTouchEnd={shouldFocusEditor}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <RichEditor
+            focusable
+            ref={editorRef}
+            placeholder="Write something beautiful..."
+            androidLayerType="hardware"
+            onCursorPosition={handleCursorPosition}
+          />
+        </KeyboardAvoidingView>
+      </ScrollView>
+
+      <View>
+        <RichToolbar
+          editor={editorRef}
+          style={styles.toolbar}
+          actions={[
+            actions.setBold,
+            actions.setItalic,
+            actions.setUnderline,
+            actions.setStrikethrough,
+            actions.setSuperscript,
+            actions.setSubscript,
+            actions.keyboard,
+            actions.removeFormat
+          ]}
+        />
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  parentView: {
     flex: 1,
     paddingTop: StatusBar.currentHeight || 0
   },
-  text: {
-    color: '#222'
-  },
-  title: {
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    paddingVertical: 10
-  },
-  editor: {
-    flex: 1,
-    padding: 0,
-    borderColor: 'red',
+  scrollView: {
+    backgroundColor: 'white',
+    marginHorizontal: 20,
+    marginBottom: 10,
+    marginTop: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
     borderWidth: 1,
-    margin: 'auto',
-    backgroundColor: 'white'
+    borderStyle: 'dotted',
+    borderColor: 'gray',
+    borderRadius: 5,
+    elevation: 10,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0
+  },
+  toolbarTop: {
+    backgroundColor: 'white',
+    marginHorizontal: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderStyle: 'dotted',
+    borderColor: 'gray',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0
+  },
+  toolbar: {
+    display: 'flex',
+    alignContent: 'center',
+    backgroundColor: COLORS.MAIN.SECONDARY
   }
 });
