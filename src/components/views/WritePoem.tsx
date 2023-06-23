@@ -1,11 +1,12 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  GestureResponderEvent,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
+  TextInput,
   View
 } from 'react-native';
 import {
@@ -22,16 +23,24 @@ const AppGradient = {
   end: { x: 2, y: 0 }
 };
 
+const editorStyles = {
+  contentCSSText: 'font-size: 20px;',
+  placeholderColor: 'lightgray'
+};
+
 export const WritePoem = () => {
   const editorRef = useRef<RichEditor | null>(null);
   const scrollRef = useRef<ScrollView>(null);
-  const [touchCordenates, setTouchCordenates] = useState<{
-    x: number;
-    y: number;
-  }>();
+  const [title, settitle] = useState('');
 
-  const handleCursorPosition = useCallback((scrollY: number) => {
-    scrollRef.current!.scrollTo({ y: scrollY - 30, animated: true });
+  const handleTitleChange = (newtitle: string) => {
+    console.log(title);
+    settitle(newtitle);
+  };
+
+  const handleCursorPosition = useCallback((scrollOffsetY: number) => {
+    console.log(scrollOffsetY);
+    scrollRef.current!.scrollTo({ y: scrollOffsetY - 220, animated: true });
   }, []);
 
   const selectRed = () => {
@@ -42,22 +51,21 @@ export const WritePoem = () => {
     }
   };
 
-  const focusEditor = () => editorRef.current!.focusContentEditor();
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        console.log('hided');
+        if (editorRef.current) {
+          editorRef.current.blurContentEditor();
+        }
+      }
+    );
 
-  const shouldFocusEditor = (event: GestureResponderEvent) => {
-    if (!touchCordenates) return;
-
-    const { x, y } = touchCordenates;
-    const {
-      nativeEvent: { pageX, pageY }
-    } = event;
-
-    const isNotDragTouch = x === pageX && y === pageY;
-
-    if (isNotDragTouch) {
-      focusEditor();
-    }
-  };
+    return () => {
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   return (
     <LinearGradient
@@ -70,6 +78,7 @@ export const WritePoem = () => {
         <RichToolbar
           editor={editorRef}
           style={styles.toolbarTop}
+          iconSize={25}
           actions={[
             actions.indent,
             actions.outdent,
@@ -79,31 +88,35 @@ export const WritePoem = () => {
           ]}
         />
       </View>
+      <View style={{ ...styles.editorView, ...styles.titleEditorView }}>
+        <TextInput
+          autoCorrect={false}
+          style={styles.titleEditor}
+          value={title}
+          onChangeText={handleTitleChange}
+          multiline={false}
+          cursorColor="black"
+          placeholder="Title..."
+          placeholderTextColor="lightgray"
+        />
+      </View>
       <ScrollView
         ref={scrollRef}
-        style={styles.scrollView}
-        nestedScrollEnabled
-        scrollEventThrottle={20}
-        onTouchStart={ev => {
-          setTouchCordenates({
-            x: ev.nativeEvent.pageX,
-            y: ev.nativeEvent.pageY
-          });
-        }}
-        onTouchEnd={shouldFocusEditor}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <RichEditor
-            focusable
-            ref={editorRef}
-            placeholder="Write something beautiful..."
-            androidLayerType="hardware"
-            onCursorPosition={handleCursorPosition}
-          />
-        </KeyboardAvoidingView>
+        style={{ ...styles.editorView, ...styles.contentEditorView }}
+        scrollEventThrottle={20}>
+        <RichEditor
+          ref={editorRef}
+          showsVerticalScrollIndicator={false}
+          initialHeight={600}
+          placeholder="Write something beautiful..."
+          androidLayerType="hardware"
+          onCursorPosition={handleCursorPosition}
+          editorStyle={editorStyles}
+        />
       </ScrollView>
 
-      <View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <RichToolbar
           editor={editorRef}
           style={styles.toolbar}
@@ -114,11 +127,10 @@ export const WritePoem = () => {
             actions.setStrikethrough,
             actions.setSuperscript,
             actions.setSubscript,
-            actions.keyboard,
             actions.removeFormat
           ]}
         />
-      </View>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 };
@@ -128,29 +140,36 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: StatusBar.currentHeight || 0
   },
-  scrollView: {
-    backgroundColor: 'white',
-    marginHorizontal: 20,
+  contentEditorView: {
     marginBottom: 10,
-    marginTop: 2,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderStyle: 'dotted',
-    borderColor: 'gray',
-    borderRadius: 5,
-    elevation: 10,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0
   },
+  titleEditorView: {
+    marginTop: 2,
+    borderRadius: 0,
+    paddingTop: 10
+  },
+  titleEditor: {
+    fontSize: 20,
+    paddingHorizontal: 10,
+    color: 'black',
+    fontWeight: '600'
+  },
+  editorView: {
+    backgroundColor: 'white',
+    marginHorizontal: 20,
+    paddingHorizontal: 10,
+    borderRadius: 5
+  },
   toolbarTop: {
+    marginTop: 10,
     backgroundColor: 'white',
     marginHorizontal: 20,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    borderWidth: 1,
-    borderStyle: 'dotted',
-    borderColor: 'gray',
+    borderRadius: 5,
+    elevation: 10,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0
   },
