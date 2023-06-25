@@ -15,10 +15,15 @@ export const PoemIsaStack = () => {
       screenOptions={{
         headerStyle: {
           backgroundColor: COLORS.MAIN.SECONDARY
-        },
-        headerShown: false
+        }
       }}>
-      <Stack.Screen name={SCREENS.APP.APP} component={HomeTabs} />
+      <Stack.Screen
+        name={SCREENS.APP.APP}
+        component={HomeTabs}
+        options={{
+          headerShown: false
+        }}
+      />
       <Stack.Screen name={SCREENS.APP.WRITE} component={WritePoem} />
       <Stack.Screen name={SCREENS.APP.CAPTURE} component={CapturePoem} />
     </Stack.Navigator>

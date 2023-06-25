@@ -40,7 +40,7 @@ export const WritePoem = () => {
 
   const handleCursorPosition = useCallback((scrollOffsetY: number) => {
     console.log(scrollOffsetY);
-    scrollRef.current!.scrollTo({ y: scrollOffsetY - 220, animated: true });
+    scrollRef.current!.scrollTo({ y: scrollOffsetY - 130, animated: true });
   }, []);
 
   const selectRed = () => {
@@ -74,21 +74,7 @@ export const WritePoem = () => {
       style={styles.parentView}
       start={AppGradient.start}
       end={AppGradient.end}>
-      <View>
-        <RichToolbar
-          editor={editorRef}
-          style={styles.toolbarTop}
-          iconSize={25}
-          actions={[
-            actions.indent,
-            actions.outdent,
-            actions.alignLeft,
-            actions.alignCenter,
-            actions.alignRight
-          ]}
-        />
-      </View>
-      <View style={{ ...styles.editorView, ...styles.titleEditorView }}>
+      {/* <View style={{ ...styles.editorView, ...styles.titleEditorView }}>
         <TextInput
           autoCorrect={false}
           style={styles.titleEditor}
@@ -99,7 +85,7 @@ export const WritePoem = () => {
           placeholder="Title..."
           placeholderTextColor="lightgray"
         />
-      </View>
+      </View> */}
       <ScrollView
         ref={scrollRef}
         style={{ ...styles.editorView, ...styles.contentEditorView }}
@@ -121,12 +107,13 @@ export const WritePoem = () => {
           editor={editorRef}
           style={styles.toolbar}
           actions={[
+            actions.alignLeft,
+            actions.alignCenter,
+            actions.alignRight,
             actions.setBold,
             actions.setItalic,
             actions.setUnderline,
             actions.setStrikethrough,
-            actions.setSuperscript,
-            actions.setSubscript,
             actions.removeFormat
           ]}
         />
@@ -137,11 +124,10 @@ export const WritePoem = () => {
 
 const styles = StyleSheet.create({
   parentView: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight || 0
+    flex: 1
   },
   contentEditorView: {
-    marginBottom: 10,
+    marginVertical: 30,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0
   },
@@ -161,17 +147,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     paddingHorizontal: 10,
     borderRadius: 5
-  },
-  toolbarTop: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    marginHorizontal: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 5,
-    elevation: 10,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0
   },
   toolbar: {
     display: 'flex',
