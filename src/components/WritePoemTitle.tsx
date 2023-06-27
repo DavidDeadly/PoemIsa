@@ -33,8 +33,7 @@ type WritePoemTitleProps = {
   tintColor?: string;
 };
 
-export const WritePoemTitle: FC<WritePoemTitleProps> = props => {
-  console.log(props);
+export const WritePoemTitle: FC<WritePoemTitleProps> = _props => {
   const [changeName, setChangeName] = useState(false);
   const [title, setTitle] = useState('');
   const toastRef = useRef<Toast>(null);
