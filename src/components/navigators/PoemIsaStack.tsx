@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { PoemIsaStackParamList } from '@/types/components';
 import { HomeTabs } from '@/components/navigators';
+import { WritePoemTitle } from '@/components/WritePoemTitle';
 import { CapturePoem } from '@/components/views';
 import { WritePoem } from '@/components/views';
 import { COLORS, SCREENS } from '@/constants';
@@ -24,7 +25,13 @@ export const PoemIsaStack = () => {
           headerShown: false
         }}
       />
-      <Stack.Screen name={SCREENS.APP.WRITE} component={WritePoem} />
+      <Stack.Screen
+        name={SCREENS.APP.WRITE}
+        component={WritePoem}
+        options={{
+          headerTitle: WritePoemTitle
+        }}
+      />
       <Stack.Screen name={SCREENS.APP.CAPTURE} component={CapturePoem} />
     </Stack.Navigator>
   );

@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { COLORS } from '@/constants';
 import QuillEditor, { QuillToolbar } from 'react-native-cn-quill';
+import { timer } from 'rxjs';
 
 const AppGradient = {
   start: { x: 0, y: 2 },
@@ -26,12 +27,15 @@ const selectionToolbarOptions = [
   ['clean']
 ];
 
-const customFormatHandler = {
-  async clean(editor: QuillEditor) {
-    const { index, length } = await editor.getSelection();
-    editor.removeFormat(index, length);
-  }
-};
+const customFormatHandler = new Map([
+  [
+    'clean',
+    async (editor: QuillEditor) => {
+      const { index, length } = await editor.getSelection();
+      editor.removeFormat(index, length);
+    }
+  ]
+]);
 
 const toolbarsStyles = {
   toolbar: {
@@ -44,9 +48,6 @@ const toolbarsStyles = {
   }
 };
 
-type CustomFormatHandler = typeof customFormatHandler;
-type PosibleCustomFormats = keyof CustomFormatHandler;
-
 export const WritePoem = () => {
   const editorRef = useRef<QuillEditor | null>(null);
   const toolbarRef = useRef<QuillToolbar | null>(null);
@@ -56,12 +57,12 @@ export const WritePoem = () => {
     ? selectionToolbarOptions
     : defaultToolbarOptions;
 
-  const customHandler = (name: PosibleCustomFormats, value: any) => {
+  const customHandler = (name: string, value: any) => {
     const editor = editorRef.current;
 
     if (!editor) return;
 
-    const formatHandler = customFormatHandler[name];
+    const formatHandler = customFormatHandler.get(name);
 
     if (!formatHandler) {
       console.log(`${name} clicked with value: ${value}`);
@@ -80,8 +81,13 @@ export const WritePoem = () => {
     setIsTextSelected(true);
   };
 
-  const handleTextChange = () =>
-    setIsTextSelected(prevValue => prevValue && false);
+  useEffect(() => {
+    const focusEditorSub = timer(500).subscribe(() =>
+      editorRef.current?.focus()
+    );
+
+    return () => focusEditorSub.unsubscribe();
+  }, []);
 
   return (
     <LinearGradient
@@ -93,7 +99,6 @@ export const WritePoem = () => {
       <QuillEditor
         ref={editorRef}
         style={[styles.editor, styles.input]}
-        onTextChange={handleTextChange}
         onSelectionChange={({ range }) => range && handleSelection(range)}
         container
         quill={{
@@ -111,12 +116,11 @@ export const WritePoem = () => {
         theme={{
           background: COLORS.MAIN.SECONDARY,
           color: COLORS.MAIN.PRIMARY,
-          overlay: `${COLORS.MAIN.TERTIARY}50`,
+          overlay: `${COLORS.MAIN.PRIMARY}30`,
           size: 35
         }}
         custom={{
-          handler: name =>
-            customFormatHandler.hasOwnProperty(name) && customHandler,
+          handler: customHandler,
           actions: ['clean']
         }}
         styles={toolbarsStyles}
