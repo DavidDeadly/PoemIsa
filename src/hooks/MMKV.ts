@@ -12,3 +12,14 @@ export const useCurrentWrittingPoemTitle = () => {
     handleTitleChange
   };
 };
+
+export const useCurrentWrittingPoemContent = () => {
+  const [content, setContent] = useMMKVStorage('PoemContent', storage, []);
+
+  const handleContentChange = (newContent: any) => setContent(newContent);
+
+  return {
+    content,
+    handleContentChange
+  };
+};

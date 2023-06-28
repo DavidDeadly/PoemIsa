@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
-import { COLORS } from '@/constants';
 import QuillEditor, { QuillToolbar } from 'react-native-cn-quill';
 import { timer } from 'rxjs';
+import debounce from 'just-debounce-it';
+
+import { COLORS } from '@/constants';
+import { useCurrentWrittingPoemContent } from '@/hooks/MMKV';
 
 const AppGradient = {
   start: { x: 0, y: 2 },
@@ -52,6 +54,7 @@ export const WritePoem = () => {
   const editorRef = useRef<QuillEditor | null>(null);
   const toolbarRef = useRef<QuillToolbar | null>(null);
   const [isTextSelected, setIsTextSelected] = useState(false);
+  const { content, handleContentChange } = useCurrentWrittingPoemContent();
 
   const toolbarOptions = isTextSelected
     ? selectionToolbarOptions
@@ -81,12 +84,45 @@ export const WritePoem = () => {
     setIsTextSelected(true);
   };
 
-  useEffect(() => {
-    const focusEditorSub = timer(500).subscribe(() =>
-      editorRef.current?.focus()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onContentChange = useCallback(
+    debounce(async (editor: QuillEditor) => {
+      const newContent = await editor.getContents();
+
+      handleContentChange(newContent.ops);
+    }, 500),
+    [editorRef]
+  );
+
+  const handlePoemSave = async (editor: QuillEditor) => {
+    const startGettingPoemData = performance.now();
+
+    console.log(Boolean(editor));
+    const [text, content, html] = await Promise.all([
+      editor.getText(),
+      editor.getContents(),
+      editor.getHtml()
+    ]);
+
+    const endGettingPoemData = performance.now();
+
+    console.log(
+      `Getting poem data took ${
+        endGettingPoemData - startGettingPoemData
+      } milliseconds.`
     );
 
-    return () => focusEditorSub.unsubscribe();
+    console.log({ text, content: content.ops, html });
+    console.log('Saving poem');
+  };
+
+  useLayoutEffect(() => {
+    const setContentSub = timer(100).subscribe(() =>
+      editorRef.current.setContents(content)
+    );
+
+    return () => setContentSub.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -97,6 +133,10 @@ export const WritePoem = () => {
       start={AppGradient.start}
       end={AppGradient.end}>
       <QuillEditor
+        webview={{
+          androidLayerType: 'hardware'
+        }}
+        onTextChange={() => onContentChange(editorRef.current)}
         ref={editorRef}
         style={[styles.editor, styles.input]}
         onSelectionChange={({ range }) => range && handleSelection(range)}
