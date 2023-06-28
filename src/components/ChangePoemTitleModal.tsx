@@ -81,12 +81,8 @@ export const ChangePoemTitleModal: FC<ChangePoemTitleModalProps> = ({
             multiline
             maxLength={MAX_TITLE_LENGHT}
           />
-          <Button
-            style={styles.saveButton}
-            onPress={() => {
-              console.log('Saving!!');
-            }}>
-            <Text>Save title</Text>
+          <Button style={styles.saveButton} onPress={closeModal}>
+            <Text>Perfecto!</Text>
           </Button>
         </View>
       </TouchableOpacity>
