@@ -2,24 +2,22 @@ import { MMKVLoader, useMMKVStorage } from 'react-native-mmkv-storage';
 
 const storage = new MMKVLoader().initialize();
 
-export const useCurrentWrittingPoemTitle = () => {
+export const useCurrentWrittingPoem = () => {
   const [title, setTitle] = useMMKVStorage('PoemTitle', storage, '');
+  const [content, setContent] = useMMKVStorage('PoemContent', storage, []);
 
   const handleTitleChange = (newTitle: string) => setTitle(newTitle);
+  const handleContentChange = (newContent: any) => setContent(newContent);
+  const resetPoem = () => {
+    setTitle('');
+    setContent([]);
+  };
 
   return {
     title,
-    handleTitleChange
-  };
-};
-
-export const useCurrentWrittingPoemContent = () => {
-  const [content, setContent] = useMMKVStorage('PoemContent', storage, []);
-
-  const handleContentChange = (newContent: any) => setContent(newContent);
-
-  return {
     content,
-    handleContentChange
+    handleTitleChange,
+    handleContentChange,
+    resetPoem
   };
 };

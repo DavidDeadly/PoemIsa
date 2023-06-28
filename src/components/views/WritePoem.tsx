@@ -1,12 +1,14 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import QuillEditor, { QuillToolbar } from 'react-native-cn-quill';
-import { timer } from 'rxjs';
 import debounce from 'just-debounce-it';
 
 import { COLORS } from '@/constants';
-import { useCurrentWrittingPoemContent } from '@/hooks/MMKV';
+import { useCurrentWrittingPoem } from '@/hooks/MMKV';
+import { NavigationProp } from '@react-navigation/native';
+import { PoemIsaStackParamList } from '@/types/components';
+import { WritePoemHeaderTitle } from '@/components/WritePoemHeaderTitle';
 
 const AppGradient = {
   start: { x: 0, y: 2 },
@@ -50,11 +52,46 @@ const toolbarsStyles = {
   }
 };
 
-export const WritePoem = () => {
+const SavePoemButton = ({ savePoem }) => (
+  <TouchableOpacity
+    onPress={savePoem}
+    style={{
+      padding: 8,
+      borderRadius: 10,
+      backgroundColor: `${COLORS.MAIN.PRIMARY}50`
+    }}>
+    <Text
+      style={{
+        color: COLORS.MAIN.PRIMARY,
+        fontWeight: '900',
+        fontSize: 18
+      }}>
+      Continuar
+    </Text>
+  </TouchableOpacity>
+);
+
+type WritePoemProps = {
+  navigation: NavigationProp<PoemIsaStackParamList>;
+};
+
+export const WritePoem: FC<WritePoemProps> = ({ navigation }) => {
   const editorRef = useRef<QuillEditor | null>(null);
   const toolbarRef = useRef<QuillToolbar | null>(null);
   const [isTextSelected, setIsTextSelected] = useState(false);
-  const { content, handleContentChange } = useCurrentWrittingPoemContent();
+  const { content, title, handleContentChange, handleTitleChange } =
+    useCurrentWrittingPoem();
+
+  useEffect(() => {
+    navigation.setOptions({
+      // eslint-disable-next-line react/no-unstable-nested-components
+      headerTitle: () => (
+        <WritePoemHeaderTitle title={title} changeTitle={handleTitleChange} />
+      ),
+      // eslint-disable-next-line react/no-unstable-nested-components
+      headerRight: () => <SavePoemButton savePoem={handlePoemSave} />
+    });
+  }, [handleTitleChange, navigation, title]);
 
   const toolbarOptions = isTextSelected
     ? selectionToolbarOptions
@@ -91,17 +128,18 @@ export const WritePoem = () => {
 
       handleContentChange(newContent.ops);
     }, 500),
-    [editorRef]
+    []
   );
 
-  const handlePoemSave = async (editor: QuillEditor) => {
+  const handlePoemSave = async () => {
+    if (!editorRef.current) return;
+
     const startGettingPoemData = performance.now();
 
-    console.log(Boolean(editor));
-    const [text, content, html] = await Promise.all([
-      editor.getText(),
-      editor.getContents(),
-      editor.getHtml()
+    const [text, contentToSave, html] = await Promise.all([
+      editorRef.current.getText(),
+      editorRef.current.getContents(),
+      editorRef.current.getHtml()
     ]);
 
     const endGettingPoemData = performance.now();
@@ -112,18 +150,9 @@ export const WritePoem = () => {
       } milliseconds.`
     );
 
-    console.log({ text, content: content.ops, html });
+    console.log({ text, content: contentToSave.ops, html });
     console.log('Saving poem');
   };
-
-  useLayoutEffect(() => {
-    const setContentSub = timer(100).subscribe(() =>
-      editorRef.current.setContents(content)
-    );
-
-    return () => setContentSub.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <LinearGradient
@@ -134,7 +163,8 @@ export const WritePoem = () => {
       end={AppGradient.end}>
       <QuillEditor
         webview={{
-          androidLayerType: 'hardware'
+          androidLayerType: 'hardware',
+          onLoad: () => editorRef.current.setContents(content)
         }}
         onTextChange={() => onContentChange(editorRef.current)}
         ref={editorRef}

@@ -3,16 +3,17 @@ import { Pressable } from 'react-native';
 
 import { TitleHeader } from '@/components/TitleHeader';
 import { ChangePoemTitleModal } from '@/components/ChangePoemTitleModal';
-import { useCurrentWrittingPoemTitle } from '@/hooks/MMKV';
 
 type WritePoemTitleProps = {
-  children: string;
-  tintColor?: string;
+  title: string;
+  changeTitle: (newTitle: string) => void;
 };
 
-export const WritePoemHeaderTitle: FC<WritePoemTitleProps> = _props => {
+export const WritePoemHeaderTitle: FC<WritePoemTitleProps> = ({
+  title,
+  changeTitle
+}) => {
   const [changeName, setChangeName] = useState(false);
-  const { title, handleTitleChange } = useCurrentWrittingPoemTitle();
 
   const closeModal = () => setChangeName(false);
   const openModal = () => setChangeName(true);
@@ -21,7 +22,7 @@ export const WritePoemHeaderTitle: FC<WritePoemTitleProps> = _props => {
     <>
       <ChangePoemTitleModal
         visible={changeName}
-        changeTitle={handleTitleChange}
+        changeTitle={changeTitle}
         title={title}
         closeModal={closeModal}
       />
