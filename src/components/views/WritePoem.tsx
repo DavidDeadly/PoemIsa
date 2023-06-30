@@ -31,12 +31,33 @@ const selectionToolbarOptions = [
   ['clean']
 ];
 
-const customFormatHandler = new Map([
+const customFormatHandler = new Map<
+  string,
+  (editor: QuillEditor, value?: any) => void
+>([
   [
     'clean',
     async (editor: QuillEditor) => {
       const { index, length } = await editor.getSelection();
       editor.removeFormat(index, length);
+    }
+  ],
+  [
+    'align',
+    async (editor: QuillEditor, value: string) => {
+      const { length } = await editor.getSelection();
+
+      const nothingIsSelected = length === 0;
+      if (nothingIsSelected) {
+        const textLength = await editor.getLength();
+        await editor.formatText(0, textLength, {
+          align: value
+        });
+
+        return;
+      }
+
+      editor.format('align', value);
     }
   ]
 ]);
@@ -109,7 +130,7 @@ export const WritePoem: FC<WritePoemProps> = ({ navigation }) => {
       return;
     }
 
-    formatHandler(editor);
+    formatHandler(editor, value);
   };
 
   const handleSelection = (range: { index: number; length: number }) => {
@@ -164,9 +185,11 @@ export const WritePoem: FC<WritePoemProps> = ({ navigation }) => {
       <QuillEditor
         webview={{
           androidLayerType: 'hardware',
-          onLoad: () => editorRef.current.setContents(content)
+          onLoad: () => editorRef.current?.setContents(content)
         }}
-        onTextChange={() => onContentChange(editorRef.current)}
+        onTextChange={() =>
+          editorRef.current && onContentChange(editorRef.current)
+        }
         ref={editorRef}
         style={[styles.editor, styles.input]}
         onSelectionChange={({ range }) => range && handleSelection(range)}
@@ -191,7 +214,7 @@ export const WritePoem: FC<WritePoemProps> = ({ navigation }) => {
         }}
         custom={{
           handler: customHandler,
-          actions: ['clean']
+          actions: ['clean', 'align']
         }}
         styles={toolbarsStyles}
       />

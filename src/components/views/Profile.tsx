@@ -34,7 +34,7 @@ export const Profile = () => {
       end={AppGradient.end}>
       <Image
         defaultSource={require('@/assets/images/default-profile-photo.png')}
-        source={{ uri: user?.providerData.at(0)?.photoURL ?? undefined }}
+        source={{ uri: user.photoURL ?? undefined }}
         style={styles.image}
       />
       <View style={styles.identity}>
