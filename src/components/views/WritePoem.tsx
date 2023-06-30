@@ -172,6 +172,12 @@ export const WritePoem: FC<WritePoemProps> = ({ navigation }) => {
     );
 
     console.log({ text, content: contentToSave.ops, html });
+    // contentToSave.ops.forEach(op => {
+    //   console.log({ op });
+    //   console.log('isANewLine: ', op.insert === '\n');
+    //   console.log('content: ', op.insert);
+    //   console.log('attributes : ', op.attributes);
+    // });
     console.log('Saving poem');
   };
 

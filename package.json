@@ -30,7 +30,7 @@
     "observable-hooks": "^4.2.1",
     "openai": "^3.2.1",
     "react": "18.2.0",
-    "react-native": "^0.72.0",
+    "react-native": "^0.71.5",
     "react-native-cn-quill": "^0.7.18",
     "react-native-config": "^1.5.0",
     "react-native-gesture-handler": "^2.9.0",

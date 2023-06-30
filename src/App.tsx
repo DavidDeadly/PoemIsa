@@ -8,7 +8,7 @@ import { ToastNotifications } from '@/components/context';
 import { AppWrapper } from '@/components';
 
 if (__DEV__) {
-  functions().useEmulator('192.168.1.10', 5001);
+  functions().useEmulator('192.168.1.12', 5001);
 }
 
 function App(): JSX.Element {
