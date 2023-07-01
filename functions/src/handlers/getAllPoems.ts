@@ -3,6 +3,7 @@ import {Poem} from "../models/converters/Poem";
 import {User, userConverter} from "../models/converters/User";
 
 interface AllPoemsData extends Poem {
+  id: string,
   author: User
 }
 
@@ -17,6 +18,7 @@ export const getAllPoemsHandler = async (): Promise<AllPoemsData[]> => {
         .withConverter(userConverter).get();
 
       return {
+        id: doc.id,
         ...poem,
         author: authorDoc.data()!,
       };

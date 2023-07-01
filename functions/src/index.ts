@@ -18,4 +18,3 @@ export const createUserDocument =
 
 export const handWrittenTextRecognition =
   https.onCall(handWrittenTextRecognitionHandler);
-

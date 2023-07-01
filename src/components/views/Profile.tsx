@@ -27,7 +27,7 @@ export const Profile = () => {
 
   return (
     <LinearGradient
-      accessibilityLabel="login"
+      accessibilityLabel="profile"
       colors={Object.values(COLORS.MAIN)}
       style={styles.container}
       start={AppGradient.start}
