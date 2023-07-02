@@ -1,11 +1,12 @@
-import { useCallback, useEffect } from 'react';
+import React, { useCallback, useLayoutEffect } from 'react';
 
 import { PoemIsaStackParamList } from '@/types/components';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useCurrentWrittingPoem } from '@/hooks/MMKV';
 import { WritePoemHeaderTitle } from '@/components/WritePoemHeaderTitle';
-import { SavePoemButton } from '@/components/SavePoemButton';
 import { TextEditorRef } from '@/components/TextEditor';
+import { COLORS } from '@/constants';
+import { WritePoemHeaderRight } from '@/components/WritePoemHeaderRight';
 
 type useWritePoemParameter = {
   editorRef: TextEditorRef;
@@ -45,12 +46,16 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
     console.log('Saving poem');
   }, [editorRef]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({
+      statusBarTranslucent: false,
+      statusBarAnimation: 'slide',
+      statusBarColor: COLORS.MAIN.SECONDARY,
+      statusBarStyle: 'dark',
       headerTitle: () => (
         <WritePoemHeaderTitle title={title} changeTitle={handleTitleChange} />
       ),
-      headerRight: () => <SavePoemButton savePoem={savePoem} />
+      headerRight: () => <WritePoemHeaderRight />
     });
   }, [navigation, title, savePoem, handleTitleChange]);
 

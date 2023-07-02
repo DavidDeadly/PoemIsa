@@ -21,7 +21,11 @@ export const PoemIsaStack = () => {
         name={SCREENS.APP.APP}
         component={HomeTabs}
         options={{
-          headerShown: false
+          headerShown: false,
+          statusBarAnimation: 'slide',
+          statusBarTranslucent: true,
+          statusBarColor: 'transparent',
+          statusBarStyle: 'dark'
         }}
       />
       <Stack.Screen name={SCREENS.APP.WRITE} component={WritePoem} />
