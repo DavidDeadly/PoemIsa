@@ -2,34 +2,11 @@ import { FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import functions from '@react-native-firebase/functions';
 
 import { Button } from '@/components';
 import { COLORS } from '@/constants';
 import { useIsFocused } from '@react-navigation/native';
-
-export interface Poem {
-  id: string;
-  title: string;
-  content: string;
-  html: string;
-  text: 0;
-  likes: 0;
-  authorUID: string;
-}
-
-export interface User {
-  displayName?: string;
-  email?: string;
-  emailVerified: boolean;
-  followers: number;
-  followed: number;
-  photoURL?: string;
-}
-
-export interface AllPoemsData extends Poem {
-  author: User;
-}
+import { getAllPoems } from '@/services/Poems';
 
 export const Home = () => {
   const [poems, setPoems] = useState<AllPoemsData[]>([]);
@@ -43,18 +20,11 @@ export const Home = () => {
       .catch(error => console.log('error signing out:', error));
 
   useEffect(() => {
-    const allPoems = async () => {
-      const getAllPoems = functions().httpsCallable('getAllPoems');
-
-      const res = await getAllPoems();
-
-      setPoems(res.data);
-    };
-
-    isFocused &&
-      allPoems().catch(err =>
-        console.log('error getting all poems: ', err.message)
-      );
+    if (isFocused) {
+      getAllPoems()
+        .then(poemsData => setPoems(poemsData))
+        .catch(err => console.log('error getting all poems: ', err.message));
+    }
   }, [isFocused]);
 
   return (
