@@ -8,7 +8,7 @@ import {
 
 import { PoemIsaHeaderButton } from '@/components/PoemIsaHeaderButton';
 import { COLORS } from '@/constants';
-import { useIsabelLoveMessage } from '@/hooks/useIsabelLoveMessage';
+import { useIsabelLoveMessage } from '@/hooks';
 import { HEADER_ICONS_NAME } from '@/components/HeaderIcon';
 import { Alert, ColorValue, StyleSheet } from 'react-native';
 

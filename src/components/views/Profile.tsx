@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -8,10 +8,11 @@ import {
   View
 } from 'react-native';
 
-import { useUser } from '@/hooks';
+import { useNotify, useUser } from '@/hooks';
 import { COLORS } from '@/constants';
-import { posts } from '@/mocks/Posts';
 import LinearGradient from 'react-native-linear-gradient';
+import { useIsFocused } from '@react-navigation/native';
+import { getPoemsByUser } from '@/services/Poems';
 
 const AppGradient = {
   start: { x: 0, y: 0 },
@@ -19,53 +20,78 @@ const AppGradient = {
 };
 
 export const Profile = () => {
+  const [poems, setPoems] = useState<Poem[]>([]);
+  const isFocused = useIsFocused();
+  const notify = useNotify();
   const { user } = useUser();
 
-  if (!user) {
-    return <h1>No has iniciado sesión!!</h1>;
-  }
+  useEffect(() => {
+    if (isFocused && user?.uid) {
+      getPoemsByUser(user.uid)
+        .then(setPoems)
+        .catch(err => {
+          console.error('Error getting: ', err.message);
+          notify.error('Error obteniendo todos los poemas');
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
 
   return (
     <LinearGradient
       accessibilityLabel="profile"
       colors={Object.values(COLORS.MAIN)}
-      style={styles.container}
+      style={container}
       start={AppGradient.start}
       end={AppGradient.end}>
-      <Image
-        defaultSource={require('@/assets/images/default-profile-photo.png')}
-        source={{ uri: user.photoURL ?? undefined }}
-        style={styles.image}
-      />
-      <View style={styles.identity}>
-        <Text style={styles.name}>{user.displayName}</Text>
-        <Text style={styles.email}>{user.email}</Text>
+      <View style={userInfoContainer}>
+        <Image
+          defaultSource={require('@/assets/images/default-profile-photo.png')}
+          source={{ uri: user?.photoURL ?? undefined }}
+          style={image}
+        />
+        <View>
+          <Text style={name}>{user?.displayName}</Text>
+          <Text style={email}>{user?.email}</Text>
+        </View>
       </View>
       <FlatList
-        style={styles.list}
-        contentContainerStyle={styles.content}
-        data={posts}
-        keyExtractor={item => String(item.id)}
-        renderItem={({ item }) => <Text style={styles.poems}>{item.body}</Text>}
+        style={list}
+        contentContainerStyle={poemsContainer}
+        data={poems}
+        renderItem={({
+          item: {
+            title,
+            author: { displayName: authorName }
+          }
+        }) => {
+          return (
+            <View style={poem}>
+              <Text style={text}>Title: {title}</Text>
+              <Text style={[text, authorText]}>
+                By: {authorName ?? 'Anonymous'}
+              </Text>
+            </View>
+          );
+        }}
+        keyExtractor={item => item.id}
       />
     </LinearGradient>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    gap: 15
-  },
-  name: {
-    fontSize: 30,
-    color: '#222',
-    textAlign: 'center',
-    fontFamily: 'MontserratAlternates-BlackItalic'
-  },
+const {
+  container,
+  authorText,
+  poem,
+  poemsContainer,
+  userInfoContainer,
+  list,
+  text,
+  email,
+  image,
+  name
+} = StyleSheet.create({
   email: {
     color: '#222',
     textAlign: 'center',
@@ -79,22 +105,41 @@ const styles = StyleSheet.create({
     marginTop: 20,
     borderColor: COLORS.MAIN.SECONDARY
   },
-  identity: {},
+  name: {
+    fontSize: 30,
+    color: '#222',
+    textAlign: 'center',
+    fontFamily: 'MontserratAlternates-BlackItalic'
+  },
+  container: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight
+  },
+  userInfoContainer: {
+    alignItems: 'center',
+    marginBottom: 15
+  },
+  text: {
+    textAlign: 'center',
+    color: '#222'
+  },
+  authorText: {
+    fontStyle: 'italic',
+    fontWeight: '500'
+  },
   list: {
-    width: '90%',
-    borderRadius: 10,
-    marginVertical: 10,
-    backgroundColor: '#222'
+    flex: 3,
+    borderRadius: 10
   },
-  content: {
-    display: 'flex',
-    alignSelf: 'center',
-    minHeight: '100%',
-    paddingVertical: 20,
-    paddingHorizontal: 30
+  poemsContainer: {
+    marginHorizontal: 20,
+    paddingVertical: 10,
+    gap: 5
   },
-  poems: {
-    marginVertical: 10,
-    textAlign: 'left'
+  poem: {
+    backgroundColor: `${COLORS.MAIN.PRIMARY}80`,
+    borderRadius: 20,
+    padding: 10,
+    marginVertical: 10
   }
 });

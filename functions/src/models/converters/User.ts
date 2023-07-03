@@ -8,9 +8,10 @@ export interface User {
   displayName?: string,
   email?: string,
   emailVerified: boolean,
+  aboutMe: string,
   followers: number,
   followed: number,
-  photoURL?: string
+  photoURL?: string,
 }
 
 export const userConverter: FirestoreDataConverter<User> = {
@@ -21,6 +22,7 @@ export const userConverter: FirestoreDataConverter<User> = {
     followers,
     followed,
     photoURL,
+    aboutMe,
   }: User): DocumentData {
     return {
       displayName,
@@ -29,6 +31,7 @@ export const userConverter: FirestoreDataConverter<User> = {
       followers,
       followed,
       photoURL,
+      aboutMe,
     };
   },
   fromFirestore(snapshot: QueryDocumentSnapshot<DocumentData>): User {
@@ -40,6 +43,7 @@ export const userConverter: FirestoreDataConverter<User> = {
       followers: data.followers,
       followed: data.followed,
       photoURL: data.photoURL,
+      aboutMe: data.aboutMe,
     };
   },
 };

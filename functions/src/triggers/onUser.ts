@@ -15,4 +15,5 @@ export const createUserDocumentTrigger = ({
     emailVerified,
     followed: 0,
     followers: 0,
+    aboutMe: "",
   });

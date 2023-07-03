@@ -11,15 +11,12 @@ export type TextEditorRef = MutableRefObject<TextEditor | null>;
 type TextEditorProps = {
   placeholder: string;
   content: any[];
-  handleContentChange: (newContent: never[]) => void;
+  persistContent: (newContent: never[]) => void;
   changeIsTextSelected: (isSelected: boolean) => void;
 };
 
 export const TextEditor = forwardRef<TextEditor, TextEditorProps>(
-  (
-    { placeholder, content, changeIsTextSelected, handleContentChange },
-    ref
-  ) => {
+  ({ placeholder, content, changeIsTextSelected, persistContent }, ref) => {
     const handleSelection = (
       range: { index: number; length: number } | null
     ) => {
@@ -38,7 +35,7 @@ export const TextEditor = forwardRef<TextEditor, TextEditorProps>(
         if (!editor) return;
         const newContent = await editor.getContents();
 
-        handleContentChange(newContent.ops);
+        persistContent(newContent.ops);
       }, 500),
       []
     );

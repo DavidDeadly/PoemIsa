@@ -1,6 +1,5 @@
-import functions from '@react-native-firebase/functions';
-
-import { poemsCollection } from '@/models/Poems';
+import { mapSnapshotToPoems, poemsCollection } from '@/models/Poems';
+import { firebase } from '@react-native-firebase/functions';
 
 export class PoemRepository implements IPoemsRepository {
   static repository: PoemRepository;
@@ -17,11 +16,25 @@ export class PoemRepository implements IPoemsRepository {
     return poemsCollection.add(poem);
   }
 
+  async getPoemsByUser(userID: string): Promise<Poem[]> {
+    const authoIdPath = new firebase.firestore.FieldPath('author', 'id');
+
+    const poemsSnapshot = await poemsCollection
+      .where(authoIdPath, '==', userID)
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    const poems = mapSnapshotToPoems(poemsSnapshot);
+
+    return poems;
+  }
+
   async getAllPoems() {
-    const getAllPoemsFunction = functions().httpsCallable('getAllPoems');
+    const poemsSnapshot = await poemsCollection
+      .orderBy('createdAt', 'desc')
+      .get();
+    const poems = mapSnapshotToPoems(poemsSnapshot);
 
-    const res = await getAllPoemsFunction();
-
-    return res.data as AllPoemsData[];
+    return poems;
   }
 }

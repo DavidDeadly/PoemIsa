@@ -1,10 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
-import { StatusBar, StyleSheet, Text, View } from 'react-native';
+import { StatusBar, StyleSheet, Text } from 'react-native';
 
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SCREENS } from '@/constants';
+import { COLORS, SCREENS } from '@/constants';
 import { Button } from '@/components';
 import { PoemIsaStackParamList } from '@/types/components';
+import LinearGradient from 'react-native-linear-gradient';
+
+const AppGradient = {
+  start: { x: 2, y: 0 },
+  end: { x: 0, y: 2 }
+};
 
 export const CreatePoem = () => {
   const navigation =
@@ -14,24 +20,31 @@ export const CreatePoem = () => {
   const goToCapture = () => navigation.navigate(SCREENS.APP.CAPTURE);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Crear</Text>
+    <LinearGradient
+      accessibilityLabel="home"
+      colors={Object.values(COLORS.MAIN)}
+      style={container}
+      start={AppGradient.start}
+      end={AppGradient.end}>
       <Button onPress={goToWrite}>
-        <Text style={styles.text}>Escribir</Text>
+        <Text style={text}>Escribir</Text>
       </Button>
       <Button onPress={goToCapture}>
-        <Text style={styles.text}>Capturar</Text>
+        <Text style={text}>Capturar</Text>
       </Button>
-    </View>
+    </LinearGradient>
   );
 };
 
-const styles = StyleSheet.create({
+const { container, text } = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingTop: StatusBar.currentHeight
   },
   text: {
-    color: '#222'
+    color: '#222',
+    fontSize: 20
   }
 });

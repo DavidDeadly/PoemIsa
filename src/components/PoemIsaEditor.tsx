@@ -6,7 +6,7 @@ import { useWritePoem } from '@/hooks/useWritePoem';
 export const PoemIsaEditor: FC = () => {
   const editorRef = useRef<TextEditor>(null);
   const [isTextSelected, setIsTextSelected] = useState(false);
-  const { content, handleContentChange } = useWritePoem({ editorRef });
+  const { content, persistContent } = useWritePoem({ editorRef });
 
   return (
     <>
@@ -14,7 +14,7 @@ export const PoemIsaEditor: FC = () => {
         ref={editorRef}
         placeholder="Escribe algo hermoso..."
         content={content}
-        handleContentChange={handleContentChange}
+        persistContent={persistContent}
         changeIsTextSelected={setIsTextSelected}
       />
       <TextEditorToolbar

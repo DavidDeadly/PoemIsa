@@ -2,13 +2,12 @@ import React, { useCallback, useLayoutEffect } from 'react';
 
 import { PoemIsaStackParamList } from '@/types/components';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { useCurrentWrittingPoem } from '@/hooks/MMKV';
+import { useCurrentWrittingPoem, useNotify } from '@/hooks';
 import { WritePoemHeaderTitle } from '@/components/WritePoemHeaderTitle';
 import { TextEditorRef } from '@/components/TextEditor';
 import { COLORS } from '@/constants';
 import { WritePoemHeaderRight } from '@/components/WritePoemHeaderRight';
 import { useUser } from './useUser';
-import { Alert } from 'react-native';
 import { createPoemDB } from '@/services/Poems';
 
 type useWritePoemParameter = {
@@ -17,28 +16,26 @@ type useWritePoemParameter = {
 
 export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
   const navigation = useNavigation<NavigationProp<PoemIsaStackParamList>>();
-  const { content, title, handleContentChange, handleTitleChange } =
+  const notify = useNotify();
+  const { content, title, persistContent, persistTitle, resetPoem } =
     useCurrentWrittingPoem();
   const { user } = useUser();
 
-  const resetPoem = useCallback(() => {
-    handleTitleChange('');
-    handleContentChange([]);
-  }, [handleTitleChange, handleContentChange]);
-
   const createPoem = useCallback(
-    async (poemData: PoemDataCreate) => {
-      createPoemDB({
+    (poemData: PoemDataCreate) => {
+      const author: Author = {
+        id: user?.uid,
+        displayName: user?.displayName,
+        photoURL: user?.photoURL
+      };
+
+      return createPoemDB({
         title,
         ...poemData,
-        authorUID: user?.uid ?? 'Anonymous'
+        author
       });
-
-      Alert.alert('SAVED!!!');
-      navigation.goBack();
-      resetPoem();
     },
-    [resetPoem, navigation, title, user]
+    [title, user]
   );
 
   const savePoem = useCallback(async () => {
@@ -54,8 +51,14 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
       text,
       html,
       content: contentToSave.ops
-    }).catch(err => console.error('Error saving: ', err.message));
-  }, [editorRef, createPoem]);
+    })
+      .then(() => {
+        resetPoem();
+        notify.success('Poema posteado con exito!');
+        navigation.goBack();
+      })
+      .catch(() => notify.error('Ha ocurrido un error posteando el poema!'));
+  }, [editorRef, navigation, notify, resetPoem, createPoem]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -64,14 +67,17 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
       statusBarColor: COLORS.MAIN.SECONDARY,
       statusBarStyle: 'dark',
       headerTitle: () => (
-        <WritePoemHeaderTitle title={title} changeTitle={handleTitleChange} />
+        <WritePoemHeaderTitle
+          initialTitle={title}
+          persistTitle={persistTitle}
+        />
       ),
       headerRight: () => <WritePoemHeaderRight savePoem={savePoem} />
     });
-  }, [navigation, title, savePoem, handleTitleChange]);
+  }, [navigation, title, savePoem, persistTitle]);
 
   return {
     content,
-    handleContentChange
+    persistContent
   };
 };

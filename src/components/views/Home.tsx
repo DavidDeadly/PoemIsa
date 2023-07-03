@@ -1,5 +1,5 @@
 import { FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
@@ -7,10 +7,18 @@ import { Button } from '@/components';
 import { COLORS } from '@/constants';
 import { useIsFocused } from '@react-navigation/native';
 import { getAllPoems } from '@/services/Poems';
+import { useNotify } from '@/hooks';
+import LinearGradient from 'react-native-linear-gradient';
+
+const AppGradient = {
+  start: { x: 2, y: 1 },
+  end: { x: 0, y: 0 }
+};
 
 export const Home = () => {
-  const [poems, setPoems] = useState<AllPoemsData[]>([]);
+  const [poems, setPoems] = useState<Poem[]>([]);
   const isFocused = useIsFocused();
+  const notify = useNotify();
 
   const handleSignOut = () =>
     auth()
@@ -22,14 +30,19 @@ export const Home = () => {
   useEffect(() => {
     if (isFocused) {
       getAllPoems()
-        .then(poemsData => setPoems(poemsData))
-        .catch(err => console.log('error getting all poems: ', err.message));
+        .then(setPoems)
+        .catch(() => notify.error('Error obteniendo todos los poemas'));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   return (
-    <View style={container}>
-      <Text style={text}>Inicio</Text>
+    <LinearGradient
+      accessibilityLabel="home"
+      colors={Object.values(COLORS.MAIN)}
+      style={container}
+      start={AppGradient.start}
+      end={AppGradient.end}>
       <Button onPress={handleSignOut}>
         <Text>Cerrar sesión</Text>
       </Button>
@@ -53,13 +66,14 @@ export const Home = () => {
         }}
         keyExtractor={item => item.id}
       />
-    </View>
+    </LinearGradient>
   );
 };
 
 const { container, authorText, poem, poemsContainer, text } = StyleSheet.create(
   {
     container: {
+      flex: 1,
       paddingTop: StatusBar.currentHeight
     },
     text: {

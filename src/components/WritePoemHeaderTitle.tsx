@@ -5,24 +5,30 @@ import { TitleHeader } from '@/components/TitleHeader';
 import { ChangePoemTitleModal } from '@/components/ChangePoemTitleModal';
 
 type WritePoemTitleProps = {
-  title: string;
-  changeTitle: (newTitle: string) => void;
+  initialTitle: string;
+  persistTitle: (newTitle: string) => void;
 };
 
 export const WritePoemHeaderTitle: FC<WritePoemTitleProps> = ({
-  title,
-  changeTitle
+  initialTitle,
+  persistTitle
 }) => {
   const [changeName, setChangeName] = useState(false);
+  const [title, setTitle] = useState<string>(initialTitle);
 
-  const closeModal = () => setChangeName(false);
   const openModal = () => setChangeName(true);
+  const closeModal = () => {
+    persistTitle(title);
+    setChangeName(false);
+  };
+
+  const onChangeTitle = (newTitle: string) => setTitle(newTitle);
 
   return (
     <>
       <ChangePoemTitleModal
         visible={changeName}
-        changeTitle={changeTitle}
+        changeTitle={onChangeTitle}
         title={title}
         closeModal={closeModal}
       />

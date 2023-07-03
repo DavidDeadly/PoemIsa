@@ -7,14 +7,13 @@ import {
 import { Google } from 'iconsax-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, { FlipInXDown } from 'react-native-reanimated';
-import { useToast } from 'react-native-toast-notifications';
 
 import { Button } from '@/components';
 import { COLORS } from '@/constants';
 import { Quote } from '@/components';
 import { FadeInView } from '@/components';
 import { Loading } from '@/components';
-import { useUser } from '@/hooks';
+import { useNotify, useUser } from '@/hooks';
 import { useFlipQuoteEffects } from '@/hooks';
 import { SignInException } from '@/errors';
 import { ERRORS, ERRORS_MAP_TO_USER } from '@/constants';
@@ -26,15 +25,15 @@ const AppGradient = {
 
 export const Login = () => {
   const { user, loginWithGoogle } = useUser();
+  const notify = useNotify();
   const { randomQuote, flipPoetry, animatedStyle } = useFlipQuoteEffects({
     delayEffect: 500
   });
-  const toast = useToast();
 
   const handleLogin = () => {
     loginWithGoogle()
       .then(() => {
-        toast.show('Inicio de sesión exitoso', { type: 'success' });
+        notify.success('Inicio de sesión exitoso');
       })
       .catch(error => {
         const userFriendlyMessage: string =
@@ -42,7 +41,7 @@ export const Login = () => {
             ? ERRORS_MAP_TO_USER.get(error.message)!
             : ERRORS_MAP_TO_USER.get(ERRORS.UNEXPECTED)!;
 
-        toast.show(userFriendlyMessage, { type: 'danger' });
+        notify.error(userFriendlyMessage);
       });
   };
 

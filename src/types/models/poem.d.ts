@@ -5,11 +5,14 @@ interface Poem {
   html: string;
   text: string;
   likes: number;
-  authorUID: string;
+  createdAt: Date;
+  author: Author;
 }
 
 type PoemDB = Omit<Poem, 'id'>;
 
-type PoemData = Omit<Poem, 'id' | 'likes'>;
+type PoemData = Omit<Poem, 'id' | 'likes' | 'createdAt'>;
 
 type PoemDataCreate = Pick<Poem, 'content' | 'html' | 'text'>;
+
+type Author = Pick<DBUser, 'id' | 'displayName' | 'photoURL'>;
