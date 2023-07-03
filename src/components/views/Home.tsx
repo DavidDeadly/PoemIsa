@@ -2,13 +2,11 @@ import { FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
 
 import { Button } from '@/components';
 import { COLORS } from '@/constants';
-
-export const poemsCollectionGroup = firestore().collectionGroup<Poem>('Poems');
+import { useIsFocused } from '@react-navigation/native';
 
 export interface Poem {
   id: string;
@@ -29,12 +27,14 @@ export interface User {
   photoURL?: string;
 }
 
-interface AllPoemsData extends Poem {
+export interface AllPoemsData extends Poem {
   author: User;
 }
 
 export const Home = () => {
   const [poems, setPoems] = useState<AllPoemsData[]>([]);
+  const isFocused = useIsFocused();
+
   const handleSignOut = () =>
     auth()
       .signOut()
@@ -51,10 +51,11 @@ export const Home = () => {
       setPoems(res.data);
     };
 
-    allPoems().catch(err =>
-      console.log('error getting all poems: ', err.message)
-    );
-  }, []);
+    isFocused &&
+      allPoems().catch(err =>
+        console.log('error getting all poems: ', err.message)
+      );
+  }, [isFocused]);
 
   return (
     <View style={container}>

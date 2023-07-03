@@ -11,7 +11,7 @@ export const PoemIsaHeaderButton = (props: HeaderButtonProps) => {
       IconComponent={HeaderIcon}
       color={COLORS.MAIN.PRIMARY}
       pressColor={COLORS.MAIN.PRIMARY}
-      iconSize={40}
+      iconSize={30}
       {...props}
     />
   );

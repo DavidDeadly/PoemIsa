@@ -1,4 +1,5 @@
 import React, { useCallback, useLayoutEffect } from 'react';
+import firestore from '@react-native-firebase/firestore';
 
 import { PoemIsaStackParamList } from '@/types/components';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -7,20 +8,54 @@ import { WritePoemHeaderTitle } from '@/components/WritePoemHeaderTitle';
 import { TextEditorRef } from '@/components/TextEditor';
 import { COLORS } from '@/constants';
 import { WritePoemHeaderRight } from '@/components/WritePoemHeaderRight';
+import { useUser } from './useUser';
+import { Alert } from 'react-native';
 
 type useWritePoemParameter = {
   editorRef: TextEditorRef;
 };
 
+interface Poem {
+  title: string;
+  content: never[];
+  html: string;
+  text: string;
+  likes: 0;
+  authorUID: string;
+}
+
+export const poemsCollection = firestore().collection<Poem>('Poems');
+
 export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
   const navigation = useNavigation<NavigationProp<PoemIsaStackParamList>>();
   const { content, title, handleContentChange, handleTitleChange } =
     useCurrentWrittingPoem();
+  const { user } = useUser();
+
+  const savePoemOnCollection = useCallback(
+    (text: string, contentToSave: never[], html: string) => {
+      poemsCollection
+        .add({
+          title,
+          html,
+          text,
+          content: contentToSave,
+          likes: 0,
+          authorUID: user?.uid ?? 'Anonymous'
+        })
+        .then(() => {
+          Alert.alert('SAVED!!!');
+          handleTitleChange('');
+          handleContentChange([]);
+          navigation.goBack();
+        })
+        .catch(err => console.error('Error saving: ', err.message));
+    },
+    [handleTitleChange, handleContentChange, navigation, title, user]
+  );
 
   const savePoem = useCallback(async () => {
     if (!editorRef.current) return;
-
-    const startGettingPoemData = performance.now();
 
     const [text, contentToSave, html] = await Promise.all([
       editorRef.current.getText(),
@@ -28,23 +63,8 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
       editorRef.current.getHtml()
     ]);
 
-    const endGettingPoemData = performance.now();
-
-    console.log(
-      `Getting poem data took ${
-        endGettingPoemData - startGettingPoemData
-      } milliseconds.`
-    );
-
-    console.log({ text, content: contentToSave.ops, html });
-    // contentToSave.ops.forEach(op => {
-    //   console.log({ op });
-    //   console.log('isANewLine: ', op.insert === '\n');
-    //   console.log('content: ', op.insert);
-    //   console.log('attributes : ', op.attributes);
-    // });
-    console.log('Saving poem');
-  }, [editorRef]);
+    savePoemOnCollection(text, contentToSave.ops, html);
+  }, [editorRef, savePoemOnCollection]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -55,7 +75,7 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
       headerTitle: () => (
         <WritePoemHeaderTitle title={title} changeTitle={handleTitleChange} />
       ),
-      headerRight: () => <WritePoemHeaderRight />
+      headerRight: () => <WritePoemHeaderRight savePoem={savePoem} />
     });
   }, [navigation, title, savePoem, handleTitleChange]);
 

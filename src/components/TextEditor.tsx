@@ -11,7 +11,7 @@ export type TextEditorRef = MutableRefObject<TextEditor | null>;
 type TextEditorProps = {
   placeholder: string;
   content: any[];
-  handleContentChange: (newContent: string) => void;
+  handleContentChange: (newContent: never[]) => void;
   changeIsTextSelected: (isSelected: boolean) => void;
 };
 

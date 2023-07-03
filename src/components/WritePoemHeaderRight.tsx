@@ -15,23 +15,27 @@ import { Alert, ColorValue, StyleSheet } from 'react-native';
 const OverFlowIcon = ({ color }: { color: ColorValue }) => {
   if (typeof color !== 'string') return null;
 
-  return <Menu size={23} color={color} />;
+  return <Menu size={20} color={color} />;
 };
 
-export const WritePoemHeaderRight = () => {
+export const WritePoemHeaderRight = ({
+  savePoem
+}: {
+  savePoem: () => void;
+}) => {
   const { isLastMessage, getNewLoveMessage } = useIsabelLoveMessage();
 
   return (
     <HeaderButtons HeaderButtonComponent={PoemIsaHeaderButton}>
       <Item
-        title={HEADER_ICONS_NAME.SAVE}
+        title={HEADER_ICONS_NAME.ERASE}
         iconName={HEADER_ICONS_NAME.ERASE}
-        onPress={() => Alert.alert('Erase')}
+        onPress={() => Alert.alert('Crear borrador!')}
       />
       <Item
         title={HEADER_ICONS_NAME.SAVE}
         iconName={HEADER_ICONS_NAME.SAVE}
-        onPress={() => Alert.alert('Saving')}
+        onPress={savePoem}
       />
       <OverflowMenu
         color={COLORS.MAIN.PRIMARY}

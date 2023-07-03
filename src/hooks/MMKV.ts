@@ -7,7 +7,7 @@ export const useCurrentWrittingPoem = () => {
   const [content, setContent] = useMMKVStorage('PoemContent', storage, []);
 
   const handleTitleChange = (newTitle: string) => setTitle(newTitle);
-  const handleContentChange = (newContent: any) => setContent(newContent);
+  const handleContentChange = (newContent: never[]) => setContent(newContent);
   const resetPoem = () => {
     setTitle('');
     setContent([]);

@@ -9,7 +9,7 @@ import { AppWrapper } from '@/components';
 import { HeaderButtonsProvider } from 'react-navigation-header-buttons';
 
 if (__DEV__) {
-  functions().useEmulator('192.168.1.12', 5001);
+  functions().useEmulator('192.168.1.60', 5001);
 }
 
 function App(): JSX.Element {
