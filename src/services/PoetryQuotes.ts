@@ -1,4 +1,4 @@
-import { PoetryQuotesRepository } from '@/repositories/PoetryQuotesRepository';
+import { PoetryQuotesRepository } from '@/repositories';
 
 export const getPoetryQuotes = () => {
   const poetryQuotesRepository = PoetryQuotesRepository.init();

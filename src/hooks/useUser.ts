@@ -1,14 +1,14 @@
 import { useContext } from 'react';
 
-import Auth from '@/services/auth';
-import { UserContext } from '@/context/UserContext';
+import { Auth } from '@/services';
+import { UserContext } from '@/components/context';
 
 export const useUser = () => {
-  const user = useContext(UserContext);
+  const { user, loadingUser } = useContext(UserContext);
 
   const signOut = () => Auth.signOut();
 
   const loginWithGoogle = () => Auth.loginWithGoogle();
 
-  return { user, signOut, loginWithGoogle };
+  return { user, loadingUser, signOut, loginWithGoogle };
 };

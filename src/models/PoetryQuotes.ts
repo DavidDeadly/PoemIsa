@@ -1,4 +1,3 @@
-import { PoetryQuotes, PoetryQuotesFS } from '@/types/models/poetryQuotes';
 import firestore from '@react-native-firebase/firestore';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore/lib';
 

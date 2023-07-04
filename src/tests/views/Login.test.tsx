@@ -1,12 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StatusBar, StyleSheet, processColor } from 'react-native';
 
-import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
-import { Login } from '@/views/Login';
+import { Login } from '@/components/views';
 import { COLORS } from '@/constants';
-import { SigInException } from '@/errors/SignInException';
-import { ERRORS, ERRORS_MAP_TO_USER } from '@/constants/errors';
-import { UnexpectedException } from '@/errors/UnexpectedExeption';
+import { SignInException } from '@/errors';
+import { ERRORS, ERRORS_MAP_TO_USER } from '@/constants';
+import { UnexpectedException } from '@/errors';
 
 const loginStyles = StyleSheet.create({
   container: {
@@ -25,7 +24,7 @@ const loginStyles = StyleSheet.create({
     fontFamily: 'MontserratAlternates-ExtraBoldItalic',
     flex: 1,
     fontWeight: '600',
-    color: COLORS.main.primary
+    color: COLORS.MAIN.PRIMARY
   },
   quoteContainer: {
     flex: 2,
@@ -48,10 +47,10 @@ const loginStyles = StyleSheet.create({
     width: '80%',
     resizeMode: 'cover',
     borderRadius: 50,
-    borderColor: COLORS.main.primary,
+    borderColor: COLORS.MAIN.PRIMARY,
     borderWidth: 2,
     padding: 10,
-    backgroundColor: COLORS.main.secondary,
+    backgroundColor: COLORS.MAIN.SECONDARY,
     opacity: 0.5
   }
 });
@@ -216,7 +215,7 @@ describe('Login', () => {
         start: { x: 1, y: 1 },
         end: { x: 0, y: 0 }
       };
-      const expectedColors = Object.values(COLORS.main).map(processColor);
+      const expectedColors = Object.values(COLORS.MAIN).map(processColor);
 
       const container = screen.queryByLabelText('login');
       expect(container).toHaveProp('colors', expectedColors);
@@ -290,7 +289,7 @@ describe('Login', () => {
 
       test('should trigger the toast notification when the login fails with an singIn exception', async () => {
         mockLoginWithGoogle.mockRejectedValue(
-          new SigInException(ERRORS.SING_IN.NETWORK_ERROR)
+          new SignInException(ERRORS.SING_IN.NETWORK_ERROR)
         );
         render(<Login />);
         const button = screen.getByText('Iniciar sesión');
@@ -299,7 +298,7 @@ describe('Login', () => {
         expect(mockLoginWithGoogle).toBeCalled();
         expect(mockLoginWithGoogle).toBeCalledTimes(1);
         await expect(mockLoginWithGoogle()).rejects.toStrictEqual(
-          new SigInException(ERRORS.SING_IN.NETWORK_ERROR)
+          new SignInException(ERRORS.SING_IN.NETWORK_ERROR)
         );
         expect(mockToastShow).toBeCalled();
         expect(mockToastShow).toBeCalledTimes(1);

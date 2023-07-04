@@ -9,6 +9,7 @@ module.exports = {
         endOfLine: 'auto'
       }
     ],
-    'react/react-in-jsx-scope': 'off'
+    'react/react-in-jsx-scope': 'off',
+    curly: 'off'
   }
 };

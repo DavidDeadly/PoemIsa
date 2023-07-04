@@ -8,10 +8,9 @@ import {
   withTiming
 } from 'react-native-reanimated';
 
-import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
-import { useRandomQuote } from '@/hooks/useRandomQuote';
-import { getSoundPrepared } from '@/helpers/getSoundPrepared';
-import { PoetryQuoteFSError } from '@/models/PoetryQuotes';
+import { useRandomQuote } from '@/hooks';
+import { getSoundPrepared } from '@/helpers';
+import { PoetryQuoteFSError } from '@/models';
 
 export const useFlipQuoteEffects = ({ delayEffect = 0, delayClick = 500 }) => {
   const { randomQuote, getAnotherQuote } = useRandomQuote();
@@ -64,7 +63,7 @@ export const useFlipQuoteEffects = ({ delayEffect = 0, delayClick = 500 }) => {
   );
 
   const flipPoetry = () =>
-    randomQuote?.id !== PoetryQuoteFSError.data.at(0).id &&
+    randomQuote?.id !== PoetryQuoteFSError.data.at(0)?.id &&
     pageFlipSubject$.next(randomQuote);
 
   return { randomQuote, flipPoetry, animatedStyle };

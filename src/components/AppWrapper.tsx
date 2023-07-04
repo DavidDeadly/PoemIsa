@@ -1,9 +1,14 @@
-import { Login } from '@/views/Login';
-import { BottomTabs } from './BottomTabs';
-import { useUser } from '@/hooks/useUser';
+import { PoemIsaStack } from '@/components/navigators';
+import { Login } from '@/components/views';
+import { useUser } from '@/hooks';
+import { FC } from 'react';
 
-export const AppWrapper = () => {
-  const { user } = useUser();
+export const AppWrapper: FC = () => {
+  const { user, loadingUser } = useUser();
 
-  return !user ? <Login /> : <BottomTabs />;
+  if (loadingUser) {
+    return null;
+  }
+
+  return !user ? <Login /> : <PoemIsaStack />;
 };

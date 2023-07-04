@@ -1,39 +1,20 @@
-import * as functions from "firebase-functions";
-import vision from "@google-cloud/vision";
+import {auth, https} from "firebase-functions";
 import * as dotenv from "dotenv";
 import {initializeApp} from "firebase-admin/app";
-
-dotenv.config();
 initializeApp();
 
-const bucketURI = process.env.IMAGES_BUCKET;
+import {
+  handWrittenTextRecognitionHandler,
+} from "./handlers/handWrittenTextRecognition";
+import {createUserDocumentTrigger} from "./triggers/onUser";
+import {getAllPoemsHandler} from "./handlers/getAllPoems";
 
-const client = new vision.ImageAnnotatorClient({
-  keyFilename: process.env.SERVICE_ACCOUNT_KEY_FILENAME,
-});
+dotenv.config();
 
-export type HandWrittenTextResponse = {
-  data: {
-    text: string;
-  };
-};
+export const getAllPoems = https.onCall(getAllPoemsHandler);
 
-export const handWrittenTextRecognition = functions.https.onCall(
-  async (bucketFilePath: string, _context) => {
-    try {
-      const fullImagePath = `${bucketURI}/${bucketFilePath}`;
-      const text = await recognizeHandWrittenText(fullImagePath);
+export const createUserDocument =
+  auth.user().onCreate(createUserDocumentTrigger);
 
-      return {
-        text,
-      };
-    } catch (e: any) {
-      throw new functions.https.HttpsError("internal", e.message, e.details);
-    }
-  });
-
-const recognizeHandWrittenText = async (filePath: string) => {
-  const [result] = await client.documentTextDetection(filePath);
-
-  return result.fullTextAnnotation?.text;
-};
+export const handWrittenTextRecognition =
+  https.onCall(handWrittenTextRecognitionHandler);

@@ -15,11 +15,10 @@ import {
 import functions from '@react-native-firebase/functions';
 import storage from '@react-native-firebase/storage';
 
-import { HandWrittenTextResponse } from '../../functions/src';
-import { Button } from '../components/Button';
-import { openai } from '../services/openai';
+import { Button } from '@/components';
+import { openai } from '@/services';
 
-export const Capture = () => {
+export const CapturePoem = () => {
   const [image, setImage] = useState<string>();
   const [imageText, setImageText] = useState<string>();
 

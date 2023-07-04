@@ -1,6 +1,6 @@
 import { IconProps } from 'iconsax-react-native';
 
-export type TabBarIconProps = {
+type TabBarIconProps = {
   color: string;
   size: number;
   focused: boolean;

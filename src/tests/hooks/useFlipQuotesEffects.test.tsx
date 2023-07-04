@@ -4,8 +4,7 @@ import {
   waitFor
 } from '@testing-library/react-native';
 
-import { useFlipQuoteEffects } from '@/hooks/useFlipQuoteEffects';
-import { PoetryQuotesFS } from '@/types/models/poetryQuotes';
+import { useFlipQuoteEffects } from '@/hooks';
 import { Subject } from 'rxjs';
 import { Player } from '@react-native-community/audio-toolkit';
 

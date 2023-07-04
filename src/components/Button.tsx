@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     gap: 8,
-    backgroundColor: COLORS.main.primary,
+    backgroundColor: COLORS.MAIN.PRIMARY,
     color: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
