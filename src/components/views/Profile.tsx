@@ -13,6 +13,9 @@ import { COLORS } from '@/constants';
 import LinearGradient from 'react-native-linear-gradient';
 import { useIsFocused } from '@react-navigation/native';
 import { getPoemsByUser } from '@/services/Poems';
+import { Auth } from '@/services';
+import { Logout } from 'iconsax-react-native';
+import { Button } from '../Button';
 
 const AppGradient = {
   start: { x: 0, y: 0 },
@@ -24,6 +27,8 @@ export const Profile = () => {
   const isFocused = useIsFocused();
   const notify = useNotify();
   const { user } = useUser();
+
+  const signOut = () => Auth.signOut();
 
   useEffect(() => {
     if (isFocused && user?.uid) {
@@ -45,6 +50,10 @@ export const Profile = () => {
       start={AppGradient.start}
       end={AppGradient.end}>
       <View style={userInfoContainer}>
+        <Button onPress={signOut} style={signOutBtn}>
+          <Logout size="20" color={COLORS.MAIN.SECONDARY} />
+          <Text>Salir</Text>
+        </Button>
         <Image
           defaultSource={require('@/assets/images/default-profile-photo.png')}
           source={{ uri: user?.photoURL ?? undefined }}
@@ -81,16 +90,17 @@ export const Profile = () => {
 };
 
 const {
-  container,
-  authorText,
   poem,
-  poemsContainer,
-  userInfoContainer,
   list,
   text,
   email,
   image,
-  name
+  name,
+  container,
+  authorText,
+  poemsContainer,
+  userInfoContainer,
+  signOutBtn
 } = StyleSheet.create({
   email: {
     color: '#222',
@@ -104,6 +114,10 @@ const {
     borderWidth: 1,
     marginTop: 20,
     borderColor: COLORS.MAIN.SECONDARY
+  },
+  signOutBtn: {
+    position: 'absolute',
+    right: 10
   },
   name: {
     fontSize: 30,

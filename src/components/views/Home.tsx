@@ -1,9 +1,6 @@
 import { FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
-import { useCallback, useEffect, useState } from 'react';
-import auth from '@react-native-firebase/auth';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useEffect, useState } from 'react';
 
-import { Button } from '@/components';
 import { COLORS } from '@/constants';
 import { useIsFocused } from '@react-navigation/native';
 import { getAllPoems } from '@/services/Poems';
@@ -19,13 +16,6 @@ export const Home = () => {
   const [poems, setPoems] = useState<Poem[]>([]);
   const isFocused = useIsFocused();
   const notify = useNotify();
-
-  const handleSignOut = () =>
-    auth()
-      .signOut()
-      .then(() => GoogleSignin.signOut())
-      .then(() => console.log('User signed out!'))
-      .catch(error => console.log('error signing out:', error));
 
   useEffect(() => {
     if (isFocused) {
@@ -43,9 +33,6 @@ export const Home = () => {
       style={container}
       start={AppGradient.start}
       end={AppGradient.end}>
-      <Button onPress={handleSignOut}>
-        <Text>Cerrar sesión</Text>
-      </Button>
       <FlatList
         contentContainerStyle={poemsContainer}
         data={poems}
