@@ -50,6 +50,11 @@ export const Home = () => {
     );
   }
 
+  const handleNewPage = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+    fetchNextPage();
+  };
+
   return (
     <LinearGradient
       accessibilityLabel="home"
@@ -63,9 +68,12 @@ export const Home = () => {
       ) : (
         <FlatList
           refreshControl={
-            <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+            <RefreshControl
+              refreshing={isRefetching && !isFetchingNextPage}
+              onRefresh={refetch}
+            />
           }
-          onEndReached={() => fetchNextPage()}
+          onEndReached={handleNewPage}
           contentContainerStyle={poemsContainer}
           data={data?.pages.flat(1)}
           renderItem={({ item: poem }) => <Poem poem={poem} key={poem.id} />}
