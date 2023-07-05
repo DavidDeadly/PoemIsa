@@ -1,5 +1,5 @@
-import { FlatList, StatusBar, StyleSheet } from 'react-native';
-import { useEffect, useState } from 'react';
+import { FlatList, RefreshControl, StatusBar, StyleSheet } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
 
 import { COLORS } from '@/constants';
 import { useIsFocused } from '@react-navigation/native';
@@ -15,17 +15,29 @@ const AppGradient = {
 
 export const Home = () => {
   const [poems, setPoems] = useState<Poem[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const isFocused = useIsFocused();
   const notify = useNotify();
 
-  useEffect(() => {
-    if (isFocused) {
+  const getPoems = useCallback(
+    () =>
       getAllPoems()
         .then(setPoems)
-        .catch(() => notify.error('Error obteniendo todos los poemas'));
-    }
+        .catch(() => notify.error('Error obteniendo todos los poemas')),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
+    []
+  );
+
+  const handleRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    getPoems().then(() => setIsRefreshing(false));
+  }, [getPoems]);
+
+  useEffect(() => {
+    if (isFocused) {
+      getPoems();
+    }
+  }, [isFocused, getPoems]);
 
   return (
     <LinearGradient
@@ -35,6 +47,9 @@ export const Home = () => {
       start={AppGradient.start}
       end={AppGradient.end}>
       <FlatList
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }
         contentContainerStyle={poemsContainer}
         data={poems}
         renderItem={({ item }) => <Poem poem={item} />}
