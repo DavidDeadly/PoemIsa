@@ -1,4 +1,8 @@
-import { mapSnapshotToPoems, poemsCollection } from '@/models/Poems';
+import {
+  mapDocToPoem,
+  mapSnapshotToPoems,
+  poemsCollection
+} from '@/models/Poems';
 import { firebase } from '@react-native-firebase/functions';
 
 export class PoemRepository implements IPoemsRepository {
@@ -29,6 +33,14 @@ export class PoemRepository implements IPoemsRepository {
     return poems;
   }
 
+  async getPoemById(poemId: any): Promise<Poem | null> {
+    const poemSnapshot = await poemsCollection.doc(poemId).get();
+
+    const poem = mapDocToPoem(poemSnapshot);
+
+    return poem;
+  }
+
   async getAllPoems() {
     const poemsSnapshot = await poemsCollection
       .orderBy('createdAt', 'desc')
@@ -36,5 +48,17 @@ export class PoemRepository implements IPoemsRepository {
     const poems = mapSnapshotToPoems(poemsSnapshot);
 
     return poems;
+  }
+
+  likePoem(poemId: string, userId: string): Promise<void> {
+    return poemsCollection.doc(poemId).update({
+      likes: firebase.firestore.FieldValue.arrayUnion(userId)
+    });
+  }
+
+  unlikePoem(poemId: string, userId: string): Promise<void> {
+    return poemsCollection.doc(poemId).update({
+      likes: firebase.firestore.FieldValue.arrayRemove(userId)
+    });
   }
 }

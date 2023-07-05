@@ -4,7 +4,7 @@ interface Poem {
   content: never[];
   html: string;
   text: string;
-  likes: number;
+  likes: string[];
   createdAt: Date;
   author: Author;
 }

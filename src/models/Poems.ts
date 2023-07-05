@@ -15,3 +15,16 @@ export const mapSnapshotToPoems = (
     };
   });
 };
+
+export const mapDocToPoem = (
+  poem: FirebaseFirestoreTypes.DocumentSnapshot<PoemDB>
+): Poem | null => {
+  const poetryQuote = poem.data();
+
+  if (!poetryQuote) return null;
+
+  return {
+    id: poem.id,
+    ...poetryQuote
+  };
+};

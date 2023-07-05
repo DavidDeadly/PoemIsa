@@ -1,15 +1,66 @@
 import { COLORS } from '@/constants';
+import { useUser } from '@/hooks';
+import { likePoem, unlikePoem } from '@/services/Poems';
 import { Heart } from 'iconsax-react-native';
-import { FC } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { FC, useEffect, useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type PoemProps = {
   poem: Poem;
 };
 
+const useLikes = ({ likes, userId }: { likes: string[]; userId?: string }) => {
+  const [isLiked, setIsLiked] = useState<boolean>();
+  const [numLikes, setNumLikes] = useState<number>(0);
+
+  const unlike = () => {
+    setIsLiked(false);
+    setNumLikes(num => num - 1);
+  };
+
+  const like = () => {
+    setIsLiked(true);
+    setNumLikes(num => num + 1);
+  };
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const alreadyLiked = likes.includes(userId);
+
+    setIsLiked(alreadyLiked);
+    setNumLikes(likes.length);
+  }, [likes, userId]);
+
+  return {
+    isLiked,
+    numLikes,
+    like,
+    unlike
+  };
+};
+
 export const Poem: FC<PoemProps> = ({
-  poem: { title, author, likes, text }
+  poem: { id, title, author, likes, text }
 }) => {
+  const { user } = useUser();
+  const { isLiked, numLikes, like, unlike } = useLikes({
+    likes,
+    userId: user?.uid
+  });
+
+  const toggleLike = async () => {
+    if (!user?.uid) return;
+    if (isLiked) {
+      await unlikePoem(id, user.uid);
+      unlike();
+      return;
+    }
+
+    await likePoem(id, user.uid);
+    like();
+  };
+
   return (
     <View style={poem}>
       <Text style={titleStyle}>{title}</Text>
@@ -25,10 +76,14 @@ export const Poem: FC<PoemProps> = ({
           />
           <Text style={authorText}>{author.displayName ?? 'Anonymous'}</Text>
         </View>
-        <View style={likesContainer}>
-          <Text style={likesText}>{likes}</Text>
-          <Heart size="30" color={COLORS.MAIN.SECONDARY} />
-        </View>
+        <TouchableOpacity style={likesContainer} onPress={toggleLike}>
+          <Text style={likesText}>{numLikes}</Text>
+          {isLiked ? (
+            <Heart size="30" color={COLORS.MAIN.PRIMARY} variant="Bulk" />
+          ) : (
+            <Heart size="30" color={COLORS.MAIN.PRIMARY} variant="Broken" />
+          )}
+        </TouchableOpacity>
       </View>
     </View>
   );
