@@ -11,8 +11,8 @@ import { getAllPoems } from '@/services/Poems';
 import LinearGradient from 'react-native-linear-gradient';
 import { Poem } from '../Poem';
 import { useInfiniteQuery } from 'react-query';
-import React from 'react';
 import { Loading } from '../Loading';
+import { useFocused } from '@/hooks/useFocused';
 
 const AppGradient = {
   start: { x: 2, y: 1 },
@@ -20,6 +20,7 @@ const AppGradient = {
 };
 
 export const Home = () => {
+  useFocused();
   const {
     isLoading,
     isError,
@@ -33,8 +34,7 @@ export const Home = () => {
   } = useInfiniteQuery({
     queryKey: 'poems',
     queryFn: ({ pageParam }) => getAllPoems(pageParam),
-    getNextPageParam: lastPage => lastPage.at(-1)?.id,
-    retry: 3
+    getNextPageParam: lastPage => lastPage.at(-1)?.id
   });
 
   if (isError) {
