@@ -1,3 +1,5 @@
+import { Timestamp } from '@google-cloud/firestore';
+
 interface Poem {
   id: string;
   title: string;
@@ -9,7 +11,7 @@ interface Poem {
   author: Author;
 }
 
-type PoemDB = Omit<Poem, 'id'>;
+type PoemDB = Omit<Poem, 'id' | 'createdAt'> & { createdAt: Timestamp };
 
 type PoemData = Omit<Poem, 'id' | 'likes' | 'createdAt'>;
 

@@ -1,3 +1,4 @@
+import { Poem, PoemDB } from '@/types/models/poem';
 import firestore from '@react-native-firebase/firestore';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore/lib';
 
@@ -11,7 +12,8 @@ export const mapSnapshotToPoems = (
 
     return {
       id: doc.id,
-      ...poetryQuote
+      ...poetryQuote,
+      createdAt: poetryQuote.createdAt.toDate()
     };
   });
 };
@@ -25,6 +27,7 @@ export const mapDocToPoem = (
 
   return {
     id: poem.id,
-    ...poetryQuote
+    ...poetryQuote,
+    createdAt: poetryQuote.createdAt.toDate()
   };
 };

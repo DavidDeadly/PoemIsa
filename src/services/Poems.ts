@@ -1,9 +1,11 @@
 import { PoemRepository } from '@/repositories';
+import { PoemDB, PoemData } from '@/types/models/poem';
+import { firebase } from '@react-native-firebase/functions';
 
-export const getAllPoems = () => {
+export const getAllPoems = (lastPoemId?: string) => {
   const poemRepository = PoemRepository.init();
 
-  return poemRepository.getAllPoems();
+  return poemRepository.getPoems({ lastPoemId, limit: 5 });
 };
 
 export const getPoemsByUser = (usedId: string) => {
@@ -18,7 +20,7 @@ export const createPoemDB = (poem: PoemData) => {
   const newPoem: PoemDB = {
     ...poem,
     likes: [],
-    createdAt: new Date()
+    createdAt: firebase.firestore.Timestamp.fromDate(new Date())
   };
 
   return poemRepository.createPoem(newPoem);

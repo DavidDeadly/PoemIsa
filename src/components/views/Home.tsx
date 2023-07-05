@@ -1,12 +1,18 @@
-import { FlatList, RefreshControl, StatusBar, StyleSheet } from 'react-native';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  FlatList,
+  RefreshControl,
+  StatusBar,
+  StyleSheet,
+  Text
+} from 'react-native';
 
 import { COLORS } from '@/constants';
-import { useIsFocused } from '@react-navigation/native';
 import { getAllPoems } from '@/services/Poems';
-import { useNotify } from '@/hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import { Poem } from '../Poem';
+import { useInfiniteQuery } from 'react-query';
+import React from 'react';
+import { Loading } from '../Loading';
 
 const AppGradient = {
   start: { x: 2, y: 1 },
@@ -14,30 +20,35 @@ const AppGradient = {
 };
 
 export const Home = () => {
-  const [poems, setPoems] = useState<Poem[]>([]);
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const isFocused = useIsFocused();
-  const notify = useNotify();
+  const {
+    isLoading,
+    isError,
+    data,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+    isFetchingNextPage,
+    error,
+    isRefetching
+  } = useInfiniteQuery({
+    queryKey: 'poems',
+    queryFn: ({ pageParam }) => getAllPoems(pageParam),
+    getNextPageParam: lastPage => lastPage.at(-1)?.id,
+    retry: 3
+  });
 
-  const getPoems = useCallback(
-    () =>
-      getAllPoems()
-        .then(setPoems)
-        .catch(() => notify.error('Error obteniendo todos los poemas')),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const handleRefresh = useCallback(() => {
-    setIsRefreshing(true);
-    getPoems().then(() => setIsRefreshing(false));
-  }, [getPoems]);
-
-  useEffect(() => {
-    if (isFocused) {
-      getPoems();
-    }
-  }, [isFocused, getPoems]);
+  if (isError) {
+    return (
+      <LinearGradient
+        accessibilityLabel="home"
+        colors={Object.values(COLORS.MAIN)}
+        style={[container, contentCenter]}
+        start={AppGradient.start}
+        end={AppGradient.end}>
+        <Text style={text}>Error: {(error as Error).message}</Text>
+      </LinearGradient>
+    );
+  }
 
   return (
     <LinearGradient
@@ -46,23 +57,38 @@ export const Home = () => {
       style={container}
       start={AppGradient.start}
       end={AppGradient.end}>
-      <FlatList
-        refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
-        }
-        contentContainerStyle={poemsContainer}
-        data={poems}
-        renderItem={({ item }) => <Poem poem={item} />}
-        keyExtractor={item => item.id}
-      />
+      {isError && <Text>Error consiguiendo los poemas.</Text>}
+      {isLoading ? (
+        <Loading styles={contentCenter} />
+      ) : (
+        <FlatList
+          refreshControl={
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+          }
+          onEndReached={() => fetchNextPage()}
+          contentContainerStyle={poemsContainer}
+          data={data?.pages.flat(1)}
+          renderItem={({ item: poem }) => <Poem poem={poem} key={poem.id} />}
+          keyExtractor={item => item.id}
+        />
+      )}
+      {hasNextPage === false && (
+        <Text style={text}>No hay más arte que mostrar.</Text>
+      )}
+      {isFetchingNextPage && <Text style={text}>Pidiendo más arte!!</Text>}
     </LinearGradient>
   );
 };
 
-const { container, poemsContainer } = StyleSheet.create({
+const { container, poemsContainer, text, contentCenter } = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight
+  },
+  contentCenter: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   text: {
     textAlign: 'center',

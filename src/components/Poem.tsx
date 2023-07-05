@@ -1,12 +1,13 @@
 import { COLORS } from '@/constants';
 import { useUser } from '@/hooks';
 import { likePoem, unlikePoem } from '@/services/Poems';
+import { Poem as PoemType } from '@/types/models/poem';
 import { Heart } from 'iconsax-react-native';
 import { FC, useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type PoemProps = {
-  poem: Poem;
+  poem: PoemType;
 };
 
 const useLikes = ({ likes, userId }: { likes: string[]; userId?: string }) => {
@@ -41,7 +42,7 @@ const useLikes = ({ likes, userId }: { likes: string[]; userId?: string }) => {
 };
 
 export const Poem: FC<PoemProps> = ({
-  poem: { id, title, author, likes, text }
+  poem: { id, title, author, likes, text, createdAt }
 }) => {
   const { user } = useUser();
   const { isLiked, numLikes, like, unlike } = useLikes({
@@ -74,7 +75,10 @@ export const Poem: FC<PoemProps> = ({
             source={{ uri: author.photoURL ?? undefined }}
             style={image}
           />
-          <Text style={authorText}>{author.displayName ?? 'Anonymous'}</Text>
+          <View>
+            <Text style={authorText}>{author.displayName ?? 'Anonymous'}</Text>
+            <Text style={date}>{createdAt.toLocaleDateString('es')}</Text>
+          </View>
         </View>
         <TouchableOpacity style={likesContainer} onPress={toggleLike}>
           <Text style={likesText}>{numLikes}</Text>
@@ -98,7 +102,8 @@ const {
   info,
   likesContainer,
   likesText,
-  authorInfo
+  authorInfo,
+  date
 } = StyleSheet.create({
   titleStyle: {
     textAlign: 'center',
@@ -120,6 +125,9 @@ const {
   info: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  date: {
+    color: COLORS.MAIN.PRIMARY
   },
   authorInfo: {
     flexDirection: 'row',

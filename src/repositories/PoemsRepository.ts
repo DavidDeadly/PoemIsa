@@ -3,6 +3,7 @@ import {
   mapSnapshotToPoems,
   poemsCollection
 } from '@/models/Poems';
+import { Poem, PoemDB } from '@/types/models/poem';
 import { firebase } from '@react-native-firebase/functions';
 
 export class PoemRepository implements IPoemsRepository {
@@ -45,6 +46,27 @@ export class PoemRepository implements IPoemsRepository {
     const poemsSnapshot = await poemsCollection
       .orderBy('createdAt', 'desc')
       .get();
+
+    const poems = mapSnapshotToPoems(poemsSnapshot);
+
+    return poems;
+  }
+
+  async getPoems({
+    lastPoemId,
+    limit = 10
+  }: {
+    lastPoemId?: string;
+    limit?: number;
+  }) {
+    let poemsQuery = poemsCollection.orderBy('createdAt', 'desc').limit(limit);
+
+    if (lastPoemId) {
+      const lastPoem = await poemsCollection.doc(lastPoemId).get();
+      poemsQuery = poemsQuery.startAfter(lastPoem);
+    }
+
+    const poemsSnapshot = await poemsQuery.get();
     const poems = mapSnapshotToPoems(poemsSnapshot);
 
     return poems;
