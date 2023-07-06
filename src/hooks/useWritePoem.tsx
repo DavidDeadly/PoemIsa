@@ -9,6 +9,7 @@ import { COLORS } from '@/constants';
 import { WritePoemHeaderRight } from '@/components/WritePoemHeaderRight';
 import { useUser } from './useUser';
 import { createPoemDB } from '@/services/Poems';
+import { Author, PoemDataCreate } from '@/types/models/poem';
 
 type useWritePoemParameter = {
   editorRef: TextEditorRef;
@@ -62,10 +63,9 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerShown: true,
       statusBarTranslucent: false,
-      statusBarAnimation: 'slide',
       statusBarColor: COLORS.MAIN.SECONDARY,
-      statusBarStyle: 'dark',
       headerTitle: () => (
         <WritePoemHeaderTitle
           initialTitle={title}

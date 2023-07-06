@@ -1,69 +1,28 @@
-import { COLORS } from '@/constants';
-import { useUser } from '@/hooks';
-import { likePoem, unlikePoem } from '@/services/Poems';
-import { Poem as PoemType } from '@/types/models/poem';
-import { Heart } from 'iconsax-react-native';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+import { COLORS } from '@/constants';
+import { PoemIsaStackParamList } from '@/types/components';
+import { Poem as PoemType } from '@/types/models/poem';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Likes } from '@/components/Likes';
 
 type PoemProps = {
   poem: PoemType;
 };
-
-const useLikes = ({ likes, userId }: { likes: string[]; userId?: string }) => {
-  const [isLiked, setIsLiked] = useState<boolean>();
-  const [numLikes, setNumLikes] = useState<number>(0);
-
-  const unlike = () => {
-    setIsLiked(false);
-    setNumLikes(num => num - 1);
-  };
-
-  const like = () => {
-    setIsLiked(true);
-    setNumLikes(num => num + 1);
-  };
-
-  useEffect(() => {
-    if (!userId) return;
-
-    const alreadyLiked = likes.includes(userId);
-
-    setIsLiked(alreadyLiked);
-    setNumLikes(likes.length);
-  }, [likes, userId]);
-
-  return {
-    isLiked,
-    numLikes,
-    like,
-    unlike
-  };
-};
-
 export const Poem: FC<PoemProps> = ({
   poem: { id, title, author, likes, text, createdAt }
 }) => {
-  const { user } = useUser();
-  const { isLiked, numLikes, like, unlike } = useLikes({
-    likes,
-    userId: user?.uid
-  });
+  const navigation = useNavigation<NavigationProp<PoemIsaStackParamList>>();
 
-  const toggleLike = async () => {
-    if (!user?.uid) return;
-    if (isLiked) {
-      await unlikePoem(id, user.uid);
-      unlike();
-      return;
-    }
-
-    await likePoem(id, user.uid);
-    like();
+  const goToDetailedPoem = () => {
+    navigation.navigate('Detalle Poem', {
+      poemId: id
+    });
   };
 
   return (
-    <View style={poem}>
+    <TouchableOpacity style={poem} onPress={goToDetailedPoem}>
       <Text style={titleStyle}>{title}</Text>
       <Text style={textStyle} numberOfLines={4}>
         {text}
@@ -80,16 +39,9 @@ export const Poem: FC<PoemProps> = ({
             <Text style={date}>{createdAt.toLocaleDateString('es')}</Text>
           </View>
         </View>
-        <TouchableOpacity style={likesContainer} onPress={toggleLike}>
-          <Text style={likesText}>{numLikes}</Text>
-          {isLiked ? (
-            <Heart size="30" color={COLORS.MAIN.PRIMARY} variant="Bulk" />
-          ) : (
-            <Heart size="30" color={COLORS.MAIN.PRIMARY} variant="Broken" />
-          )}
-        </TouchableOpacity>
+        <Likes likes={likes} poemId={id} />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -100,8 +52,6 @@ const {
   textStyle,
   image,
   info,
-  likesContainer,
-  likesText,
   authorInfo,
   date
 } = StyleSheet.create({
@@ -145,13 +95,5 @@ const {
     borderRadius: 100,
     borderWidth: 1,
     borderColor: COLORS.MAIN.SECONDARY
-  },
-  likesContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2
-  },
-  likesText: {
-    color: COLORS.MAIN.SECONDARY
   }
 });

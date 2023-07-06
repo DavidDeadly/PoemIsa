@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -10,7 +9,7 @@ const AppGradient = {
   end: { x: 2, y: 0 }
 };
 
-export const WritePoem: FC = () => (
+export const WritePoem = () => (
   <LinearGradient
     accessibilityLabel="editor"
     colors={Object.values(COLORS.MAIN)}

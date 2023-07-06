@@ -5,7 +5,7 @@ import { firebase } from '@react-native-firebase/functions';
 export const getAllPoems = (lastPoemId?: string) => {
   const poemRepository = PoemRepository.init();
 
-  return poemRepository.getPoems({ lastPoemId, limit: 5 });
+  return poemRepository.getPoems({ lastPoemId });
 };
 
 export const getPoemsByUser = (usedId: string) => {
@@ -26,7 +26,8 @@ export const createPoemDB = (poem: PoemData) => {
   return poemRepository.createPoem(newPoem);
 };
 
-export const getPoemById = (poemId: string) => {
+export const getPoemById = (poemId?: string) => {
+  if (!poemId) return Promise.reject('Required poemId');
   const poemRepository = PoemRepository.init();
 
   return poemRepository.getPoemById(poemId);

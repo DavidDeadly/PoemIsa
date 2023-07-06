@@ -7,12 +7,10 @@ import {
 } from 'react-native';
 
 import { COLORS } from '@/constants';
-import { getAllPoems } from '@/services/Poems';
 import LinearGradient from 'react-native-linear-gradient';
-import { Poem } from '../Poem';
-import { useInfiniteQuery } from 'react-query';
-import { Loading } from '../Loading';
-import { useFocused } from '@/hooks/useFocused';
+import { Poem } from '@/components/Poem';
+import { Loading } from '@/components/Loading';
+import { usePoemsFromInfiniteQuery } from '@/hooks/usePoemsFromInfiniteQuery';
 
 const AppGradient = {
   start: { x: 2, y: 1 },
@@ -20,22 +18,17 @@ const AppGradient = {
 };
 
 export const Home = () => {
-  useFocused();
   const {
     isLoading,
     isError,
-    data,
+    poems,
     fetchNextPage,
     hasNextPage,
     refetch,
     isFetchingNextPage,
     error,
-    isRefetching
-  } = useInfiniteQuery({
-    queryKey: 'poems',
-    queryFn: ({ pageParam }) => getAllPoems(pageParam),
-    getNextPageParam: lastPage => lastPage.at(-1)?.id
-  });
+    isRefreshing
+  } = usePoemsFromInfiniteQuery();
 
   if (isError) {
     return (
@@ -51,7 +44,8 @@ export const Home = () => {
   }
 
   const handleNewPage = () => {
-    if (!hasNextPage || isFetchingNextPage) return;
+    const pausedInfinite = !hasNextPage || isFetchingNextPage;
+    if (pausedInfinite) return;
     fetchNextPage();
   };
 
@@ -64,20 +58,23 @@ export const Home = () => {
       end={AppGradient.end}>
       {isError && <Text>Error consiguiendo los poemas.</Text>}
       {isLoading ? (
-        <Loading styles={contentCenter} />
+        <Loading style={contentCenter} />
       ) : (
         <FlatList
+          onEndReached={handleNewPage}
+          contentContainerStyle={poemsContainer}
+          data={poems}
+          renderItem={({ item: poem }) => <Poem poem={poem} key={poem.id} />}
+          keyExtractor={item => item.id}
           refreshControl={
             <RefreshControl
-              refreshing={isRefetching && !isFetchingNextPage}
+              enabled
+              colors={Object.values(COLORS.MAIN)}
+              progressBackgroundColor={COLORS.MAIN.SECONDARY}
+              refreshing={isRefreshing}
               onRefresh={refetch}
             />
           }
-          onEndReached={handleNewPage}
-          contentContainerStyle={poemsContainer}
-          data={data?.pages.flat(1)}
-          renderItem={({ item: poem }) => <Poem poem={poem} key={poem.id} />}
-          keyExtractor={item => item.id}
         />
       )}
       {hasNextPage === false && (

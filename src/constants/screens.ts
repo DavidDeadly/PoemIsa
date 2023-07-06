@@ -7,6 +7,7 @@ export const SCREENS = {
   APP: {
     APP: 'App',
     WRITE: 'Escribir',
-    CAPTURE: 'Capturar'
+    CAPTURE: 'Capturar',
+    POEM_DETAILED: 'Detalle Poem'
   }
 } as const;
