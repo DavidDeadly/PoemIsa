@@ -1,5 +1,5 @@
 import { useLikes } from '@/hooks/useLikes';
-import { likePoem, unlikePoem } from '@/services/Poems';
+import { usePoemsStore } from '@/hooks/usePoemsStore';
 
 export const useLikePoem = ({
   likes = [],
@@ -8,6 +8,7 @@ export const useLikePoem = ({
   likes?: string[];
   poemId?: string;
 }) => {
+  const { likePoem, unlikePoem } = usePoemsStore();
   const { isLiked, numLikes, toggleLike } = useLikes({
     likes,
     idToLike: poemId,

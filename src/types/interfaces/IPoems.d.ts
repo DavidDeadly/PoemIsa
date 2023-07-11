@@ -1,5 +1,7 @@
+import { Poem } from '@/models/poem';
+
 interface IPoemsRepository {
-  createPoem: (poem: PoemDB) => void;
+  createPoem: (poem: PoemDB) => Poem;
   getPoemsByUser: (userID: string) => Promise<Poem[]>;
   getAllPoems: () => Promise<Poem[]>;
   getPoems: ({

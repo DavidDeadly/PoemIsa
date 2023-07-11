@@ -5,7 +5,7 @@ import { firebase } from '@react-native-firebase/functions';
 export const getAllPoems = (lastPoemId?: string) => {
   const poemRepository = PoemRepository.init();
 
-  return poemRepository.getPoems({ lastPoemId });
+  return poemRepository.getPoems({ lastPoemId, limit: 5 });
 };
 
 export const getPoemsByUser = (usedId: string) => {

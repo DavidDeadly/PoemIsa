@@ -3,6 +3,7 @@ import {
   mapSnapshotToPoems,
   poemsCollection
 } from '@/models/Poems';
+import { IPoemsRepository } from '@/types/interfaces/IPoems';
 import { Poem, PoemDB } from '@/types/models/poem';
 import { firebase } from '@react-native-firebase/functions';
 
@@ -18,7 +19,10 @@ export class PoemRepository implements IPoemsRepository {
   }
 
   createPoem(poem: PoemDB) {
-    return poemsCollection.add(poem);
+    return poemsCollection
+      .add(poem)
+      .then(doc => doc.get())
+      .then(mapDocToPoem);
   }
 
   async getPoemsByUser(userID: string): Promise<Poem[]> {

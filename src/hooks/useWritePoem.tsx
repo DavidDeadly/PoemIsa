@@ -8,8 +8,8 @@ import { TextEditorRef } from '@/components/TextEditor';
 import { COLORS } from '@/constants';
 import { WritePoemHeaderRight } from '@/components/WritePoemHeaderRight';
 import { useUser } from './useUser';
-import { createPoemDB } from '@/services/Poems';
 import { Author, PoemDataCreate } from '@/types/models/poem';
+import { usePoemsStore } from './usePoemsStore';
 
 type useWritePoemParameter = {
   editorRef: TextEditorRef;
@@ -22,7 +22,9 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
     useCurrentWrittingPoem();
   const { user } = useUser();
 
-  const createPoem = useCallback(
+  const { createPoem } = usePoemsStore();
+
+  const persistPoem = useCallback(
     (poemData: PoemDataCreate) => {
       const author: Author = {
         id: user?.uid,
@@ -30,13 +32,13 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
         photoURL: user?.photoURL
       };
 
-      return createPoemDB({
+      return createPoem({
         title,
         ...poemData,
         author
       });
     },
-    [title, user]
+    [title, user, createPoem]
   );
 
   const savePoem = useCallback(async () => {
@@ -48,7 +50,7 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
       editorRef.current.getHtml()
     ]);
 
-    createPoem({
+    persistPoem({
       text,
       html,
       content: contentToSave.ops
@@ -59,7 +61,7 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
         navigation.goBack();
       })
       .catch(() => notify.error('Ha ocurrido un error posteando el poema!'));
-  }, [editorRef, navigation, notify, resetPoem, createPoem]);
+  }, [editorRef, navigation, notify, resetPoem, persistPoem]);
 
   useLayoutEffect(() => {
     navigation.setOptions({

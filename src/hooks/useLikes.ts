@@ -4,8 +4,8 @@ import { useNotify, useUser } from '@/hooks';
 type UseLikes = {
   likes: string[];
   idToLike?: string;
-  doOnLike: (idToLike: string, userId: string) => Promise<any>;
-  doOnUnlike: (idToLike: string, userId: string) => Promise<any>;
+  doOnLike: (idToLike: string, userId: string) => Promise<void>;
+  doOnUnlike: (idToLike: string, userId: string) => Promise<void>;
 };
 
 export const useLikes = ({
@@ -53,7 +53,7 @@ export const useLikes = ({
   useEffect(() => {
     if (!user?.uid) return;
 
-    const alreadyLiked = likes.includes(user?.uid);
+    const alreadyLiked = likes.includes(user.uid);
 
     setIsLiked(alreadyLiked);
     setNumLikes(likes.length);

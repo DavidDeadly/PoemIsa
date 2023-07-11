@@ -64,6 +64,7 @@ export const Home = () => {
           onEndReached={handleNewPage}
           contentContainerStyle={poemsContainer}
           data={poems}
+          extraData={poems}
           renderItem={({ item: poem }) => <Poem poem={poem} key={poem.id} />}
           keyExtractor={item => item.id}
           refreshControl={
