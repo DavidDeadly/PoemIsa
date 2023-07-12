@@ -12,8 +12,8 @@ import { Button } from '@/components/Button';
 import { Warning2 } from 'iconsax-react-native';
 import { COLORS } from '@/constants';
 import { ToastOptions } from 'react-native-toast-notifications/lib/typescript/toast';
+import { MAX_TITLE_LENGHT } from '@/constants/poems';
 
-const MAX_TITLE_LENGHT = 50;
 const warningToastConfig: ToastOptions = {
   placement: 'top',
   duration: 5000,
