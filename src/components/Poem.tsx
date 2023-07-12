@@ -1,19 +1,36 @@
 import { FC } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewToken
+} from 'react-native';
 
 import { COLORS } from '@/constants';
 import { PoemIsaStackParamList } from '@/types/components';
 import { Poem as PoemType } from '@/types/models/poem';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { Likes } from '@/components/Likes';
+import Animated, { SharedValue } from 'react-native-reanimated';
+import { useAnimateViewableItem } from '@/hooks/useAnimateViewableItem';
 
 type PoemProps = {
   poem: PoemType;
+  viewableItems: SharedValue<ViewToken[]>;
 };
+
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 export const Poem: FC<PoemProps> = ({
-  poem: { id, title, author, likes, text, createdAt }
+  poem: { id, title, author, likes, text, createdAt },
+  viewableItems
 }) => {
   const navigation = useNavigation<NavigationProp<PoemIsaStackParamList>>();
+  const viewableStyle = useAnimateViewableItem({
+    viewableItems,
+    itemId: id
+  });
 
   const goToDetailedPoem = () => {
     navigation.navigate('Detalle Poem', {
@@ -22,7 +39,7 @@ export const Poem: FC<PoemProps> = ({
   };
 
   return (
-    <TouchableOpacity style={poem} onPress={goToDetailedPoem}>
+    <AnimatedTouchable style={[poem, viewableStyle]} onPress={goToDetailedPoem}>
       <Text style={titleStyle}>{title}</Text>
       <Text style={textStyle} numberOfLines={4}>
         {text}
@@ -41,7 +58,7 @@ export const Poem: FC<PoemProps> = ({
         </View>
         <Likes likes={likes} poemId={id} />
       </View>
-    </TouchableOpacity>
+    </AnimatedTouchable>
   );
 };
 

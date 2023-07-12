@@ -4,7 +4,8 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TextInput
+  TextInput,
+  ViewToken
 } from 'react-native';
 
 import { COLORS } from '@/constants';
@@ -14,6 +15,8 @@ import { Loading } from '@/components/Loading';
 import { usePoemsFromInfiniteQuery } from '@/hooks/usePoemsFromInfiniteQuery';
 import { MAX_TITLE_LENGHT } from '@/constants/poems';
 import { InfinitQueryFooter } from '@/components/InfiniteQueryFooter';
+import { useSharedValue } from 'react-native-reanimated';
+import { useCallback } from 'react';
 
 const AppGradient = {
   start: { x: 2, y: 1 },
@@ -32,6 +35,15 @@ export const Home = () => {
     error,
     isRefreshing
   } = usePoemsFromInfiniteQuery();
+
+  const viewableItems = useSharedValue<ViewToken[]>([]);
+
+  const onViewableItems = useCallback(
+    ({ viewableItems: vItems }: { viewableItems: ViewToken[] }) => {
+      viewableItems.value = vItems;
+    },
+    [viewableItems]
+  );
 
   if (isError) {
     return (
@@ -71,13 +83,16 @@ export const Home = () => {
         <Loading style={contentCenter} />
       ) : (
         <FlatList
-          ListHeaderComponent={<Text style={title}>Poems</Text>}
-          onEndReached={handleNewPage}
-          contentContainerStyle={poemsContainer}
           data={poems}
           extraData={poems}
-          renderItem={({ item: poem }) => <Poem poem={poem} key={poem.id} />}
           keyExtractor={item => item.id}
+          onEndReached={handleNewPage}
+          contentContainerStyle={poemsContainer}
+          onViewableItemsChanged={onViewableItems}
+          ListHeaderComponent={<Text style={title}>Poems</Text>}
+          renderItem={({ item: poem }) => (
+            <Poem viewableItems={viewableItems} poem={poem} key={poem.id} />
+          )}
           ListFooterComponent={
             <InfinitQueryFooter
               iconSize={50}
