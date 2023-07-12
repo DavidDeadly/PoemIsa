@@ -21,7 +21,6 @@ type PoemProps = {
   viewableItems: SharedValue<ViewToken[]>;
 };
 
-const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 export const Poem: FC<PoemProps> = ({
   poem: { id, title, author, likes, text, createdAt },
   viewableItems
@@ -39,26 +38,30 @@ export const Poem: FC<PoemProps> = ({
   };
 
   return (
-    <AnimatedTouchable style={[poem, viewableStyle]} onPress={goToDetailedPoem}>
-      <Text style={titleStyle}>{title}</Text>
-      <Text style={textStyle} numberOfLines={4}>
-        {text}
-      </Text>
-      <View style={info}>
-        <View style={authorInfo}>
-          <Image
-            defaultSource={require('@/assets/images/default-profile-photo.png')}
-            source={{ uri: author.photoURL ?? undefined }}
-            style={image}
-          />
-          <View>
-            <Text style={authorText}>{author.displayName ?? 'Anonymous'}</Text>
-            <Text style={date}>{createdAt.toLocaleDateString('es')}</Text>
+    <TouchableOpacity onPress={goToDetailedPoem}>
+      <Animated.View style={[poem, viewableStyle]}>
+        <Text style={titleStyle}>{title}</Text>
+        <Text style={textStyle} numberOfLines={4}>
+          {text}
+        </Text>
+        <View style={info}>
+          <View style={authorInfo}>
+            <Image
+              defaultSource={require('@/assets/images/default-profile-photo.png')}
+              source={{ uri: author.photoURL ?? undefined }}
+              style={image}
+            />
+            <View>
+              <Text style={authorText}>
+                {author.displayName ?? 'Anonymous'}
+              </Text>
+              <Text style={date}>{createdAt.toLocaleDateString('es')}</Text>
+            </View>
           </View>
+          <Likes likes={likes} poemId={id} />
         </View>
-        <Likes likes={likes} poemId={id} />
-      </View>
-    </AnimatedTouchable>
+      </Animated.View>
+    </TouchableOpacity>
   );
 };
 

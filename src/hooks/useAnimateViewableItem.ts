@@ -25,7 +25,7 @@ export const useAnimateViewableItem = ({
         }
       ]
     };
-  }, []);
+  });
 
   return reanimatedStyle;
 };
