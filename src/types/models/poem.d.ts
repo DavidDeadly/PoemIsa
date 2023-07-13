@@ -6,14 +6,15 @@ interface Poem {
   content: never[];
   html: string;
   text: string;
-  likes: string[];
+  usersLiked: string[];
+  likes: number;
   createdAt: Date;
   author: Author;
 }
 
 type PoemDB = Omit<Poem, 'id' | 'createdAt'> & { createdAt: Timestamp };
 
-type PoemData = Omit<Poem, 'id' | 'likes' | 'createdAt'>;
+type PoemData = Omit<Poem, 'id' | 'likes' | 'usersLiked' | 'createdAt'>;
 
 type PoemDataCreate = Pick<Poem, 'content' | 'html' | 'text'>;
 

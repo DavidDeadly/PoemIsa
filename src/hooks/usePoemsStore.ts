@@ -5,6 +5,7 @@ import { create } from 'zustand';
 interface PoemsStore {
   poems: Poem[];
   fillPoems: (poems: Poem[]) => void;
+  fillPoem: (poem: Poem) => void;
   createPoem: (newPoem: PoemData) => Promise<void>;
   likePoem: (poemId: string, userId: string) => Promise<void>;
   unlikePoem: (poemId: string, userId: string) => Promise<void>;
@@ -12,6 +13,11 @@ interface PoemsStore {
 
 export const usePoemsStore = create<PoemsStore>()(set => ({
   poems: [],
+  fillPoem(poem) {
+    set(state => ({
+      poems: state.poems.map(p => (poem.id === p.id ? poem : p))
+    }));
+  },
   fillPoems(poems) {
     set(() => ({ poems }));
   },
@@ -26,14 +32,15 @@ export const usePoemsStore = create<PoemsStore>()(set => ({
   likePoem(poemId, userId) {
     set(state => ({
       poems: [...state.poems].map(poem => {
-        const newLikes = [...poem.likes];
+        const newLikes = [...poem.usersLiked];
         if (poem.id === poemId) {
           newLikes.push(userId);
         }
 
         return {
           ...poem,
-          likes: newLikes
+          usersLiked: newLikes,
+          likes: newLikes.length
         };
       })
     }));
@@ -45,12 +52,13 @@ export const usePoemsStore = create<PoemsStore>()(set => ({
       poems: [...state.poems].map(poem => {
         const newLikes =
           poem.id === poemId
-            ? poem.likes.filter(id => id !== userId)
-            : poem.likes;
+            ? poem.usersLiked.filter(id => id !== userId)
+            : poem.usersLiked;
 
         return {
           ...poem,
-          likes: newLikes
+          usersLiked: newLikes,
+          likes: newLikes.length
         };
       })
     }));

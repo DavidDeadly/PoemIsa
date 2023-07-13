@@ -19,7 +19,8 @@ export const createPoemDB = (poem: PoemData) => {
 
   const newPoem: PoemDB = {
     ...poem,
-    likes: [],
+    likes: 0,
+    usersLiked: [],
     createdAt: firebase.firestore.Timestamp.fromDate(new Date())
   };
 

@@ -2,31 +2,40 @@ import { useEffect, useState } from 'react';
 import { useNotify, useUser } from '@/hooks';
 
 type UseLikes = {
-  likes: string[];
+  usersLiked: string[];
   idToLike?: string;
   doOnLike: (idToLike: string, userId: string) => Promise<void>;
   doOnUnlike: (idToLike: string, userId: string) => Promise<void>;
 };
 
 export const useLikes = ({
-  likes,
+  usersLiked,
   idToLike,
   doOnLike,
   doOnUnlike
 }: UseLikes) => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [numLikes, setNumLikes] = useState<number>(0);
   const { user } = useUser();
   const notify = useNotify();
 
-  const unlike = () => {
+  const unlike = (id: string, userId: string) => {
     setIsLiked(false);
-    setNumLikes(num => num - 1);
+
+    doOnUnlike(id, userId).catch(err => {
+      like(id, userId);
+      notify.error('Hubo un error al romper corazón.');
+      console.log('Error unliking post: ', err.message);
+    });
   };
 
-  const like = () => {
+  const like = (id: string, userId: string) => {
     setIsLiked(true);
-    setNumLikes(num => num + 1);
+
+    return doOnLike(id, userId).catch(err => {
+      unlike(id, userId);
+      notify.error('Hubo un error al entregar tu corazón .');
+      console.log('Error liking post: ', err.message);
+    });
   };
 
   const toggleLike = () => {
@@ -34,34 +43,23 @@ export const useLikes = ({
     if (!userId || !idToLike) return null;
 
     if (isLiked) {
-      unlike();
-      return doOnUnlike(idToLike, userId).catch(err => {
-        like();
-        notify.error('Hubo un error al romper corazón.');
-        console.log('Error unliking post: ', err.message);
-      });
+      unlike(idToLike, userId);
+      return;
     }
 
-    like();
-    return doOnLike(idToLike, userId).catch(err => {
-      unlike();
-      notify.error('Hubo un error al entregar tu corazón .');
-      console.log('Error liking post: ', err.message);
-    });
+    like(idToLike, userId);
   };
 
   useEffect(() => {
     if (!user?.uid) return;
 
-    const alreadyLiked = likes.includes(user.uid);
+    const alreadyLiked = usersLiked.includes(user.uid);
 
     setIsLiked(alreadyLiked);
-    setNumLikes(likes.length);
-  }, [likes, user]);
+  }, [usersLiked, user]);
 
   return {
     isLiked,
-    numLikes,
     toggleLike
   };
 };

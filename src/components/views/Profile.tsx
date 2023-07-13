@@ -7,17 +7,18 @@ import {
   Text,
   View
 } from 'react-native';
+import { Logout } from 'iconsax-react-native';
 
 import { useNotify, useUser } from '@/hooks';
 import { COLORS } from '@/constants';
-import LinearGradient from 'react-native-linear-gradient';
 import { useIsFocused } from '@react-navigation/native';
 import { getPoemsByUser } from '@/services/Poems';
 import { Auth } from '@/services';
-import { Logout } from 'iconsax-react-native';
-import { Button } from '../Button';
+import { Button } from '@/components/Button';
+import { Poem } from '@/types/models/poem';
+import { PoemIsaGradient } from '@/components/PoemIsaGradient';
 
-const AppGradient = {
+const ProfileGradient = {
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 }
 };
@@ -43,12 +44,10 @@ export const Profile = () => {
   }, [isFocused]);
 
   return (
-    <LinearGradient
-      accessibilityLabel="profile"
-      colors={Object.values(COLORS.MAIN)}
+    <PoemIsaGradient
+      label="profile"
       style={container}
-      start={AppGradient.start}
-      end={AppGradient.end}>
+      gradient={ProfileGradient}>
       <View style={userInfoContainer}>
         <Button onPress={signOut} style={signOutBtn}>
           <Logout size="20" color={COLORS.MAIN.SECONDARY} />
@@ -85,7 +84,7 @@ export const Profile = () => {
         }}
         keyExtractor={item => item.id}
       />
-    </LinearGradient>
+    </PoemIsaGradient>
   );
 };
 

@@ -5,19 +5,20 @@ import { FC } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 type LikeIconProps = {
-  likes?: string[];
+  usersLiked?: string[];
+  likes?: number;
   poemId?: string;
 };
 
-export const Likes: FC<LikeIconProps> = ({ likes, poemId }) => {
-  const { isLiked, numLikes, toggleLike } = useLikePoem({
-    likes,
+export const Likes: FC<LikeIconProps> = ({ usersLiked, likes, poemId }) => {
+  const { isLiked, toggleLike } = useLikePoem({
+    usersLiked,
     poemId
   });
 
   return (
     <TouchableOpacity style={likesContainer} onPress={toggleLike}>
-      <Text style={likesText}>{numLikes}</Text>
+      <Text style={likesText}>{likes}</Text>
       <Heart
         size="30"
         color={COLORS.MAIN.PRIMARY}

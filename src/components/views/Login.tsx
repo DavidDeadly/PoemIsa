@@ -5,7 +5,6 @@ import {
   StatusBar
 } from 'react-native';
 import { Google } from 'iconsax-react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import Animated, { FlipInXDown } from 'react-native-reanimated';
 
 import { Button } from '@/components';
@@ -17,8 +16,9 @@ import { useNotify, useUser } from '@/hooks';
 import { useFlipQuoteEffects } from '@/hooks';
 import { SignInException } from '@/errors';
 import { ERRORS, ERRORS_MAP_TO_USER } from '@/constants';
+import { PoemIsaGradient } from '@/components/PoemIsaGradient';
 
-const AppGradient = {
+const LoginGradient = {
   start: { x: 1, y: 1 },
   end: { x: 0, y: 0 }
 };
@@ -46,12 +46,10 @@ export const Login = () => {
   };
 
   return (
-    <LinearGradient
-      accessibilityLabel="login"
-      colors={Object.values(COLORS.MAIN)}
+    <PoemIsaGradient
+      label="login"
       style={styles.container}
-      start={AppGradient.start}
-      end={AppGradient.end}>
+      gradient={LoginGradient}>
       <Text style={styles.title}>PoemIsa</Text>
 
       <Button
@@ -72,7 +70,7 @@ export const Login = () => {
       </TouchableWithoutFeedback>
 
       {!randomQuote ? (
-        <Loading styles={styles.quoteContainer} />
+        <Loading style={styles.quoteContainer} />
       ) : (
         <FadeInView
           accessibilityLabel="quote"
@@ -81,7 +79,7 @@ export const Login = () => {
           <Quote quote={randomQuote} fontSize={20} />
         </FadeInView>
       )}
-    </LinearGradient>
+    </PoemIsaGradient>
   );
 };
 

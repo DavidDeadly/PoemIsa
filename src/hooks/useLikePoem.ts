@@ -2,15 +2,15 @@ import { useLikes } from '@/hooks/useLikes';
 import { usePoemsStore } from '@/hooks/usePoemsStore';
 
 export const useLikePoem = ({
-  likes = [],
+  usersLiked = [],
   poemId
 }: {
-  likes?: string[];
+  usersLiked?: string[];
   poemId?: string;
 }) => {
   const { likePoem, unlikePoem } = usePoemsStore();
-  const { isLiked, numLikes, toggleLike } = useLikes({
-    likes,
+  const { isLiked, toggleLike } = useLikes({
+    usersLiked,
     idToLike: poemId,
     doOnLike: likePoem,
     doOnUnlike: unlikePoem
@@ -18,7 +18,6 @@ export const useLikePoem = ({
 
   return {
     isLiked,
-    numLikes,
     toggleLike
   };
 };

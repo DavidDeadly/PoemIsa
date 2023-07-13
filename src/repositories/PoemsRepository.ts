@@ -78,13 +78,15 @@ export class PoemRepository implements IPoemsRepository {
 
   likePoem(poemId: string, userId: string): Promise<void> {
     return poemsCollection.doc(poemId).update({
-      likes: firebase.firestore.FieldValue.arrayUnion(userId)
+      usersLiked: firebase.firestore.FieldValue.arrayUnion(userId),
+      likes: firebase.firestore.FieldValue.increment(1)
     });
   }
 
   unlikePoem(poemId: string, userId: string): Promise<void> {
     return poemsCollection.doc(poemId).update({
-      likes: firebase.firestore.FieldValue.arrayRemove(userId)
+      usersLiked: firebase.firestore.FieldValue.arrayRemove(userId),
+      likes: firebase.firestore.FieldValue.increment(-1)
     });
   }
 }

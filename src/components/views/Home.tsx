@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import { COLORS } from '@/constants';
-import LinearGradient from 'react-native-linear-gradient';
 import { Poem } from '@/components/Poem';
 import { Loading } from '@/components/Loading';
 import { usePoemsFromInfiniteQuery } from '@/hooks/usePoemsFromInfiniteQuery';
@@ -17,8 +16,9 @@ import { MAX_TITLE_LENGHT } from '@/constants/poems';
 import { InfinitQueryFooter } from '@/components/InfiniteQueryFooter';
 import { useSharedValue } from 'react-native-reanimated';
 import { useCallback } from 'react';
+import { PoemIsaGradient } from '../PoemIsaGradient';
 
-const AppGradient = {
+const HomeGradient = {
   start: { x: 2, y: 1 },
   end: { x: 0, y: 0 }
 };
@@ -47,14 +47,12 @@ export const Home = () => {
 
   if (isError) {
     return (
-      <LinearGradient
-        accessibilityLabel="home"
-        colors={Object.values(COLORS.MAIN)}
+      <PoemIsaGradient
+        label="home"
         style={[container, contentCenter]}
-        start={AppGradient.start}
-        end={AppGradient.end}>
+        gradient={HomeGradient}>
         <Text style={text}>Error: {(error as Error).message}</Text>
-      </LinearGradient>
+      </PoemIsaGradient>
     );
   }
 
@@ -65,12 +63,7 @@ export const Home = () => {
   };
 
   return (
-    <LinearGradient
-      accessibilityLabel="home"
-      colors={Object.values(COLORS.MAIN)}
-      style={container}
-      start={AppGradient.start}
-      end={AppGradient.end}>
+    <PoemIsaGradient label="home" style={container} gradient={HomeGradient}>
       <TextInput
         numberOfLines={1}
         maxLength={MAX_TITLE_LENGHT}
@@ -111,7 +104,7 @@ export const Home = () => {
           }
         />
       )}
-    </LinearGradient>
+    </PoemIsaGradient>
   );
 };
 

@@ -22,7 +22,7 @@ type PoemProps = {
 };
 
 export const Poem: FC<PoemProps> = ({
-  poem: { id, title, author, likes, text, createdAt },
+  poem: { id, title, author, usersLiked, likes, text, createdAt },
   viewableItems
 }) => {
   const navigation = useNavigation<NavigationProp<PoemIsaStackParamList>>();
@@ -58,7 +58,7 @@ export const Poem: FC<PoemProps> = ({
               <Text style={date}>{createdAt.toLocaleDateString('es')}</Text>
             </View>
           </View>
-          <Likes likes={likes} poemId={id} />
+          <Likes usersLiked={usersLiked} likes={likes} poemId={id} />
         </View>
       </Animated.View>
     </TouchableOpacity>

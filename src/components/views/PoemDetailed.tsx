@@ -1,123 +1,71 @@
-import { getPoemById } from '@/services/Poems';
-import { PoemIsaStackParamList } from '@/types/components';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { Image, StatusBar, StyleSheet, Text, View } from 'react-native';
-import { useQuery } from 'react-query';
-import { Loading } from '../Loading';
-import LinearGradient from 'react-native-linear-gradient';
-import { COLORS } from '@/constants';
 import { WebView } from 'react-native-webview';
-import { Likes } from '@/components/Likes';
-import { Author } from '@/types/models/poem';
-import { FC } from 'react';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
-const AppGradient = {
+import { Loading } from '@/components/Loading';
+import { PoemInfo } from '@/components/PoemInfo';
+import { COLORS } from '@/constants';
+import { useDetailedPoem } from '@/hooks/useDetailedPoem';
+import { PoemIsaGradient } from '@/components/PoemIsaGradient';
+
+const PoemDetailedGradient = {
   start: { x: 2, y: 1 },
   end: { x: 0, y: 0 }
 };
 
-type PoemInfo = {
-  displayIf: boolean;
-  poemId?: string;
-  author?: Author;
-  createdAt?: Date;
-  likes?: string[];
-};
-
-const PoemInfo: FC<PoemInfo> = ({
-  displayIf,
-  author,
-  poemId,
-  createdAt,
-  likes
-}) => {
-  if (!displayIf) return null;
-
-  return (
-    <View style={info}>
-      <View style={authorInfo}>
-        <Image
-          defaultSource={require('@/assets/images/default-profile-photo.png')}
-          source={{ uri: author?.photoURL ?? undefined }}
-          style={image}
-        />
-        <View>
-          <Text style={authorText}>{author?.displayName ?? 'Anonymous'}</Text>
-          <Text style={date}>{createdAt?.toLocaleDateString('es')}</Text>
-        </View>
-      </View>
-      <Likes likes={likes} poemId={poemId} />
-    </View>
-  );
-};
-
 export const PoemDetailed = () => {
-  const { params } = useRoute<RouteProp<PoemIsaStackParamList>>();
-  const { isLoading, isError, data, error } = useQuery({
-    queryKey: `poem-${params?.poemId}`,
-    queryFn: () => getPoemById(params?.poemId)
-  });
+  const { poem, isLoading, isError, error } = useDetailedPoem();
 
   if (isError) {
     return (
-      <LinearGradient
-        accessibilityLabel="home"
-        colors={Object.values(COLORS.MAIN)}
+      <PoemIsaGradient
+        label="poemDetailed"
         style={[container, contentCenter]}
-        start={AppGradient.start}
-        end={AppGradient.end}>
+        gradient={PoemDetailedGradient}>
         <Text style={title}>Error: {(error as Error).message}</Text>
-      </LinearGradient>
+      </PoemIsaGradient>
     );
   }
 
   return (
-    <LinearGradient
-      accessibilityLabel="home"
-      colors={Object.values(COLORS.MAIN)}
+    <PoemIsaGradient
+      label="poemDetailed"
       style={container}
-      start={AppGradient.start}
-      end={AppGradient.end}>
+      gradient={PoemDetailedGradient}>
       {isLoading ? (
         <Loading style={contentCenter} />
       ) : (
         <View style={poemContainer}>
-          <Text style={[title, border]}>{data?.title}</Text>
+          <Text style={[title, border]}>{poem?.title}</Text>
           <WebView
-            style={{
-              backgroundColor: 'transparent'
-            }}
+            style={webView}
             containerStyle={[webViewContainer, border]}
             minimumFontSize={50}
             originWhitelist={['*']}
-            source={{ html: data?.html ?? '' }}
+            source={{ html: poem?.html ?? '' }}
             androidLayerType="software"
           />
           <PoemInfo
-            displayIf={Boolean(data)}
-            poemId={data?.id}
-            likes={data?.likes}
-            author={data?.author}
-            createdAt={data?.createdAt}
+            displayIf={Boolean(poem)}
+            poemId={poem?.id}
+            likes={poem?.likes}
+            author={poem?.author}
+            usersLiked={poem?.usersLiked}
+            createdAt={poem?.createdAt}
           />
         </View>
       )}
-    </LinearGradient>
+    </PoemIsaGradient>
   );
 };
 
 const {
   container,
   contentCenter,
+  webView,
   webViewContainer,
   poemContainer,
   title,
-  border,
-  info,
-  date,
-  authorInfo,
-  authorText,
-  image
+  border
 } = StyleSheet.create({
   container: {
     flex: 1,
@@ -132,6 +80,9 @@ const {
     flex: 1,
     padding: 10,
     borderTopWidth: 0
+  },
+  webView: {
+    backgroundColor: 'transparent'
   },
   border: {
     borderColor: `${COLORS.MAIN.PRIMARY}80`,
@@ -150,29 +101,5 @@ const {
     borderBottomWidth: 0,
     textAlign: 'center',
     fontFamily: 'MontserratAlternates-ExtraBoldItalic'
-  },
-  info: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  date: {
-    color: COLORS.MAIN.PRIMARY
-  },
-  authorInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5
-  },
-  authorText: {
-    fontStyle: 'italic',
-    fontWeight: '500',
-    color: '#222'
-  },
-  image: {
-    width: 30,
-    height: 30,
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: COLORS.MAIN.SECONDARY
   }
 });
