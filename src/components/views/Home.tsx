@@ -53,7 +53,14 @@ export const Home = () => {
   };
 
   return (
-    <PoemIsaGradient label="home" style={container} gradient={HomeGradient}>
+    <PoemIsaGradient
+      label="home"
+      style={container}
+      gradient={HomeGradient}
+      LeftMenuComponent={
+        <Text style={sideText}>Oye... sabes que TE AMOOO!!! No??</Text>
+      }
+      LeftMenuComponentStyle={sideMenu}>
       <TextInput
         numberOfLines={1}
         maxLength={MAX_TITLE_LENGHT}
@@ -98,40 +105,59 @@ export const Home = () => {
   );
 };
 
-const { container, poemsContainer, text, title, contentCenter, searchBar } =
-  StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingTop: StatusBar.currentHeight
-    },
-    contentCenter: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    text: {
-      textAlign: 'center',
-      color: '#222'
-    },
-    title: {
-      color: COLORS.MAIN.PRIMARY,
-      fontSize: 40,
-      fontFamily: 'MontserratAlternates-ExtraBoldItalic',
-      marginBottom: 10
-    },
-    poemsContainer: {
-      marginHorizontal: 20,
-      gap: 10
-    },
-    searchBar: {
-      backgroundColor: `${COLORS.MAIN.PRIMARY}80`,
-      color: COLORS.MAIN.PRIMARY,
-      fontSize: 20,
-      marginHorizontal: 20,
-      padding: 15,
-      borderRadius: 20,
-      marginVertical: 10,
-      fontStyle: 'italic',
-      fontWeight: '500'
-    }
-  });
+const {
+  container,
+  poemsContainer,
+  text,
+  title,
+  contentCenter,
+  searchBar,
+  sideText,
+  sideMenu
+} = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight
+  },
+  contentCenter: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  text: {
+    textAlign: 'center',
+    color: '#222'
+  },
+  title: {
+    color: COLORS.MAIN.PRIMARY,
+    fontSize: 40,
+    fontFamily: 'MontserratAlternates-ExtraBoldItalic',
+    marginBottom: 10
+  },
+  poemsContainer: {
+    marginHorizontal: 20,
+    gap: 10
+  },
+  searchBar: {
+    backgroundColor: `${COLORS.MAIN.PRIMARY}80`,
+    color: COLORS.MAIN.PRIMARY,
+    fontSize: 20,
+    marginHorizontal: 20,
+    padding: 15,
+    borderRadius: 20,
+    marginVertical: 10,
+    fontStyle: 'italic',
+    fontWeight: '500'
+  },
+  sideMenu: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  sideText: {
+    textAlign: 'center',
+    color: COLORS.MAIN.PRIMARY,
+    fontWeight: 'bold',
+    fontSize: 35,
+    fontStyle: 'italic'
+  }
+});
