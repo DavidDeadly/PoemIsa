@@ -4,8 +4,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
-  ViewToken
+  TextInput
 } from 'react-native';
 
 import { COLORS } from '@/constants';
@@ -14,9 +13,8 @@ import { Loading } from '@/components/Loading';
 import { usePoemsFromInfiniteQuery } from '@/hooks/usePoemsFromInfiniteQuery';
 import { MAX_TITLE_LENGHT } from '@/constants/poems';
 import { InfinitQueryFooter } from '@/components/InfiniteQueryFooter';
-import { useSharedValue } from 'react-native-reanimated';
-import { useCallback } from 'react';
 import { PoemIsaGradient } from '../PoemIsaGradient';
+import { useViewableItems } from '@/hooks/useViewableItems';
 
 const HomeGradient = {
   start: { x: 2, y: 1 },
@@ -35,15 +33,7 @@ export const Home = () => {
     error,
     isRefreshing
   } = usePoemsFromInfiniteQuery();
-
-  const viewableItems = useSharedValue<ViewToken[]>([]);
-
-  const onViewableItems = useCallback(
-    ({ viewableItems: vItems }: { viewableItems: ViewToken[] }) => {
-      viewableItems.value = vItems;
-    },
-    [viewableItems]
-  );
+  const { viewableItems, onViewableItems } = useViewableItems();
 
   if (isError) {
     return (

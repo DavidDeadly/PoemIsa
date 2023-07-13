@@ -17,6 +17,8 @@ import { Auth } from '@/services';
 import { Button } from '@/components/Button';
 import { Poem } from '@/types/models/poem';
 import { PoemIsaGradient } from '@/components/PoemIsaGradient';
+import { useViewableItems } from '@/hooks/useViewableItems';
+import { UserPoem } from '@/components/UserPoem';
 
 const ProfileGradient = {
   start: { x: 0, y: 0 },
@@ -28,6 +30,7 @@ export const Profile = () => {
   const isFocused = useIsFocused();
   const notify = useNotify();
   const { user } = useUser();
+  const { viewableItems, onViewableItems } = useViewableItems();
 
   const signOut = () => Auth.signOut();
 
@@ -66,22 +69,11 @@ export const Profile = () => {
       <FlatList
         style={list}
         contentContainerStyle={poemsContainer}
+        onViewableItemsChanged={onViewableItems}
         data={poems}
-        renderItem={({
-          item: {
-            title,
-            author: { displayName: authorName }
-          }
-        }) => {
-          return (
-            <View style={poem}>
-              <Text style={text}>Title: {title}</Text>
-              <Text style={[text, authorText]}>
-                By: {authorName ?? 'Anonymous'}
-              </Text>
-            </View>
-          );
-        }}
+        renderItem={({ item }) => (
+          <UserPoem poem={item} viewableItems={viewableItems} />
+        )}
         keyExtractor={item => item.id}
       />
     </PoemIsaGradient>
@@ -89,14 +81,11 @@ export const Profile = () => {
 };
 
 const {
-  poem,
   list,
-  text,
   email,
   image,
   name,
   container,
-  authorText,
   poemsContainer,
   userInfoContainer,
   signOutBtn
@@ -132,14 +121,7 @@ const {
     alignItems: 'center',
     marginBottom: 15
   },
-  text: {
-    textAlign: 'center',
-    color: '#222'
-  },
-  authorText: {
-    fontStyle: 'italic',
-    fontWeight: '500'
-  },
+
   list: {
     flex: 3,
     borderRadius: 10
@@ -148,11 +130,5 @@ const {
     marginHorizontal: 20,
     paddingVertical: 10,
     gap: 5
-  },
-  poem: {
-    backgroundColor: `${COLORS.MAIN.PRIMARY}80`,
-    borderRadius: 20,
-    padding: 10,
-    marginVertical: 10
   }
 });
