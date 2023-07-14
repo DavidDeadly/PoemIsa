@@ -16,7 +16,8 @@ export const useSideMenuStyles = () => {
     { x: number }
   >({
     onStart: (_, context) => (context.x = translationX.value),
-    onActive: (e, context) => (translationX.value = e.translationX + context.x),
+    onActive: (e, context) =>
+      (translationX.value = Math.max(e.translationX + context.x)),
     onEnd: () => {
       if (translationX.value <= THREESHOLD) {
         translationX.value = withTiming(0);
@@ -35,17 +36,18 @@ export const useSideMenuStyles = () => {
       Extrapolate.CLAMP
     );
 
+    const borderRadius = interpolate(
+      translationX.value,
+      [0, HALF_SCREEN],
+      [0, 15],
+      Extrapolate.CLAMP
+    );
     return {
+      borderRadius,
       transform: [
-        {
-          perspective: 100
-        },
-        {
-          translateX: translationX.value
-        },
-        {
-          rotateY: `-${rotate}deg`
-        }
+        { perspective: 100 },
+        { translateX: translationX.value },
+        { rotateY: `-${rotate}deg` }
       ]
     };
   }, []);

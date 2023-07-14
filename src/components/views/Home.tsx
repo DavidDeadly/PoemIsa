@@ -1,5 +1,4 @@
 import {
-  FlatList,
   RefreshControl,
   StatusBar,
   StyleSheet,
@@ -15,6 +14,7 @@ import { MAX_TITLE_LENGHT } from '@/constants/poems';
 import { InfinitQueryFooter } from '@/components/InfiniteQueryFooter';
 import { PoemIsaGradient } from '../PoemIsaGradient';
 import { useViewableItems } from '@/hooks/useViewableItems';
+import { FlatList } from 'react-native-gesture-handler';
 
 const HomeGradient = {
   start: { x: 2, y: 1 },
