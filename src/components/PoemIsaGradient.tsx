@@ -13,7 +13,7 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated from 'react-native-reanimated';
 
-type GradientOritation = { x: number; y: number };
+type GradientOrientation = { x: number; y: number };
 
 type LeftMenuComponentType =
   | React.ComponentType<any>
@@ -24,8 +24,8 @@ type PoemIsaGradientProps = {
   style?: StyleProp<ViewStyle>;
   label: string;
   gradient: {
-    start: GradientOritation;
-    end: GradientOritation;
+    start: GradientOrientation;
+    end: GradientOrientation;
   };
   LeftMenuComponent?: LeftMenuComponentType;
   LeftMenuComponentStyle?: StyleProp<ViewStyle>;
@@ -41,7 +41,7 @@ export const PoemIsaGradient: FC<PropsWithChildren<PoemIsaGradientProps>> = ({
   LeftMenuComponent,
   LeftMenuComponentStyle
 }) => {
-  const { panGestureHandler, mainScreenAnimatedSyles, leftMenuAnimatedStyles } =
+  const { panGestureHandler, mainScreenAnimatedStyles, leftMenuAnimatedStyles } =
     useSideMenuStyles();
 
   if (!LeftMenuComponent) {
@@ -49,7 +49,7 @@ export const PoemIsaGradient: FC<PropsWithChildren<PoemIsaGradientProps>> = ({
       <AnimatedLinearGradient
         accessibilityLabel={label}
         colors={Object.values(COLORS.MAIN)}
-        style={[style, mainScreenAnimatedSyles, gradientContainer]}
+        style={[style, mainScreenAnimatedStyles, gradientContainer]}
         start={gradient.start}
         end={gradient.end}>
         {children}
@@ -63,7 +63,7 @@ export const PoemIsaGradient: FC<PropsWithChildren<PoemIsaGradientProps>> = ({
         <AnimatedLinearGradient
           accessibilityLabel={label}
           colors={Object.values(COLORS.MAIN)}
-          style={[style, mainScreenAnimatedSyles, gradientContainer]}
+          style={[style, mainScreenAnimatedStyles, gradientContainer]}
           start={gradient.start}
           end={gradient.end}>
           {children}

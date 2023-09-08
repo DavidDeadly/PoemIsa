@@ -44,7 +44,8 @@ export const PoemInfo: FC<PoemInfo> = ({
 const { info, date, authorInfo, authorText, image } = StyleSheet.create({
   info: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginVertical: 5
   },
   date: {
     color: COLORS.MAIN.PRIMARY

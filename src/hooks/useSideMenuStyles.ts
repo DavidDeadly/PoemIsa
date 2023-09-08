@@ -1,4 +1,4 @@
-import { HALF_SCREEN, THREESHOLD } from '@/constants/screens';
+import { HALF_SCREEN, THRESHOLD } from '@/constants/screens';
 import { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 import {
   Extrapolate,
@@ -19,7 +19,7 @@ export const useSideMenuStyles = () => {
     onActive: (e, context) =>
       (translationX.value = Math.max(e.translationX + context.x)),
     onEnd: () => {
-      if (translationX.value <= THREESHOLD) {
+      if (translationX.value <= THRESHOLD) {
         translationX.value = withTiming(0);
         return;
       }
@@ -28,7 +28,7 @@ export const useSideMenuStyles = () => {
     }
   });
 
-  const mainScreenAnimatedSyles = useAnimatedStyle(() => {
+  const mainScreenAnimatedStyles = useAnimatedStyle(() => {
     const rotate = interpolate(
       translationX.value,
       [0, HALF_SCREEN],
@@ -65,7 +65,7 @@ export const useSideMenuStyles = () => {
 
   return {
     panGestureHandler,
-    mainScreenAnimatedSyles,
+    mainScreenAnimatedStyles,
     leftMenuAnimatedStyles
   };
 };

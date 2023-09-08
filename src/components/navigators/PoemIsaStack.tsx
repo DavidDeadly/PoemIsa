@@ -5,7 +5,7 @@ import { HomeTabs } from '@/components/navigators';
 import { CapturePoem } from '@/components/views';
 import { WritePoem } from '@/components/views';
 import { COLORS, SCREENS } from '@/constants';
-import { PoemDetailed } from '../views/PoemDetailed';
+import { PoemDetailed } from '@/components/views/PoemDetailed';
 
 const Stack = createNativeStackNavigator<PoemIsaStackParamList>();
 

@@ -1,11 +1,11 @@
 import { usePoemsFromInfiniteQuery } from '@/hooks/usePoemsFromInfiniteQuery';
 import { useViewableItems } from '@/hooks/useViewableItems';
 import { Loading } from './Loading';
-import { RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Poem } from './Poem';
-import { InfinitQueryFooter } from './InfiniteQueryFooter';
-import { COLORS } from '@/constants';
+import { InfiniteQueryFooter } from './InfiniteQueryFooter';
 import { FlatList } from 'react-native-gesture-handler';
+import { ListPoemsHeader } from './ListPoemsHeader';
 
 export const InfiniteListPoems = () => {
   const {
@@ -49,32 +49,23 @@ export const InfiniteListPoems = () => {
       onEndReached={handleNewPage}
       contentContainerStyle={poemsContainer}
       onViewableItemsChanged={onViewableItems}
-      ListEmptyComponent={<Text style={text}>No hay poemas</Text>}
-      ListHeaderComponent={<Text style={title}>Poemas</Text>}
+      ListEmptyComponent={<Text style={text}>{isRefreshing ? "Refrescando poemas" : "No hay poemas"}</Text>}
+      ListHeaderComponent={<ListPoemsHeader refetch={refetch} />}
       renderItem={({ item: poem }) => (
         <Poem viewableItems={viewableItems} poem={poem} key={poem.id} />
       )}
       ListFooterComponent={
-        <InfinitQueryFooter
+        <InfiniteQueryFooter
           iconSize={50}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
-        />
-      }
-      refreshControl={
-        <RefreshControl
-          enabled
-          colors={Object.values(COLORS.MAIN)}
-          progressBackgroundColor={COLORS.MAIN.SECONDARY}
-          refreshing={isRefreshing}
-          onRefresh={refetch}
         />
       }
     />
   );
 };
 
-const { poemsContainer, text, title, contentCenter } = StyleSheet.create({
+const { poemsContainer, text, contentCenter } = StyleSheet.create({
   poemsContainer: {
     marginHorizontal: 20,
     gap: 10
@@ -82,12 +73,6 @@ const { poemsContainer, text, title, contentCenter } = StyleSheet.create({
   text: {
     textAlign: 'center',
     color: '#222'
-  },
-  title: {
-    color: COLORS.MAIN.PRIMARY,
-    fontSize: 40,
-    fontFamily: 'MontserratAlternates-ExtraBoldItalic',
-    marginBottom: 10
   },
   contentCenter: {
     flex: 1,

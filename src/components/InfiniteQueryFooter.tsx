@@ -3,7 +3,7 @@ import { BatteryFull, More } from 'iconsax-react-native';
 import { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export const InfinitQueryFooter: FC<{
+export const InfiniteQueryFooter: FC<{
   hasNextPage?: boolean;
   isFetchingNextPage: boolean;
   iconSize: number;

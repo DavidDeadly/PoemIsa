@@ -16,5 +16,5 @@ export const SCREENS = {
 
 export const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-export const THREESHOLD = SCREEN_WIDTH / 3;
+export const THRESHOLD = SCREEN_WIDTH / 3;
 export const HALF_SCREEN = SCREEN_WIDTH / 2;

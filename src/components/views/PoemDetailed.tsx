@@ -79,7 +79,8 @@ const {
   webViewContainer: {
     flex: 1,
     padding: 10,
-    borderTopWidth: 0
+    borderTopWidth: 0,
+    backgroundColor: `${COLORS.MAIN.PRIMARY}40`
   },
   webView: {
     backgroundColor: 'transparent'
@@ -91,7 +92,7 @@ const {
   },
   poemContainer: {
     width: '90%',
-    minHeight: '80%',
+    minHeight: '92%',
     marginVertical: 10
   },
   title: {
@@ -100,6 +101,7 @@ const {
     padding: 10,
     borderBottomWidth: 0,
     textAlign: 'center',
-    fontFamily: 'MontserratAlternates-ExtraBoldItalic'
+    fontFamily: 'MontserratAlternates-ExtraBoldItalic',
+    backgroundColor: `${COLORS.MAIN.PRIMARY}40`
   }
 });

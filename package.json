@@ -8,6 +8,7 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
+    "android:wifi": "adb tcpip 5555 && adb connect $DEVICE_IP:5555 && adb devices",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"

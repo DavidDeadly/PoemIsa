@@ -12,7 +12,7 @@ import { Button } from '@/components/Button';
 import { Warning2 } from 'iconsax-react-native';
 import { COLORS } from '@/constants';
 import { ToastOptions } from 'react-native-toast-notifications/lib/typescript/toast';
-import { MAX_TITLE_LENGHT } from '@/constants/poems';
+import { MAX_TITLE_LENGTH } from '@/constants/poems';
 
 const warningToastConfig: ToastOptions = {
   placement: 'top',
@@ -49,9 +49,9 @@ export const ChangePoemTitleModal: FC<ChangePoemTitleModalProps> = ({
     if (!toastId) return;
 
     const isToastOpen = toast.isOpen(toastId);
-    if (!isToastOpen && newTitle.length >= MAX_TITLE_LENGHT) {
+    if (!isToastOpen && newTitle.length >= MAX_TITLE_LENGTH) {
       toastRef.current?.show(
-        `Maximun title characters reached: ${MAX_TITLE_LENGHT}`,
+        `Maximun title characters reached: ${MAX_TITLE_LENGTH}`,
         warningToastConfig
       );
     }
@@ -79,7 +79,7 @@ export const ChangePoemTitleModal: FC<ChangePoemTitleModalProps> = ({
             onChangeText={handleTitleChange}
             value={title}
             multiline
-            maxLength={MAX_TITLE_LENGHT}
+            maxLength={MAX_TITLE_LENGTH}
           />
           <Button style={styles.saveButton} onPress={closeModal}>
             <Text>Perfecto!</Text>

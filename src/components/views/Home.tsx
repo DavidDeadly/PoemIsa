@@ -1,8 +1,8 @@
 import { StatusBar, StyleSheet, Text, TextInput } from 'react-native';
 
 import { COLORS } from '@/constants';
-import { MAX_TITLE_LENGHT } from '@/constants/poems';
-import { PoemIsaGradient } from '../PoemIsaGradient';
+import { MAX_TITLE_LENGTH } from '@/constants/poems';
+import { PoemIsaGradient } from '@/components/PoemIsaGradient';
 import { InfiniteListPoems } from '@/components/ListPoems';
 
 const HomeGradient = {
@@ -22,7 +22,7 @@ export const Home = () => {
       LeftMenuComponentStyle={sideMenu}>
       <TextInput
         numberOfLines={1}
-        maxLength={MAX_TITLE_LENGHT}
+        maxLength={MAX_TITLE_LENGTH}
         placeholder="Busca por título..."
         placeholderTextColor={COLORS.MAIN.SECONDARY}
         style={searchBar}
