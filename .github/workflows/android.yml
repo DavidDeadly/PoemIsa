@@ -12,7 +12,7 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v2
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --force
       - name: Build Android Release
         run: npx react-native build-android --mode=release
       - name: Sign APK
