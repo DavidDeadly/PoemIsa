@@ -20,6 +20,9 @@ jobs:
           INPUT_ENV_WEB_CLIENT_ID: ${{ secrets.WEB_CLIENT_ID }}
       - name: Build Android Release
         run: npx react-native build-android --mode=release
+        env:
+          STORE_PASSWORD: ${{ secrets.POEMISA_SIGNING_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.POEMISA_SIGNING_KEY_PASSWORD }}
       - name: Sign APK
         id: sign_app
         uses: r0adkll/sign-android-release@v1
