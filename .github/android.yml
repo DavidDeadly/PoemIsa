@@ -1,0 +1,32 @@
+name: Android Build
+
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  android-build:
+    name: Android Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci
+      - name: Build Android Release
+        run: npx react-native build-android --mode=release
+      - name: Sign APK
+        id: sign_app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: ${{ github.workspace}}/PoemIsa/android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.POEMISA_SIGNING_KEY }}
+          alias: ${{ secrets.POEMISA_SIGNING_ALIAS }}
+          keyStorePassword: ${{ secrets.POEMISA_SIGNING_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.POEMISA_SIGNING_KEY_PASSWORD }}
+      - name: Upload APK
+        id: uploadArtifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
