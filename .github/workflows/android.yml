@@ -27,7 +27,7 @@ jobs:
         id: sign_app
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: ${{ github.workspace}}/PoemIsa/android/app/build/outputs/apk/release
+          releaseDirectory: ${{ github.workspace}}/android/app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.POEMISA_SIGNING_KEY }}
           alias: ${{ secrets.POEMISA_SIGNING_ALIAS }}
           keyStorePassword: ${{ secrets.POEMISA_SIGNING_STORE_PASSWORD }}
