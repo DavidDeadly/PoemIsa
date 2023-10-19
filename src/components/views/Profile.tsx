@@ -7,14 +7,20 @@ import {
   Text,
   View
 } from 'react-native';
+import { Logout } from 'iconsax-react-native';
 
 import { useNotify, useUser } from '@/hooks';
 import { COLORS } from '@/constants';
-import LinearGradient from 'react-native-linear-gradient';
 import { useIsFocused } from '@react-navigation/native';
 import { getPoemsByUser } from '@/services/Poems';
+import { Auth } from '@/services';
+import { Button } from '@/components/Button';
+import { Poem } from '@/types/models/poem';
+import { PoemIsaGradient } from '@/components/PoemIsaGradient';
+import { useViewableItems } from '@/hooks/useViewableItems';
+import { UserPoem } from '@/components/UserPoem';
 
-const AppGradient = {
+const ProfileGradient = {
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 }
 };
@@ -24,6 +30,9 @@ export const Profile = () => {
   const isFocused = useIsFocused();
   const notify = useNotify();
   const { user } = useUser();
+  const { viewableItems, onViewableItems } = useViewableItems();
+
+  const signOut = () => Auth.signOut();
 
   useEffect(() => {
     if (isFocused && user?.uid) {
@@ -38,13 +47,15 @@ export const Profile = () => {
   }, [isFocused]);
 
   return (
-    <LinearGradient
-      accessibilityLabel="profile"
-      colors={Object.values(COLORS.MAIN)}
+    <PoemIsaGradient
+      label="profile"
       style={container}
-      start={AppGradient.start}
-      end={AppGradient.end}>
+      gradient={ProfileGradient}>
       <View style={userInfoContainer}>
+        <Button onPress={signOut} style={signOutBtn}>
+          <Logout size="20" color={COLORS.MAIN.SECONDARY} />
+          <Text>Salir</Text>
+        </Button>
         <Image
           defaultSource={require('@/assets/images/default-profile-photo.png')}
           source={{ uri: user?.photoURL ?? undefined }}
@@ -58,39 +69,26 @@ export const Profile = () => {
       <FlatList
         style={list}
         contentContainerStyle={poemsContainer}
+        onViewableItemsChanged={onViewableItems}
         data={poems}
-        renderItem={({
-          item: {
-            title,
-            author: { displayName: authorName }
-          }
-        }) => {
-          return (
-            <View style={poem}>
-              <Text style={text}>Title: {title}</Text>
-              <Text style={[text, authorText]}>
-                By: {authorName ?? 'Anonymous'}
-              </Text>
-            </View>
-          );
-        }}
+        renderItem={({ item }) => (
+          <UserPoem poem={item} viewableItems={viewableItems} />
+        )}
         keyExtractor={item => item.id}
       />
-    </LinearGradient>
+    </PoemIsaGradient>
   );
 };
 
 const {
-  container,
-  authorText,
-  poem,
-  poemsContainer,
-  userInfoContainer,
   list,
-  text,
   email,
   image,
-  name
+  name,
+  container,
+  poemsContainer,
+  userInfoContainer,
+  signOutBtn
 } = StyleSheet.create({
   email: {
     color: '#222',
@@ -104,6 +102,10 @@ const {
     borderWidth: 1,
     marginTop: 20,
     borderColor: COLORS.MAIN.SECONDARY
+  },
+  signOutBtn: {
+    position: 'absolute',
+    right: 10
   },
   name: {
     fontSize: 30,
@@ -119,14 +121,7 @@ const {
     alignItems: 'center',
     marginBottom: 15
   },
-  text: {
-    textAlign: 'center',
-    color: '#222'
-  },
-  authorText: {
-    fontStyle: 'italic',
-    fontWeight: '500'
-  },
+
   list: {
     flex: 3,
     borderRadius: 10
@@ -135,11 +130,5 @@ const {
     marginHorizontal: 20,
     paddingVertical: 10,
     gap: 5
-  },
-  poem: {
-    backgroundColor: `${COLORS.MAIN.PRIMARY}80`,
-    borderRadius: 20,
-    padding: 10,
-    marginVertical: 10
   }
 });

@@ -1,97 +1,62 @@
-import { FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
-import { useCallback, useEffect, useState } from 'react';
-import auth from '@react-native-firebase/auth';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { StatusBar, StyleSheet, Text, TextInput } from 'react-native';
 
-import { Button } from '@/components';
 import { COLORS } from '@/constants';
-import { useIsFocused } from '@react-navigation/native';
-import { getAllPoems } from '@/services/Poems';
-import { useNotify } from '@/hooks';
-import LinearGradient from 'react-native-linear-gradient';
+import { MAX_TITLE_LENGTH } from '@/constants/poems';
+import { PoemIsaGradient } from '@/components/PoemIsaGradient';
+import { InfiniteListPoems } from '@/components/ListPoems';
 
-const AppGradient = {
+const HomeGradient = {
   start: { x: 2, y: 1 },
   end: { x: 0, y: 0 }
 };
 
 export const Home = () => {
-  const [poems, setPoems] = useState<Poem[]>([]);
-  const isFocused = useIsFocused();
-  const notify = useNotify();
-
-  const handleSignOut = () =>
-    auth()
-      .signOut()
-      .then(() => GoogleSignin.signOut())
-      .then(() => console.log('User signed out!'))
-      .catch(error => console.log('error signing out:', error));
-
-  useEffect(() => {
-    if (isFocused) {
-      getAllPoems()
-        .then(setPoems)
-        .catch(() => notify.error('Error obteniendo todos los poemas'));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
-
   return (
-    <LinearGradient
-      accessibilityLabel="home"
-      colors={Object.values(COLORS.MAIN)}
+    <PoemIsaGradient
+      label="home"
       style={container}
-      start={AppGradient.start}
-      end={AppGradient.end}>
-      <Button onPress={handleSignOut}>
-        <Text>Cerrar sesión</Text>
-      </Button>
-      <FlatList
-        contentContainerStyle={poemsContainer}
-        data={poems}
-        renderItem={({
-          item: {
-            title,
-            author: { displayName: authorName }
-          }
-        }) => {
-          return (
-            <View style={poem}>
-              <Text style={text}>Title: {title}</Text>
-              <Text style={[text, authorText]}>
-                By: {authorName ?? 'Anonymous'}
-              </Text>
-            </View>
-          );
-        }}
-        keyExtractor={item => item.id}
+      gradient={HomeGradient}
+      LeftMenuComponent={
+        <Text style={sideText}>Oye... sabes que TE AMOOO!!! No??</Text>
+      }
+      LeftMenuComponentStyle={sideMenu}>
+      <TextInput
+        numberOfLines={1}
+        maxLength={MAX_TITLE_LENGTH}
+        placeholder="Busca por título..."
+        placeholderTextColor={COLORS.MAIN.SECONDARY}
+        style={searchBar}
       />
-    </LinearGradient>
+      <InfiniteListPoems />
+    </PoemIsaGradient>
   );
 };
 
-const { container, authorText, poem, poemsContainer, text } = StyleSheet.create(
-  {
-    container: {
-      flex: 1,
-      paddingTop: StatusBar.currentHeight
-    },
-    text: {
-      textAlign: 'center',
-      color: '#222'
-    },
-    authorText: {
-      fontStyle: 'italic',
-      fontWeight: '500'
-    },
-    poemsContainer: {
-      margin: 20,
-      gap: 10
-    },
-    poem: {
-      backgroundColor: `${COLORS.MAIN.PRIMARY}80`,
-      borderRadius: 20,
-      padding: 10
-    }
+const { container, searchBar, sideText, sideMenu } = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight
+  },
+  searchBar: {
+    backgroundColor: `${COLORS.MAIN.PRIMARY}80`,
+    color: COLORS.MAIN.PRIMARY,
+    fontSize: 20,
+    marginHorizontal: 20,
+    padding: 15,
+    borderRadius: 20,
+    marginVertical: 10,
+    fontStyle: 'italic',
+    fontWeight: '500'
+  },
+  sideMenu: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  sideText: {
+    textAlign: 'center',
+    color: COLORS.MAIN.PRIMARY,
+    fontWeight: 'bold',
+    fontSize: 35,
+    fontStyle: 'italic'
   }
-);
+});

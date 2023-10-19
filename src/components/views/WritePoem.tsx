@@ -1,24 +1,17 @@
-import { FC } from 'react';
 import { StyleSheet } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
-import { COLORS } from '@/constants';
 import { PoemIsaEditor } from '@/components/PoemIsaEditor';
+import { PoemIsaGradient } from '@/components/PoemIsaGradient';
 
-const AppGradient = {
+const EditorGradient = {
   start: { x: 0, y: 2 },
   end: { x: 2, y: 0 }
 };
 
-export const WritePoem: FC = () => (
-  <LinearGradient
-    accessibilityLabel="editor"
-    colors={Object.values(COLORS.MAIN)}
-    style={parentView}
-    start={AppGradient.start}
-    end={AppGradient.end}>
+export const WritePoem = () => (
+  <PoemIsaGradient label="editor" style={parentView} gradient={EditorGradient}>
     <PoemIsaEditor />
-  </LinearGradient>
+  </PoemIsaGradient>
 );
 
 const { parentView } = StyleSheet.create({

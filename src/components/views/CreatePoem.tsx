@@ -1,13 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar, StyleSheet, Text } from 'react-native';
-
 import { StackNavigationProp } from '@react-navigation/stack';
-import { COLORS, SCREENS } from '@/constants';
+
+import { SCREENS } from '@/constants';
 import { Button } from '@/components';
 import { PoemIsaStackParamList } from '@/types/components';
-import LinearGradient from 'react-native-linear-gradient';
+import { PoemIsaGradient } from '@/components/PoemIsaGradient';
 
-const AppGradient = {
+const CreateGradient = {
   start: { x: 2, y: 0 },
   end: { x: 0, y: 2 }
 };
@@ -20,19 +20,17 @@ export const CreatePoem = () => {
   const goToCapture = () => navigation.navigate(SCREENS.APP.CAPTURE);
 
   return (
-    <LinearGradient
-      accessibilityLabel="home"
-      colors={Object.values(COLORS.MAIN)}
+    <PoemIsaGradient
+      label="createPoem"
       style={container}
-      start={AppGradient.start}
-      end={AppGradient.end}>
+      gradient={CreateGradient}>
       <Button onPress={goToWrite}>
         <Text style={text}>Escribir</Text>
       </Button>
       <Button onPress={goToCapture}>
         <Text style={text}>Capturar</Text>
       </Button>
-    </LinearGradient>
+    </PoemIsaGradient>
   );
 };
 
