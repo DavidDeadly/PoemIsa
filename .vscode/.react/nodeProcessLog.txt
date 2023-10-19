@@ -1,0 +1,2 @@
+Debugger listening on ws://127.0.0.1:35000/ec89714b-9870-4a57-b18e-ebc282df4c8b
+For help, see: https://nodejs.org/en/docs/inspector

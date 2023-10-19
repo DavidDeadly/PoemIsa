@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "885622529419-utirsqjdh89tq7u901djna1qld361qhd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.poemisa",
+            "certificate_hash": "20c653cf82bc523627c97fe1669d035149f5aaa6"
+          }
+        },
+        {
           "client_id": "885622529419-0j1grs556pgm92iqdld62dtp4u4rejut.apps.googleusercontent.com",
           "client_type": 3
         }
