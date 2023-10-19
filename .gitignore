@@ -70,3 +70,4 @@ yarn-error.log
 !.env.vault
 coverage
 index.android.bundle
+.vscode

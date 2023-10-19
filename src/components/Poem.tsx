@@ -9,12 +9,11 @@ import {
 } from 'react-native';
 
 import { COLORS } from '@/constants';
-import { PoemIsaStackParamList } from '@/types/components';
 import { Poem as PoemType } from '@/types/models/poem';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { Likes } from '@/components/Likes';
 import Animated, { SharedValue } from 'react-native-reanimated';
 import { useAnimateViewableItem } from '@/hooks/useAnimateViewableItem';
+import { usePoemNavigate } from '@/hooks/usePoemNavigate';
 
 type PoemProps = {
   poem: PoemType;
@@ -25,20 +24,14 @@ export const Poem: FC<PoemProps> = ({
   poem: { id, title, author, usersLiked, likes, text, createdAt },
   viewableItems
 }) => {
-  const navigation = useNavigation<NavigationProp<PoemIsaStackParamList>>();
+  const { goToDetailed } = usePoemNavigate();
   const viewableStyle = useAnimateViewableItem({
     viewableItems,
     itemId: id
   });
 
-  const goToDetailedPoem = () => {
-    navigation.navigate('Detalle Poem', {
-      poemId: id
-    });
-  };
-
   return (
-    <TouchableOpacity onPress={goToDetailedPoem}>
+    <TouchableOpacity onPress={() => goToDetailed(id)}>
       <Animated.View style={[poem, viewableStyle]}>
         <Text style={titleStyle}>{title}</Text>
         <Text style={textStyle} numberOfLines={4}>
