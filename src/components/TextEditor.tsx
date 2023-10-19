@@ -2,6 +2,7 @@ import { MutableRefObject, forwardRef, useCallback } from 'react';
 import QuillEditor from 'react-native-cn-quill';
 import debounce from 'just-debounce-it';
 import { StyleSheet } from 'react-native';
+
 import { COLORS } from '@/constants';
 import { handleEditorRef } from '@/helpers/handleEditorRef';
 

@@ -1,4 +1,3 @@
-import { WebView } from 'react-native-webview';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
 import { Loading } from '@/components/Loading';
@@ -6,6 +5,8 @@ import { PoemInfo } from '@/components/PoemInfo';
 import { COLORS } from '@/constants';
 import { useDetailedPoem } from '@/hooks/useDetailedPoem';
 import { PoemIsaGradient } from '@/components/PoemIsaGradient';
+import QuillEditor from 'react-native-cn-quill';
+import { useRef } from 'react';
 
 const PoemDetailedGradient = {
   start: { x: 2, y: 1 },
@@ -14,6 +15,7 @@ const PoemDetailedGradient = {
 
 export const PoemDetailed = () => {
   const { poem, isLoading, isError, error } = useDetailedPoem();
+  const ref = useRef<QuillEditor>(null);
 
   if (isError) {
     return (
@@ -36,13 +38,17 @@ export const PoemDetailed = () => {
       ) : (
         <View style={poemContainer}>
           <Text style={[title, border]}>{poem?.title}</Text>
-          <WebView
-            style={webView}
-            containerStyle={[webViewContainer, border]}
-            minimumFontSize={50}
-            originWhitelist={['*']}
-            source={{ html: poem?.html ?? '' }}
-            androidLayerType="software"
+          <QuillEditor
+            webview={{
+              androidLayerType: 'software',
+              style: webView,
+              containerStyle: [webViewContainer, border],
+              onLoad: () => {
+                ref.current?.disable();
+                ref.current?.setContents(poem?.content);
+              }
+            }}
+            ref={ref}
           />
           <PoemInfo
             displayIf={Boolean(poem)}

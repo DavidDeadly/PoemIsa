@@ -1,8 +1,6 @@
 import { View, Text, ViewStyle, StyleSheet } from 'react-native';
 import { FC, useMemo } from 'react';
 
-import { PoetryQuotes } from '@/types/models/poetryQuotes';
-
 interface QuoteProps {
   quote: PoetryQuotes;
   fontSize: number;
