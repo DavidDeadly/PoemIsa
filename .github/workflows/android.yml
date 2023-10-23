@@ -9,6 +9,10 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Set up nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
       - name: Check out Git repository
         uses: actions/checkout@v4
       - name: Install dependencies
