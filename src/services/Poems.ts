@@ -28,7 +28,7 @@ export const createPoemDB = (poem: PoemData) => {
 };
 
 export const getPoemById = (poemId?: string) => {
-  if (!poemId) return Promise.reject('Required poemId');
+  if (!poemId) return null;
   const poemRepository = PoemRepository.init();
 
   return poemRepository.getPoemById(poemId);

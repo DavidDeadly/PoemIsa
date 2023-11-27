@@ -12,4 +12,3 @@ export const usePoemNavigate = () => {
 
   return { goToDetailed };
 };
-

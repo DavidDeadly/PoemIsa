@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import QuillEditor from 'react-native-cn-quill';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
 import { Loading } from '@/components/Loading';
@@ -5,8 +7,6 @@ import { PoemInfo } from '@/components/PoemInfo';
 import { COLORS } from '@/constants';
 import { useDetailedPoem } from '@/hooks/useDetailedPoem';
 import { PoemIsaGradient } from '@/components/PoemIsaGradient';
-import QuillEditor from 'react-native-cn-quill';
-import { useRef } from 'react';
 
 const PoemDetailedGradient = {
   start: { x: 2, y: 1 },

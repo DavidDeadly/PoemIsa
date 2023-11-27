@@ -1,9 +1,10 @@
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { usePoemsStore } from './usePoemsStore';
-import { useQuery } from 'react-query';
-import { getPoemById } from '@/services/Poems';
 import { useEffect } from 'react';
+import { useQuery } from 'react-query';
+import { RouteProp, useRoute } from '@react-navigation/native';
+
+import { getPoemById } from '@/services/Poems';
 import { PoemIsaStackParamList } from '@/types/components';
+import { usePoemsStore } from './usePoemsStore';
 
 export const useDetailedPoem = () => {
   const { params } = useRoute<RouteProp<PoemIsaStackParamList>>();

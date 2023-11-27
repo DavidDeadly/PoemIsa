@@ -3,7 +3,9 @@ import { SCREENS } from '@/constants';
 const PoemIsaStackParamListValues = {
   [SCREENS.APP.APP]: undefined,
   [SCREENS.APP.CAPTURE]: undefined,
-  [SCREENS.APP.WRITE]: undefined,
+  [SCREENS.APP.WRITE]: {
+    poemId: ''
+  },
   [SCREENS.APP.POEM_DETAILED]: {
     poemId: ''
   }
