@@ -14,19 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "885622529419-uhd2qcfept40urigj4tnohegmmt2a3r5.apps.googleusercontent.com",
+          "client_id": "885622529419-o10he34joqvnsm4577f0qpokngskjdb7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.poemisa",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "885622529419-utirsqjdh89tq7u901djna1qld361qhd.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.poemisa",
-            "certificate_hash": "20c653cf82bc523627c97fe1669d035149f5aaa6"
+            "certificate_hash": "00edf88a213ed674bbd660e266f9da2b7070bff3"
           }
         },
         {

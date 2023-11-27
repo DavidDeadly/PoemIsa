@@ -15,9 +15,9 @@ class Auth implements IAuth {
     auth()
       .signOut()
       .then(() => GoogleSignin.signOut())
-      .then(() => console.log('User signed out!'))
+      .then(() => console.info('User signed out!'))
       .catch((error: Error) =>
-        console.log('error signing out:', error.message)
+        console.error('error signing out:', error.message)
       );
   }
 
@@ -25,20 +25,24 @@ class Auth implements IAuth {
     const result = await GoogleSignin.hasPlayServices({
       showPlayServicesUpdateDialog: true
     })
-      .then(() => {
-        console.log('has play services');
-        return GoogleSignin.signIn();
-      })
+      .then(() => GoogleSignin.signIn())
       .then(({ idToken }) => {
-        console.log(idToken);
+        if (!idToken) {
+          throw new UnexpectedException(
+            'No idToken, ensure you have configured Google Sign In correctly'
+          );
+        }
+
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-        console.log(googleCredential);
+
         return auth().signInWithCredential(googleCredential);
       })
       .catch((error: Error) => {
-        const posibleErrors = Object.values(ERRORS.SING_IN);
+        console.error(`Error login with google: ${error}`);
 
-        if (!posibleErrors.includes(error.message)) {
+        const possibleErrors = Object.values(ERRORS.SING_IN);
+
+        if (!possibleErrors.includes(error.message)) {
           throw new UnexpectedException(error.message);
         }
 
