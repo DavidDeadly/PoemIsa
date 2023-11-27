@@ -26,10 +26,10 @@ export class PoemRepository implements IPoemsRepository {
   }
 
   async getPoemsByUser(userID: string): Promise<Poem[]> {
-    const authoIdPath = new firebase.firestore.FieldPath('author', 'id');
+    const authorIdPath = new firebase.firestore.FieldPath('author', 'id');
 
     const poemsSnapshot = await poemsCollection
-      .where(authoIdPath, '==', userID)
+      .where(authorIdPath, '==', userID)
       .orderBy('createdAt', 'desc')
       .get();
 

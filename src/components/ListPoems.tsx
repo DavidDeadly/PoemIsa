@@ -49,7 +49,11 @@ export const InfiniteListPoems = () => {
       onEndReached={handleNewPage}
       contentContainerStyle={poemsContainer}
       onViewableItemsChanged={onViewableItems}
-      ListEmptyComponent={<Text style={text}>{isRefreshing ? "Refrescando poemas" : "No hay poemas"}</Text>}
+      ListEmptyComponent={
+        <Text style={text}>
+          {isRefreshing ? 'Refrescando poemas' : 'No hay poemas'}
+        </Text>
+      }
       ListHeaderComponent={<ListPoemsHeader refetch={refetch} />}
       renderItem={({ item: poem }) => (
         <Poem viewableItems={viewableItems} poem={poem} key={poem.id} />
