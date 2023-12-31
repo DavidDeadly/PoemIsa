@@ -5,7 +5,7 @@ export const usePoemNavigate = () => {
   const navigation = useNavigation<NavigationProp<PoemIsaStackParamList>>();
 
   const goToDetailed = (id: string) => {
-    navigation.navigate('Detalle Poem', {
+    navigation.navigate('Detalle', {
       poemId: id
     });
   };

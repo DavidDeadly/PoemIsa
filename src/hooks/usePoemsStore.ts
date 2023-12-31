@@ -7,6 +7,7 @@ interface PoemsStore {
   fillPoems: (poems: Poem[]) => void;
   fillPoem: (poem: Poem) => void;
   createPoem: (newPoem: PoemData) => Promise<void>;
+  updatePoem: (id: string, poemData: PoemData) => Promise<void>;
   likePoem: (poemId: string, userId: string) => Promise<void>;
   unlikePoem: (poemId: string, userId: string) => Promise<void>;
 }
@@ -28,6 +29,19 @@ export const usePoemsStore = create<PoemsStore>()(set => ({
     set(state => ({
       poems: [createdPoem, ...state.poems]
     }));
+  },
+  async updatePoem(id, poemData) {
+    const updatedPoem = await PoemsService.updatePoem(id, poemData);
+
+    if (!updatedPoem) return set(state => state);
+
+    set(state => {
+      const indexToUpdate = state.poems.findIndex(poem => poem.id === id);
+
+      return {
+        poems: [...state.poems].splice(indexToUpdate, 1, updatedPoem)
+      };
+    });
   },
   likePoem(poemId, userId) {
     set(state => ({

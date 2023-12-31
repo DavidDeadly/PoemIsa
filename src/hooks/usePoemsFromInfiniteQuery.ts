@@ -21,7 +21,7 @@ export const usePoemsFromInfiniteQuery = () => {
     error,
     isRefetching
   } = useInfiniteQuery({
-    queryKey: 'poems',
+    queryKey: ['poems'],
     queryFn: ({ pageParam }) => getAllPoems(pageParam),
     getNextPageParam: lastPage => lastPage.at(-1)?.id
   });

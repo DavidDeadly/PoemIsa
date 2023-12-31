@@ -18,11 +18,20 @@ export class PoemRepository implements IPoemsRepository {
     return this.repository;
   }
 
-  createPoem(poem: PoemDB) {
+  createPoem(poem: PoemDB): Promise<Poem | null> {
     return poemsCollection
       .add(poem)
       .then(doc => doc.get())
       .then(mapDocToPoem);
+  }
+
+  async updatePoem(
+    poemId: string,
+    poem: Partial<PoemDB>
+  ): Promise<Poem | null> {
+    await poemsCollection.doc(poemId).update(poem);
+
+    return poemsCollection.doc(poemId).get().then(mapDocToPoem);
   }
 
   async getPoemsByUser(userID: string): Promise<Poem[]> {

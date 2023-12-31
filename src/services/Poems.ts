@@ -27,6 +27,12 @@ export const createPoemDB = (poem: PoemData) => {
   return poemRepository.createPoem(newPoem);
 };
 
+export function updatePoem(id: string, poemData: PoemData) {
+  const poemRepository = PoemRepository.init();
+
+  return poemRepository.updatePoem(id, poemData);
+}
+
 export const getPoemById = (poemId?: string) => {
   if (!poemId) return null;
   const poemRepository = PoemRepository.init();
@@ -45,3 +51,4 @@ export const likePoem = (poemId: string, userId: string) => {
 
   return poemRepository.likePoem(poemId, userId);
 };
+

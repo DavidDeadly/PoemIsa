@@ -7,14 +7,14 @@ import { PoemIsaStackParamList } from '@/types/components';
 import { usePoemsStore } from './usePoemsStore';
 
 export const useDetailedPoem = () => {
-  const { params } = useRoute<RouteProp<PoemIsaStackParamList>>();
+  const { params } = useRoute<RouteProp<PoemIsaStackParamList, 'Detalle'>>();
   const [poem, fillPoem] = usePoemsStore(state => [
     state.poems.find(p => p.id === params?.poemId),
     state.fillPoem
   ]);
 
-  const { isLoading, isError, data, error } = useQuery({
-    queryKey: `poem-${params?.poemId}`,
+  const { isLoading, isError, data, error, isRefetching } = useQuery({
+    queryKey: ['poem', { id: params?.poemId }],
     queryFn: () => getPoemById(params?.poemId)
   });
 
@@ -26,6 +26,7 @@ export const useDetailedPoem = () => {
     poem,
     isLoading,
     isError,
-    error
+    error,
+    isRefetching
   };
 };

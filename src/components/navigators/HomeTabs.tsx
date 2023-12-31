@@ -12,8 +12,9 @@ import { Home } from '@/components/views';
 import { Profile } from '@/components/views';
 import { TabBarIcon } from '@/components';
 import { SCREENS } from '@/constants';
+import { PoemIsaHomeTabsParamList } from '@/types/components/navigators/PoemIsaStack';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<PoemIsaHomeTabsParamList>();
 
 export const HomeTabs = () => {
   return (
