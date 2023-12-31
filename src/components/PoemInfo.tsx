@@ -6,6 +6,7 @@ import { COLORS, SCREENS } from '@/constants';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PoemIsaStackParamList } from '@/types/components';
+import { useUser } from '@/hooks';
 
 type PoemInfo = {
   displayIf: boolean;
@@ -24,11 +25,13 @@ export const PoemInfo: FC<PoemInfo> = ({
   usersLiked,
   likes
 }) => {
+  const { user } = useUser();
   const navigation =
     useNavigation<StackNavigationProp<PoemIsaStackParamList>>();
 
   if (!displayIf) return null;
 
+  const allowEditing = user?.uid === author?.id;
   const goToEditor = () =>
     navigation.navigate(SCREENS.APP.WRITE, {
       poemId: poemId ?? ''
@@ -47,7 +50,13 @@ export const PoemInfo: FC<PoemInfo> = ({
           <Text style={date}>{createdAt?.toLocaleDateString('es')}</Text>
         </View>
       </View>
-      <Button title="Editar" color={COLORS.MAIN.PRIMARY} onPress={goToEditor} />
+      {allowEditing && (
+        <Button
+          title="Editar"
+          color={COLORS.MAIN.PRIMARY}
+          onPress={goToEditor}
+        />
+      )}
       <Likes likes={likes} usersLiked={usersLiked} poemId={poemId} />
     </View>
   );
