@@ -14,7 +14,6 @@ type PoemInfo = {
   author?: Author;
   createdAt?: Date;
   usersLiked?: string[];
-  likes?: number;
 };
 
 export const PoemInfo: FC<PoemInfo> = ({
@@ -22,8 +21,7 @@ export const PoemInfo: FC<PoemInfo> = ({
   author,
   poemId,
   createdAt,
-  usersLiked,
-  likes
+  usersLiked
 }) => {
   const { user } = useUser();
   const navigation =
@@ -57,7 +55,7 @@ export const PoemInfo: FC<PoemInfo> = ({
           onPress={goToEditor}
         />
       )}
-      <Likes likes={likes} usersLiked={usersLiked} poemId={poemId} />
+      <Likes usersLiked={usersLiked} poemId={poemId} />
     </View>
   );
 };

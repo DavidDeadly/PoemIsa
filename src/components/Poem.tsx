@@ -21,7 +21,7 @@ type PoemProps = {
 };
 
 export const Poem: FC<PoemProps> = ({
-  poem: { id, title, author, usersLiked, likes, text, createdAt },
+  poem: { id, title, author, usersLiked, text, createdAt },
   viewableItems
 }) => {
   const { goToDetailed } = usePoemNavigate();
@@ -51,7 +51,7 @@ export const Poem: FC<PoemProps> = ({
               <Text style={date}>{createdAt.toLocaleDateString('es')}</Text>
             </View>
           </View>
-          <Likes usersLiked={usersLiked} likes={likes} poemId={id} />
+          <Likes usersLiked={usersLiked} poemId={id} />
         </View>
       </Animated.View>
     </TouchableOpacity>

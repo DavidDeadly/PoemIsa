@@ -1,5 +1,5 @@
 import {
-    filterByTitle,
+  filterByTitle,
   mapDocToPoem,
   mapSnapshotToPoems,
   poemsCollection
@@ -91,15 +91,13 @@ export class PoemRepository implements IPoemsRepository {
 
   likePoem(poemId: string, userId: string): Promise<void> {
     return poemsCollection.doc(poemId).update({
-      usersLiked: firebase.firestore.FieldValue.arrayUnion(userId),
-      likes: firebase.firestore.FieldValue.increment(1)
+      usersLiked: firebase.firestore.FieldValue.arrayUnion(userId)
     });
   }
 
   unlikePoem(poemId: string, userId: string): Promise<void> {
     return poemsCollection.doc(poemId).update({
-      usersLiked: firebase.firestore.FieldValue.arrayRemove(userId),
-      likes: firebase.firestore.FieldValue.increment(-1)
+      usersLiked: firebase.firestore.FieldValue.arrayRemove(userId)
     });
   }
 }

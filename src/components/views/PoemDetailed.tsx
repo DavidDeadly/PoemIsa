@@ -53,7 +53,6 @@ export const PoemDetailed = () => {
           <PoemInfo
             displayIf={Boolean(poem)}
             poemId={poem?.id}
-            likes={poem?.likes}
             author={poem?.author}
             usersLiked={poem?.usersLiked}
             createdAt={poem?.createdAt}
