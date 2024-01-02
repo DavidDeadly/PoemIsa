@@ -1,26 +1,30 @@
-import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
-
+import { usePoemsFromInfiniteQuery } from '@/hooks/usePoemsFromInfiniteQuery';
 import { useViewableItems } from '@/hooks/useViewableItems';
-import { useSearchedPoems } from '@/hooks/userSearchedPoems';
-
 import { Loading } from './Loading';
+import { StyleSheet, Text, View } from 'react-native';
 import { Poem } from './Poem';
+import { InfiniteQueryFooter } from './InfiniteQueryFooter';
+import { FlatList } from 'react-native-gesture-handler';
 import { ListPoemsHeader } from './ListPoemsHeader';
 
-type ListPoemsProps = {
-  searchedTitle: string;
-};
+export const InfiniteListPoems = () => {
+  const {
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+    isLoading,
+    isError,
+    poems,
+    error,
+    isRefreshing
+  } = usePoemsFromInfiniteQuery();
 
-export const ListPoems = ({ searchedTitle }: ListPoemsProps) => {
-  const { error, poems, refetch, isError, isRefetching, isLoading } =
-    useSearchedPoems(searchedTitle);
-
-  useEffect(() => {
-    refetch();
-  }, [searchedTitle, refetch]);
-
+  const handleNewPage = () => {
+    const pausedInfinite = !hasNextPage || isFetchingNextPage;
+    if (pausedInfinite) return;
+    fetchNextPage();
+  };
   const { viewableItems, onViewableItems } = useViewableItems();
 
   if (isLoading) {
@@ -42,17 +46,25 @@ export const ListPoems = ({ searchedTitle }: ListPoemsProps) => {
       data={poems}
       extraData={poems}
       keyExtractor={item => item.id}
+      onEndReached={handleNewPage}
       contentContainerStyle={poemsContainer}
       onViewableItemsChanged={onViewableItems}
       ListEmptyComponent={
         <Text style={text}>
-          {isRefetching ? 'Buscando poemas' : 'No hay poemas con ese título'}
+          {isRefreshing ? 'Refrescando poemas' : 'No hay poemas'}
         </Text>
       }
       ListHeaderComponent={<ListPoemsHeader refetch={refetch} />}
       renderItem={({ item: poem }) => (
         <Poem viewableItems={viewableItems} poem={poem} key={poem.id} />
       )}
+      ListFooterComponent={
+        <InfiniteQueryFooter
+          iconSize={50}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+      }
     />
   );
 };

@@ -12,10 +12,11 @@ import {
 import { COLORS } from '@/constants';
 import { MAX_TITLE_LENGTH } from '@/constants/poems';
 import { PoemIsaGradient } from '@/components/PoemIsaGradient';
-import { InfiniteListPoems } from '@/components/ListPoems';
+import { InfiniteListPoems } from '@/components/InfiniteListPoems';
 import debounce from 'just-debounce-it';
 import React, { useRef, useState } from 'react';
 import { CloseSquare } from 'iconsax-react-native';
+import { ListPoems } from '../ListPoems';
 
 const HomeGradient = {
   start: { x: 2, y: 1 },
@@ -56,7 +57,12 @@ export const Home = () => {
           <CloseSquare size="32" color={COLORS.MAIN.PRIMARY} variant="Bulk" />
         </TouchableHighlight>
       </View>
-      <InfiniteListPoems searchedTitle={searchedTitle} />
+
+      {searchedTitle ? (
+        <ListPoems searchedTitle={searchedTitle} />
+      ) : (
+        <InfiniteListPoems />
+      )}
     </PoemIsaGradient>
   );
 };

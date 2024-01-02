@@ -3,12 +3,10 @@ import { useInfiniteQuery } from 'react-query';
 
 import { getAllPoems } from '@/services/Poems';
 import { usePoemsStore } from '@/hooks/usePoemsStore';
+import { useFillPoems } from './useFillPoems';
 
-export const usePoemsFromInfiniteQuery = (title: string) => {
-  const [poems, fillPoems] = usePoemsStore(state => [
-    state.poems,
-    state.fillPoems
-  ]);
+export const usePoemsFromInfiniteQuery = () => {
+  const poems = usePoemsStore(state => state.poems);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const {
     isLoading,
@@ -21,20 +19,19 @@ export const usePoemsFromInfiniteQuery = (title: string) => {
     error,
     isRefetching
   } = useInfiniteQuery({
+    keepPreviousData: true,
     queryKey: ['poems'],
-    queryFn: ({ pageParam }) => getAllPoems(pageParam, title),
+    queryFn: ({ pageParam }) => getAllPoems(pageParam),
     getNextPageParam: lastPage => lastPage.at(-1)?.id
   });
 
   useEffect(() => {
     const refreshing = isRefetching && !isFetchingNextPage;
-    setIsRefreshing(refreshing);
-    refreshing && fillPoems([]);
-  }, [isRefetching, isFetchingNextPage, fillPoems]);
 
-  useEffect(() => {
-    data?.pages && fillPoems(data.pages.flat(1));
-  }, [data, fillPoems]);
+    setIsRefreshing(refreshing);
+  }, [isRefetching, isFetchingNextPage]);
+
+  useFillPoems(isRefreshing, data?.pages);
 
   return {
     isLoading,

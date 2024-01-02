@@ -77,7 +77,7 @@ export class PoemRepository implements IPoemsRepository {
   }) {
     let poemsQuery = poemsCollection.orderBy('createdAt', 'desc').limit(limit);
 
-    if (lastPoemId) {
+    if (lastPoemId && !title) {
       const lastPoem = await poemsCollection.doc(lastPoemId).get();
       poemsQuery = poemsQuery.startAfter(lastPoem);
     }
