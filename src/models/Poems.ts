@@ -31,3 +31,17 @@ export const mapDocToPoem = (
     createdAt: poetryQuote.createdAt.toDate()
   };
 };
+
+export const removeAccents = (str: string) =>
+  str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+export const filterByTitle = (poems: Poem[], title?: string) => {
+  if (!title) return poems;
+
+  const regEx = new RegExp(`.*${title}.*`);
+  return poems.filter(poem => {
+    const titleNoAccents = removeAccents(poem.title);
+
+    return titleNoAccents.match(regEx);
+  });
+};

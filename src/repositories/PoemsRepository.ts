@@ -1,4 +1,5 @@
 import {
+    filterByTitle,
   mapDocToPoem,
   mapSnapshotToPoems,
   poemsCollection
@@ -67,10 +68,12 @@ export class PoemRepository implements IPoemsRepository {
 
   async getPoems({
     lastPoemId,
-    limit = 10
+    limit = 10,
+    title = ''
   }: {
     lastPoemId?: string;
     limit?: number;
+    title?: string;
   }) {
     let poemsQuery = poemsCollection.orderBy('createdAt', 'desc').limit(limit);
 
@@ -81,8 +84,9 @@ export class PoemRepository implements IPoemsRepository {
 
     const poemsSnapshot = await poemsQuery.get();
     const poems = mapSnapshotToPoems(poemsSnapshot);
+    const filterPoems = filterByTitle(poems, title);
 
-    return poems;
+    return filterPoems;
   }
 
   likePoem(poemId: string, userId: string): Promise<void> {

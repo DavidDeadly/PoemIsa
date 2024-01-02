@@ -6,8 +6,13 @@ import { Poem } from './Poem';
 import { InfiniteQueryFooter } from './InfiniteQueryFooter';
 import { FlatList } from 'react-native-gesture-handler';
 import { ListPoemsHeader } from './ListPoemsHeader';
+import { useEffect } from 'react';
 
-export const InfiniteListPoems = () => {
+type ListPoemsProps = {
+  searchedTitle: string;
+};
+
+export const InfiniteListPoems = ({ searchedTitle }: ListPoemsProps) => {
   const {
     fetchNextPage,
     hasNextPage,
@@ -18,7 +23,11 @@ export const InfiniteListPoems = () => {
     poems,
     error,
     isRefreshing
-  } = usePoemsFromInfiniteQuery();
+  } = usePoemsFromInfiniteQuery(searchedTitle);
+
+  useEffect(() => {
+    refetch();
+  }, [searchedTitle, refetch]);
 
   const handleNewPage = () => {
     const pausedInfinite = !hasNextPage || isFetchingNextPage;

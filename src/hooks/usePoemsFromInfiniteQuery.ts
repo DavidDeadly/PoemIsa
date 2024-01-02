@@ -4,7 +4,7 @@ import { useInfiniteQuery } from 'react-query';
 import { getAllPoems } from '@/services/Poems';
 import { usePoemsStore } from '@/hooks/usePoemsStore';
 
-export const usePoemsFromInfiniteQuery = () => {
+export const usePoemsFromInfiniteQuery = (title: string) => {
   const [poems, fillPoems] = usePoemsStore(state => [
     state.poems,
     state.fillPoems
@@ -22,7 +22,7 @@ export const usePoemsFromInfiniteQuery = () => {
     isRefetching
   } = useInfiniteQuery({
     queryKey: ['poems'],
-    queryFn: ({ pageParam }) => getAllPoems(pageParam),
+    queryFn: ({ pageParam }) => getAllPoems(pageParam, title),
     getNextPageParam: lastPage => lastPage.at(-1)?.id
   });
 

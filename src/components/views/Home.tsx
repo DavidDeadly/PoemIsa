@@ -4,6 +4,8 @@ import { COLORS } from '@/constants';
 import { MAX_TITLE_LENGTH } from '@/constants/poems';
 import { PoemIsaGradient } from '@/components/PoemIsaGradient';
 import { InfiniteListPoems } from '@/components/ListPoems';
+import debounce from 'just-debounce-it';
+import { useState } from 'react';
 
 const HomeGradient = {
   start: { x: 2, y: 1 },
@@ -11,6 +13,9 @@ const HomeGradient = {
 };
 
 export const Home = () => {
+  const [searchedTitle, setSearchTitle] = useState('');
+  const searchPoem = debounce((text: string) => setSearchTitle(text), 500);
+
   return (
     <PoemIsaGradient
       label="home"
@@ -26,8 +31,9 @@ export const Home = () => {
         placeholder="Busca por título..."
         placeholderTextColor={COLORS.MAIN.SECONDARY}
         style={searchBar}
+        onChangeText={searchPoem}
       />
-      <InfiniteListPoems />
+      <InfiniteListPoems searchedTitle={searchedTitle} />
     </PoemIsaGradient>
   );
 };
