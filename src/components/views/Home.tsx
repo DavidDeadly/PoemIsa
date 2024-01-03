@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -8,18 +8,17 @@ import {
   View
 } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
-import notifee, { EventType } from '@notifee/react-native';
+import notifee from '@notifee/react-native';
+import debounce from 'just-debounce-it';
+import { CloseSquare } from 'iconsax-react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 import { PoemIsaStackParamList } from './types/components';
 import { COLORS } from '@/constants';
 import { MAX_TITLE_LENGTH } from '@/constants/poems';
 import { PoemIsaGradient } from '@/components/PoemIsaGradient';
 import { InfiniteListPoems } from '@/components/InfiniteListPoems';
-import debounce from 'just-debounce-it';
-import React, { useRef, useState } from 'react';
-import { CloseSquare } from 'iconsax-react-native';
 import { ListPoems } from '../ListPoems';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { notificationsEventHandler, onMessage } from '@/helpers/notifications';
 
 const HomeGradient = {
@@ -44,7 +43,7 @@ export const Home = () => {
 
     messaging()
       .subscribeToTopic('Poems')
-      .then(() => console.log('Subscribed to poems topic!'));
+      .then(() => console.info('Subscribed to poems topic!'));
 
     const unsubscribeNotifeeFore = notifee.onForegroundEvent(
       ({ type, detail }) =>

@@ -1,5 +1,4 @@
 import React, { useCallback, useLayoutEffect } from 'react';
-import functions from '@react-native-firebase/functions';
 
 import { PoemIsaStackParamList } from '@/types/components';
 import {
@@ -22,6 +21,7 @@ import {
   invalidatePoemsQuery
 } from '@/helpers/invalidateQueries';
 import { PoemIsaHomeTabsParamList } from '@/types/components/navigators/PoemIsaStack';
+import { sendNotification } from '@/helpers/notifications';
 
 const DEFAULT_TITLE = 'Sin título';
 type useWritePoemParameter = {
@@ -90,29 +90,19 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
             : 'Poema posteado con éxito!';
 
           notify.success(message);
+          await sendNotification({
+            opts: { isEditing },
+            poem: {
+              id,
+              authorPic: user?.photoURL,
+              title: poemTitle,
+              text
+            }
+          });
 
-          functions()
-            .httpsCallable('sendNotification')({
-              opts: { isEditing },
-              poem: {
-                id,
-                authorPic: user?.photoURL,
-                title: poemTitle,
-                text
-              }
-            })
-            .then(() => {
-              console.log('Notification send successfully!');
-            })
-            .catch(err => {
-              console.error(
-                'There was an error notifying the poem creation!: ',
-                err
-              );
-            });
           isEditing ? navMain.navigate('Perfil') : navigation.goBack();
         })
-        .catch(() => {
+        .catch(err => {
           const isEditing = Boolean(params?.poemId);
 
           if (!isEditing) resetPoem();
@@ -120,6 +110,8 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
           const message = isEditing
             ? 'Ha ocurrido un error editando el poema!'
             : 'Ha ocurrido un error posteando el poema!';
+
+          console.error(`${message}: ${err}`);
           notify.error(message);
         })
         .finally(async () => {
@@ -136,6 +128,7 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
       notify,
       navMain,
       params?.poemId,
+      user?.photoURL,
       resetPoem,
       persistPoem
     ]

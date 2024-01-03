@@ -1,18 +1,20 @@
 import auth from '@react-native-firebase/auth';
-import { likePoem } from '@/services/Poems';
-import { PoemNoti } from '@/types/models/poem';
+import functions from '@react-native-firebase/functions';
+import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 import notifee, {
   AndroidStyle,
   EventDetail,
   EventType
 } from '@notifee/react-native';
-import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
+
+import { likePoem } from '@/services/Poems';
+import { PoemNoti } from '@/types/models/poem';
 
 export const enum NOTIFICATION_ACTIONS {
   LIKE = 'like'
 }
 
-type Notification = {
+type DisplayNotification = {
   titleNoti: string;
   body: string;
   poem: PoemNoti;
@@ -33,13 +35,19 @@ export const onMessage = (
   });
 };
 
-const displayNotification = async ({ titleNoti, body, poem }: Notification) => {
+const displayNotification = async ({
+  titleNoti,
+  body,
+  poem
+}: DisplayNotification) => {
   const channelId = await notifee.createChannel({
     id: 'poemisa',
     name: 'PoemIsa'
   });
 
   const { summary, title, text, authorPic, id } = poem;
+
+  if (!id) return;
 
   await notifee.displayNotification({
     title: titleNoti,
@@ -103,3 +111,23 @@ export const notificationsEventHandler = async ({
     await notifee.cancelNotification(notification?.id ?? '');
   }
 };
+
+type Notification = {
+  opts: {
+    isEditing;
+  };
+  poem: {
+    id: string;
+    authorPic?: string | null;
+    title: string;
+    text: string;
+  };
+};
+
+export async function sendNotification(notification: Notification) {
+  await functions()
+    .httpsCallable('sendNotification')(notification)
+    .catch(err => {
+      console.error('There was an error notifying the poem creation!: ', err);
+    });
+}
