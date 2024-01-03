@@ -15,6 +15,11 @@ type PoemDB = Omit<Poem, 'id' | 'createdAt'> & { createdAt: Timestamp };
 
 type PoemData = Omit<Poem, 'id' | 'usersLiked' | 'createdAt'>;
 
+type PoemNoti = Pick<Poem, 'title' | 'text'> & {
+  authorPic: string;
+  summary: string;
+};
+
 type PoemDataCreate = Pick<Poem, 'title' | 'content' | 'html' | 'text'>;
 
 type Author = Pick<DBUser, 'id' | 'displayName' | 'photoURL'>;

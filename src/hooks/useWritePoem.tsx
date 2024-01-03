@@ -1,4 +1,5 @@
 import React, { useCallback, useLayoutEffect } from 'react';
+import functions from '@react-native-firebase/functions';
 
 import { PoemIsaStackParamList } from '@/types/components';
 import {
@@ -20,7 +21,6 @@ import {
   invalidatePoemIdQuery,
   invalidatePoemsQuery
 } from '@/helpers/invalidateQueries';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { PoemIsaHomeTabsParamList } from '@/types/components/navigators/PoemIsaStack';
 
 const DEFAULT_TITLE = 'Sin título';
@@ -88,6 +88,25 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
             : 'Poema posteado con éxito!';
 
           notify.success(message);
+
+          functions()
+            .httpsCallable('sendNotification')({
+              opts: { isEditing },
+              poem: {
+                authorPic: user?.photoURL,
+                title: poemTitle,
+                text
+              }
+            })
+            .then(() => {
+              console.log('Notification send successfully!');
+            })
+            .catch(err => {
+              console.error(
+                'There was an error notifying the poem creation!: ',
+                err
+              );
+            });
           isEditing ? navMain.navigate('Perfil') : navigation.goBack();
         })
         .catch(() => {
@@ -108,7 +127,15 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
           await invalidatePoemsQuery();
         });
     },
-    [editorRef, navigation, notify, params?.poemId, resetPoem, persistPoem]
+    [
+      editorRef,
+      navigation,
+      notify,
+      navMain,
+      params?.poemId,
+      resetPoem,
+      persistPoem
+    ]
   );
 
   const onSavePoem = useCallback(async () => {

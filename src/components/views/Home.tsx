@@ -1,10 +1,8 @@
 import {
-  Button,
   StatusBar,
   StyleSheet,
   Text,
   TextInput,
-  Touchable,
   TouchableHighlight,
   View
 } from 'react-native';
