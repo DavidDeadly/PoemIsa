@@ -1,3 +1,5 @@
+import auth from '@react-native-firebase/auth';
+import { likePoem } from '@/services/Poems';
 import { PoemNoti } from '@/types/models/poem';
 import notifee, {
   AndroidStyle,
@@ -87,14 +89,17 @@ export const notificationsEventHandler = async ({
 
   if (type === EventType.PRESS) {
     navigate('Detalle', { poemId: notification?.data?.poemId });
-    await notifee.cancelNotification(notification?.id ?? '');
-    return;
+
+    return notifee.cancelNotification(notification?.id ?? '');
   }
 
   if (
     type === EventType.ACTION_PRESS &&
     pressAction.id === NOTIFICATION_ACTIONS.LIKE
   ) {
-    console.log('I liked it #', notification?.data?.poemId);
+    const user = auth().currentUser;
+
+    await likePoem(notification?.data?.poemId, user?.uid);
+    await notifee.cancelNotification(notification?.id ?? '');
   }
 };
