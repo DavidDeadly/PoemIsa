@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 const NOTIFICATION = {
   edit: {
     TITLE: "¡Poema Editado!",
-    DESCRIPTION: "El arte siempre se está mejorando..."
+    DESCRIPTION: "El arte siempre se está mejorando...",
   },
   new: {
     TITLE: "¡Nuevo Poema!",
@@ -30,7 +30,7 @@ const DEFAULT_OPTS: Options = {
 
 type Data = {
   poem: PoemData,
-  opts?: Options
+  opts?: Options,
 }
 
 export const sendPoemNotification =

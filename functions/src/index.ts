@@ -1,6 +1,5 @@
 import {auth, https} from "firebase-functions";
 import * as dotenv from "dotenv";
-import * as admin from "firebase-admin";
 import {initializeApp} from "firebase-admin/app";
 
 initializeApp();
@@ -10,7 +9,7 @@ import {
 } from "./handlers/handWrittenTextRecognition";
 import {createUserDocumentTrigger} from "./triggers/onUser";
 import {getAllPoemsHandler} from "./handlers/getAllPoems";
-import { sendPoemNotification } from "./handlers/sendPoemNotification";
+import {sendPoemNotification} from "./handlers/sendPoemNotification";
 
 dotenv.config();
 
