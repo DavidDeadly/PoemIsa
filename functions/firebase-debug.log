@@ -1019,3 +1019,55 @@ Issues? Report them at https://github.com/firebase/firebase-tools/issues and att
 [debug] [2024-01-03T08:03:26.470Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-sendNotification"},"extension":{},"message":"Finishing up request with event=finish"}}
 [debug] [2024-01-03T08:03:26.470Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-sendNotification"},"extension":{},"message":"Finishing up request with event=close"}}
 [debug] [2024-01-03T08:03:26.470Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2024-01-03T08:07:02.323Z] File /home/daviddeadly/Dev/Isa/PoemIsa/functions/src/index.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /home/daviddeadly/Dev/Isa/PoemIsa/functions/src/index.ts changed, reloading triggers"}}
+[debug] [2024-01-03T08:07:03.324Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2024-01-03T08:07:04.066Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@google-cloud/vision": "^3.1.2",
+    "@react-native-firebase/messaging": "^18.6.2",
+    "dotenv": "^16.0.3",
+    "firebase-admin": "^11.11.1",
+    "firebase-functions": "^4.4.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.0.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2024-01-03T08:07:04.066Z] Building nodejs source
+[debug] [2024-01-03T08:07:04.066Z] Failed to find version of module node: reached end of search path /home/daviddeadly/Dev/Isa/PoemIsa/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "16" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2024-01-03T08:07:04.067Z] Could not find functions.yaml. Must use http discovery
+[debug] [2024-01-03T08:07:04.068Z] Found firebase-functions binary at '/home/daviddeadly/Dev/Isa/PoemIsa/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8740
+
+[debug] [2024-01-03T08:07:04.853Z] Got response from /__/functions.yaml {"endpoints":{"getAllPoems":{"platform":"gcfv1","labels":{},"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"callableTrigger":{},"entryPoint":"getAllPoems"},"sendNotification":{"platform":"gcfv1","labels":{},"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"callableTrigger":{},"entryPoint":"sendNotification"},"send":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"httpsTrigger":{},"entryPoint":"send"},"createUserDocument":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/firebase.auth/eventTypes/user.create","eventFilters":{"resource":"projects/versouls"},"retry":false},"labels":{},"entryPoint":"createUserDocument"},"handWrittenTextRecognition":{"platform":"gcfv1","labels":{},"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"callableTrigger":{},"entryPoint":"handWrittenTextRecognition"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[info] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: getAllPoems, sendNotification, send, createUserDocument, handWrittenTextRecognition. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: getAllPoems, sendNotification, send, createUserDocument, handWrittenTextRecognition."}}
+[debug] [2024-01-03T08:07:09.882Z] [worker-pool] Shutting down IDLE worker (us-central1-sendNotification) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-sendNotification)"}}
+[debug] [2024-01-03T08:07:09.882Z] [worker-us-central1-sendNotification-0ebfe64c-c748-4839-9478-bf8ba043aa7f]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-sendNotification"},"extension":{},"message":"[worker-us-central1-sendNotification-0ebfe64c-c748-4839-9478-bf8ba043aa7f]: FINISHING"}}
+[debug] [2024-01-03T08:07:09.894Z] [worker-us-central1-sendNotification-0ebfe64c-c748-4839-9478-bf8ba043aa7f]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-sendNotification"},"extension":{},"message":"[worker-us-central1-sendNotification-0ebfe64c-c748-4839-9478-bf8ba043aa7f]: exited"}}
+[debug] [2024-01-03T08:07:09.894Z] [worker-us-central1-sendNotification-0ebfe64c-c748-4839-9478-bf8ba043aa7f]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-sendNotification"},"extension":{},"message":"[worker-us-central1-sendNotification-0ebfe64c-c748-4839-9478-bf8ba043aa7f]: FINISHED"}}
