@@ -1,6 +1,14 @@
 import { PoemNoti } from '@/types/models/poem';
-import notifee, { AndroidStyle } from '@notifee/react-native';
+import notifee, {
+  AndroidStyle,
+  EventDetail,
+  EventType
+} from '@notifee/react-native';
 import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
+
+export const enum NOTIFICATION_ACTIONS {
+  LIKE = 'like'
+}
 
 type Notification = {
   titleNoti: string;
@@ -10,12 +18,18 @@ type Notification = {
 
 export const onMessage = (
   remoteMessage: FirebaseMessagingTypes.RemoteMessage
-) =>
-  displayNotification({
+) => {
+  const poem =
+    typeof remoteMessage.data?.poem === 'string'
+      ? JSON.parse(remoteMessage.data?.poem)
+      : {};
+
+  return displayNotification({
     titleNoti: remoteMessage.notification?.title ?? '',
     body: remoteMessage.notification?.body ?? '',
-    poem: JSON.parse(remoteMessage.data?.poem ?? {})
+    poem
   });
+};
 
 const displayNotification = async ({ titleNoti, body, poem }: Notification) => {
   const channelId = await notifee.createChannel({
@@ -23,11 +37,14 @@ const displayNotification = async ({ titleNoti, body, poem }: Notification) => {
     name: 'PoemIsa'
   });
 
-  const { summary, title, text, authorPic } = poem;
+  const { summary, title, text, authorPic, id } = poem;
 
   await notifee.displayNotification({
     title: titleNoti,
     body,
+    data: {
+      poemId: id
+    },
     android: {
       sound: 'pageflip',
       channelId,
@@ -44,7 +61,7 @@ const displayNotification = async ({ titleNoti, body, poem }: Notification) => {
           title: 'Me gusta',
           icon: 'poemisa_notification_ic',
           pressAction: {
-            id: 'like'
+            id: NOTIFICATION_ACTIONS.LIKE
           }
         }
       ],
@@ -53,4 +70,31 @@ const displayNotification = async ({ titleNoti, body, poem }: Notification) => {
       }
     }
   });
+};
+
+type NotificationEvent = {
+  type: EventType;
+  detail: EventDetail;
+  navigate: (screen: string, params: Record<string, any>) => void;
+};
+
+export const notificationsEventHandler = async ({
+  type,
+  detail,
+  navigate
+}: NotificationEvent) => {
+  const { notification, pressAction } = detail;
+
+  if (type === EventType.PRESS) {
+    navigate('Detalle', { poemId: notification?.data?.poemId });
+    await notifee.cancelNotification(notification?.id ?? '');
+    return;
+  }
+
+  if (
+    type === EventType.ACTION_PRESS &&
+    pressAction.id === NOTIFICATION_ACTIONS.LIKE
+  ) {
+    console.log('I liked it #', notification?.data?.poemId);
+  }
 };

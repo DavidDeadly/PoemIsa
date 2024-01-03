@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -6,7 +7,10 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+import notifee, { EventType } from '@notifee/react-native';
 
+import { PoemIsaStackParamList } from './types/components';
 import { COLORS } from '@/constants';
 import { MAX_TITLE_LENGTH } from '@/constants/poems';
 import { PoemIsaGradient } from '@/components/PoemIsaGradient';
@@ -15,6 +19,8 @@ import debounce from 'just-debounce-it';
 import React, { useRef, useState } from 'react';
 import { CloseSquare } from 'iconsax-react-native';
 import { ListPoems } from '../ListPoems';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { notificationsEventHandler, onMessage } from '@/helpers/notifications';
 
 const HomeGradient = {
   start: { x: 2, y: 1 },
@@ -23,6 +29,7 @@ const HomeGradient = {
 
 export const Home = () => {
   const [searchedTitle, setSearchTitle] = useState('');
+  const navigation = useNavigation<NavigationProp<PoemIsaStackParamList>>();
   const inputRef = useRef<TextInput>(null);
 
   const searchPoem = debounce((text: string) => setSearchTitle(text), 500);
@@ -31,6 +38,29 @@ export const Home = () => {
     inputRef.current?.clear();
     searchPoem('');
   };
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(onMessage);
+
+    messaging()
+      .subscribeToTopic('Poems')
+      .then(() => console.log('Subscribed to poems topic!'));
+
+    const unsubscribeNotifeeFore = notifee.onForegroundEvent(
+      ({ type, detail }) =>
+        notificationsEventHandler({
+          type,
+          detail,
+          navigate: navigation.navigate
+        })
+    );
+
+    return () => {
+      messaging().unsubscribeFromTopic('Poems');
+      unsubscribeNotifeeFore();
+      unsubscribe();
+    };
+  }, [navigation]);
 
   return (
     <PoemIsaGradient

@@ -28,6 +28,17 @@ export const PoemDetailed = () => {
     );
   }
 
+  if (!poem && !isLoading) {
+    return (
+      <PoemIsaGradient
+        label="poemDetailed"
+        style={[container, contentCenter]}
+        gradient={PoemDetailedGradient}>
+        <Text style={title}>Este poema al parecer no existe :c</Text>
+      </PoemIsaGradient>
+    );
+  }
+
   return (
     <PoemIsaGradient
       label="poemDetailed"

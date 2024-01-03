@@ -78,7 +78,9 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
         html,
         content: contentToSave.ops
       })
-        .then(async () => {
+        .then(async id => {
+          if (!id) throw new Error('Poem not persisted');
+
           resetPoem();
 
           const isEditing = Boolean(params?.poemId);
@@ -93,6 +95,7 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
             .httpsCallable('sendNotification')({
               opts: { isEditing },
               poem: {
+                id,
                 authorPic: user?.photoURL,
                 title: poemTitle,
                 text

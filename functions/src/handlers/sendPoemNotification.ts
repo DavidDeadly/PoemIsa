@@ -14,6 +14,7 @@ const NOTIFICATION = {
 const DEFAULT_TEXT = "Sin texto";
 
 type PoemData = {
+  id?:string;
   authorPic?: string;
   title?: string;
   text?: string
@@ -38,6 +39,7 @@ export const sendPoemNotification =
       authorPic = "https://unavatar.io/unavatar.com",
       title = "Sin título",
       text = DEFAULT_TEXT,
+      id = "",
     } = poem;
 
     const summary = text === DEFAULT_TEXT ?
@@ -53,6 +55,7 @@ export const sendPoemNotification =
       data: {
         poem: JSON.stringify({
           summary,
+          id,
           authorPic,
           title,
           text,
