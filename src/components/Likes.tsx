@@ -6,11 +6,10 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 type LikeIconProps = {
   usersLiked?: string[];
-  likes?: number;
   poemId?: string;
 };
 
-export const Likes: FC<LikeIconProps> = ({ usersLiked, likes, poemId }) => {
+export const Likes: FC<LikeIconProps> = ({ usersLiked, poemId }) => {
   const { isLiked, toggleLike } = useLikePoem({
     usersLiked,
     poemId
@@ -18,7 +17,7 @@ export const Likes: FC<LikeIconProps> = ({ usersLiked, likes, poemId }) => {
 
   return (
     <TouchableOpacity style={likesContainer} onPress={toggleLike}>
-      <Text style={likesText}>{likes}</Text>
+      <Text style={likesText}>{usersLiked?.length ?? '--'}</Text>
       <Heart
         size="30"
         color={COLORS.MAIN.PRIMARY}

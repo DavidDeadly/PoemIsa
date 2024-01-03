@@ -7,15 +7,19 @@ interface Poem {
   html: string;
   text: string;
   usersLiked: string[];
-  likes: number;
   createdAt: Date;
   author: Author;
 }
 
 type PoemDB = Omit<Poem, 'id' | 'createdAt'> & { createdAt: Timestamp };
 
-type PoemData = Omit<Poem, 'id' | 'likes' | 'usersLiked' | 'createdAt'>;
+type PoemData = Omit<Poem, 'id' | 'usersLiked' | 'createdAt'>;
 
-type PoemDataCreate = Pick<Poem, 'content' | 'html' | 'text'>;
+type PoemNoti = Pick<Poem, 'id' | 'title' | 'text'> & {
+  authorPic: string;
+  summary: string;
+};
+
+type PoemDataCreate = Pick<Poem, 'title' | 'content' | 'html' | 'text'>;
 
 type Author = Pick<DBUser, 'id' | 'displayName' | 'photoURL'>;

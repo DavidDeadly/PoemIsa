@@ -1,4 +1,5 @@
 import {
+  filterByTitle,
   mapDocToPoem,
   mapSnapshotToPoems,
   poemsCollection
@@ -18,18 +19,27 @@ export class PoemRepository implements IPoemsRepository {
     return this.repository;
   }
 
-  createPoem(poem: PoemDB) {
+  createPoem(poem: PoemDB): Promise<Poem | null> {
     return poemsCollection
       .add(poem)
       .then(doc => doc.get())
       .then(mapDocToPoem);
   }
 
+  async updatePoem(
+    poemId: string,
+    poem: Partial<PoemDB>
+  ): Promise<Poem | null> {
+    await poemsCollection.doc(poemId).update(poem);
+
+    return poemsCollection.doc(poemId).get().then(mapDocToPoem);
+  }
+
   async getPoemsByUser(userID: string): Promise<Poem[]> {
-    const authoIdPath = new firebase.firestore.FieldPath('author', 'id');
+    const authorIdPath = new firebase.firestore.FieldPath('author', 'id');
 
     const poemsSnapshot = await poemsCollection
-      .where(authoIdPath, '==', userID)
+      .where(authorIdPath, '==', userID)
       .orderBy('createdAt', 'desc')
       .get();
 
@@ -58,35 +68,36 @@ export class PoemRepository implements IPoemsRepository {
 
   async getPoems({
     lastPoemId,
-    limit = 10
+    limit = 10,
+    title = ''
   }: {
     lastPoemId?: string;
     limit?: number;
+    title?: string;
   }) {
     let poemsQuery = poemsCollection.orderBy('createdAt', 'desc').limit(limit);
 
-    if (lastPoemId) {
+    if (lastPoemId && !title) {
       const lastPoem = await poemsCollection.doc(lastPoemId).get();
       poemsQuery = poemsQuery.startAfter(lastPoem);
     }
 
     const poemsSnapshot = await poemsQuery.get();
     const poems = mapSnapshotToPoems(poemsSnapshot);
+    const filterPoems = filterByTitle(poems, title);
 
-    return poems;
+    return filterPoems;
   }
 
   likePoem(poemId: string, userId: string): Promise<void> {
     return poemsCollection.doc(poemId).update({
-      usersLiked: firebase.firestore.FieldValue.arrayUnion(userId),
-      likes: firebase.firestore.FieldValue.increment(1)
+      usersLiked: firebase.firestore.FieldValue.arrayUnion(userId)
     });
   }
 
   unlikePoem(poemId: string, userId: string): Promise<void> {
     return poemsCollection.doc(poemId).update({
-      usersLiked: firebase.firestore.FieldValue.arrayRemove(userId),
-      likes: firebase.firestore.FieldValue.increment(-1)
+      usersLiked: firebase.firestore.FieldValue.arrayRemove(userId)
     });
   }
 }

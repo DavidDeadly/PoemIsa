@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import QuillEditor from 'react-native-cn-quill';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
 import { Loading } from '@/components/Loading';
@@ -5,8 +7,6 @@ import { PoemInfo } from '@/components/PoemInfo';
 import { COLORS } from '@/constants';
 import { useDetailedPoem } from '@/hooks/useDetailedPoem';
 import { PoemIsaGradient } from '@/components/PoemIsaGradient';
-import QuillEditor from 'react-native-cn-quill';
-import { useRef } from 'react';
 
 const PoemDetailedGradient = {
   start: { x: 2, y: 1 },
@@ -24,6 +24,17 @@ export const PoemDetailed = () => {
         style={[container, contentCenter]}
         gradient={PoemDetailedGradient}>
         <Text style={title}>Error: {(error as Error).message}</Text>
+      </PoemIsaGradient>
+    );
+  }
+
+  if (!poem && !isLoading) {
+    return (
+      <PoemIsaGradient
+        label="poemDetailed"
+        style={[container, contentCenter]}
+        gradient={PoemDetailedGradient}>
+        <Text style={title}>Este poema al parecer no existe :c</Text>
       </PoemIsaGradient>
     );
   }
@@ -53,7 +64,6 @@ export const PoemDetailed = () => {
           <PoemInfo
             displayIf={Boolean(poem)}
             poemId={poem?.id}
-            likes={poem?.likes}
             author={poem?.author}
             usersLiked={poem?.usersLiked}
             createdAt={poem?.createdAt}

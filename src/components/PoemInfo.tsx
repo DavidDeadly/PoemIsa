@@ -1,8 +1,12 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Button, Image, StyleSheet, Text, View } from 'react-native';
 import { Likes } from './Likes';
 import { Author } from '@/types/models/poem';
 import { FC } from 'react';
-import { COLORS } from '@/constants';
+import { COLORS, SCREENS } from '@/constants';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PoemIsaStackParamList } from '@/types/components';
+import { useUser } from '@/hooks';
 
 type PoemInfo = {
   displayIf: boolean;
@@ -10,7 +14,6 @@ type PoemInfo = {
   author?: Author;
   createdAt?: Date;
   usersLiked?: string[];
-  likes?: number;
 };
 
 export const PoemInfo: FC<PoemInfo> = ({
@@ -18,10 +21,19 @@ export const PoemInfo: FC<PoemInfo> = ({
   author,
   poemId,
   createdAt,
-  usersLiked,
-  likes
+  usersLiked
 }) => {
+  const { user } = useUser();
+  const navigation =
+    useNavigation<StackNavigationProp<PoemIsaStackParamList>>();
+
   if (!displayIf) return null;
+
+  const allowEditing = user?.uid === author?.id;
+  const goToEditor = () =>
+    navigation.navigate(SCREENS.APP.WRITE, {
+      poemId: poemId ?? ''
+    });
 
   return (
     <View style={info}>
@@ -36,7 +48,14 @@ export const PoemInfo: FC<PoemInfo> = ({
           <Text style={date}>{createdAt?.toLocaleDateString('es')}</Text>
         </View>
       </View>
-      <Likes likes={likes} usersLiked={usersLiked} poemId={poemId} />
+      {allowEditing && (
+        <Button
+          title="Editar"
+          color={COLORS.MAIN.PRIMARY}
+          onPress={goToEditor}
+        />
+      )}
+      <Likes usersLiked={usersLiked} poemId={poemId} />
     </View>
   );
 };

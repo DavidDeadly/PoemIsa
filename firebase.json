@@ -1,4 +1,7 @@
 {
+  "react-native": {
+    "messaging_android_notification_color": "@color/hotpink"
+  },
   "functions": [
     {
       "source": "functions",
@@ -18,10 +21,10 @@
   "emulators": {
     "functions": {
       "port": 5001,
-      "host": "192.168.1.60"
+      "host": "192.168.1.14"
     },
     "auth": {
-      "host": "192.168.1.60",
+      "host": "192.168.1.14",
       "port": 9099
     },
     "ui": {

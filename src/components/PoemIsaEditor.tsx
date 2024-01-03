@@ -1,7 +1,8 @@
 import { FC, useRef, useState } from 'react';
+
+import { useWritePoem } from '@/hooks/useWritePoem';
 import { TextEditor } from './TextEditor';
 import { TextEditorToolbar } from './TextEditorToolbar';
-import { useWritePoem } from '@/hooks/useWritePoem';
 
 export const PoemIsaEditor: FC = () => {
   const editorRef = useRef<TextEditor>(null);

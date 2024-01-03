@@ -1,8 +1,13 @@
 import React, { useCallback, useLayoutEffect } from 'react';
 
 import { PoemIsaStackParamList } from '@/types/components';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { useCurrentWrittingPoem, useNotify } from '@/hooks';
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute
+} from '@react-navigation/native';
+import { useCurrentWritingPoem, useNotify } from '@/hooks';
 import { WritePoemHeaderTitle } from '@/components/WritePoemHeaderTitle';
 import { TextEditorRef } from '@/components/TextEditor';
 import { COLORS } from '@/constants';
@@ -10,19 +15,29 @@ import { WritePoemHeaderRight } from '@/components/WritePoemHeaderRight';
 import { useUser } from './useUser';
 import { Author, PoemDataCreate } from '@/types/models/poem';
 import { usePoemsStore } from './usePoemsStore';
+import { Alert } from 'react-native';
+import {
+  invalidatePoemIdQuery,
+  invalidatePoemsQuery
+} from '@/helpers/invalidateQueries';
+import { PoemIsaHomeTabsParamList } from '@/types/components/navigators/PoemIsaStack';
+import { sendNotification } from '@/helpers/notifications';
 
+const DEFAULT_TITLE = 'Sin título';
 type useWritePoemParameter = {
   editorRef: TextEditorRef;
 };
 
 export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
   const navigation = useNavigation<NavigationProp<PoemIsaStackParamList>>();
+  const navMain = useNavigation<NavigationProp<PoemIsaHomeTabsParamList>>();
+  const { params } = useRoute<RouteProp<PoemIsaStackParamList, 'Escribir'>>();
   const notify = useNotify();
   const { content, title, persistContent, persistTitle, resetPoem } =
-    useCurrentWrittingPoem();
+    useCurrentWritingPoem();
   const { user } = useUser();
 
-  const { createPoem } = usePoemsStore();
+  const { createPoem, updatePoem } = usePoemsStore();
 
   const persistPoem = useCallback(
     (poemData: PoemDataCreate) => {
@@ -32,36 +47,113 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
         photoURL: user?.photoURL
       };
 
-      return createPoem({
-        title,
-        ...poemData,
-        author
-      });
+      const isEditing = Boolean(params?.poemId);
+
+      return isEditing
+        ? updatePoem(params?.poemId ?? '', {
+            ...poemData,
+            author
+          })
+        : createPoem({
+            ...poemData,
+            author
+          });
     },
-    [title, user, createPoem]
+    [user, params?.poemId, createPoem, updatePoem]
   );
 
-  const savePoem = useCallback(async () => {
-    if (!editorRef.current) return;
+  const savePoem = useCallback(
+    async (poemTitle: string) => {
+      if (!editorRef.current) return;
 
-    const [text, contentToSave, html] = await Promise.all([
-      editorRef.current.getText(),
-      editorRef.current.getContents(),
-      editorRef.current.getHtml()
-    ]);
+      const [text, contentToSave, html] = await Promise.all([
+        editorRef.current.getText(),
+        editorRef.current.getContents(),
+        editorRef.current.getHtml()
+      ]);
 
-    persistPoem({
-      text,
-      html,
-      content: contentToSave.ops
-    })
-      .then(() => {
-        resetPoem();
-        notify.success('Poema posteado con exito!');
-        navigation.goBack();
+      persistPoem({
+        title: poemTitle,
+        text,
+        html,
+        content: contentToSave.ops
       })
-      .catch(() => notify.error('Ha ocurrido un error posteando el poema!'));
-  }, [editorRef, navigation, notify, resetPoem, persistPoem]);
+        .then(async id => {
+          if (!id) throw new Error('Poem not persisted');
+
+          resetPoem();
+
+          const isEditing = Boolean(params?.poemId);
+
+          const message = isEditing
+            ? 'Poema editado con éxito!'
+            : 'Poema posteado con éxito!';
+
+          notify.success(message);
+          await sendNotification({
+            opts: { isEditing },
+            poem: {
+              id,
+              authorPic: user?.photoURL,
+              title: poemTitle,
+              text
+            }
+          });
+
+          isEditing ? navMain.navigate('Perfil') : navigation.goBack();
+        })
+        .catch(err => {
+          const isEditing = Boolean(params?.poemId);
+
+          if (!isEditing) resetPoem();
+
+          const message = isEditing
+            ? 'Ha ocurrido un error editando el poema!'
+            : 'Ha ocurrido un error posteando el poema!';
+
+          console.error(`${message}: ${err}`);
+          notify.error(message);
+        })
+        .finally(async () => {
+          if (params?.poemId) {
+            await invalidatePoemIdQuery(params.poemId);
+          }
+
+          await invalidatePoemsQuery();
+        });
+    },
+    [
+      editorRef,
+      navigation,
+      notify,
+      navMain,
+      params?.poemId,
+      user?.photoURL,
+      resetPoem,
+      persistPoem
+    ]
+  );
+
+  const onSavePoem = useCallback(async () => {
+    if (title) return savePoem(title);
+
+    return Alert.alert(
+      'Obra sin título',
+      'No has titulado tu hermoso poema, ¿deseas continuar sin título?',
+      [
+        {
+          text: 'Sí',
+          onPress: () => {
+            persistTitle(DEFAULT_TITLE);
+            savePoem(DEFAULT_TITLE);
+          }
+        }
+      ],
+      {
+        cancelable: true
+      }
+    );
+  }, [title, persistTitle, savePoem]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -74,9 +166,9 @@ export const useWritePoem = ({ editorRef }: useWritePoemParameter) => {
           persistTitle={persistTitle}
         />
       ),
-      headerRight: () => <WritePoemHeaderRight savePoem={savePoem} />
+      headerRight: () => <WritePoemHeaderRight savePoem={onSavePoem} />
     });
-  }, [navigation, title, savePoem, persistTitle]);
+  }, [navigation, title, onSavePoem, persistTitle]);
 
   return {
     content,
